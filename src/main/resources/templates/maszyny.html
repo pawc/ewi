@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head>
+    <title>Ewi</title>
+
+    <head>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link href="/css/index.css" rel="stylesheet">
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="/js/index.js"></script>
+
+        <script>
+            $(document).ready(() => {
+                $('#maszynyLink').css("font-weight", "bold");
+                $('#maszynyLink').css("text-decoration", "underline");
+            })
+        </script>
+    </head>
+
+</head>
+
+    <div th:insert="menu.html :: nav"> </div>
+
+    <body>
+
+        <div class="container">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th> Numer </th>
+                    <th> Nazwa </th>
+                    <th> Paliwo </th>
+                    <th> Opis </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${maszyny.empty}">
+                    <td colspan="2"> Brak maszyn </td>
+                </tr>
+                <tr th:each="maszyna : ${maszyny}">
+                    <td><span th:text="${maszyna.id}"> Numer </span></td>
+                    <td><span th:text="${maszyna.nazwa}"> Nazwa </span></td>
+                    <td><span th:text="${maszyna.paliwo} "> Paliwo </span></td>
+                    <td><span th:text="${maszyna.opis}"> Opis  </span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </body>
+
+</html>

@@ -17,14 +17,6 @@ var myNavBar = {
             }
             this.flagAdd = false;
         }
-    },
-
-    remove: function() {
-        for(var i=0; i < this.elements.length; i++) {
-            document.getElementById(this.elements[i]).className =
-                    document.getElementById(this.elements[i]).className.replace( /(?:^|\s)fixed-theme(?!\S)/g , '' );
-        }
-        this.flagAdd = true;
     }
 
 };
@@ -42,9 +34,6 @@ function offSetManager(){
 
     if(yOffset < currYOffSet) {
         myNavBar.add();
-    }
-    else if(currYOffSet == yOffset){
-        myNavBar.remove();
     }
 
 }

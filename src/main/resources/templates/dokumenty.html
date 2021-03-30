@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head>
+    <title>Ewi</title>
+
+    <head>
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link href="/css/index.css" rel="stylesheet">
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="/js/index.js"></script>
+
+        <script>
+            $(document).ready(() => {
+                $('#dokumentyLink').css("font-weight", "bold");
+                $('#dokumentyLink').css("text-decoration", "underline");
+            })
+        </script>
+    </head>
+
+</head>
+
+    <div th:insert="menu.html :: nav"> </div>
+
+    <body>
+
+        <div class="container">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th> Numer </th>
+                    <th> Data </th>
+                    <th> Maszyna </th>
+                    <th> Zużycie [litry] </th>
+                    <th> Paliwo </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${dokumenty.empty}">
+                    <td colspan="2"> Brak dokumentów </td>
+                </tr>
+                <tr th:each="dokument : ${dokumenty}">
+                    <td><span th:text="${dokument.numer}"> Numer </span></td>
+                    <td><span th:text="${dokument.data}"> Data </span></td>
+                    <td><span th:text="${dokument.maszyna.nazwa} + ' (' + ${dokument.maszyna.id} + ') '"> Maszyna </span></td>
+                    <td><span th:text="${dokument.ilosc}"> Zużycie [litry] </span></td>
+                    <td><span th:text="${dokument.maszyna.paliwo}"> Paliwo </span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </body>
+
+</html>

@@ -13,7 +13,7 @@ import pl.pawc.ewi.repository.MaszynaRepository;
 import java.sql.Date;
 
 @Component
-public class DataLoader implements ApplicationRunner {
+public class InitialDataLoader implements ApplicationRunner {
 
     @Autowired
     MaszynaRepository maszynaRepository;
