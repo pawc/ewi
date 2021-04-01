@@ -8,6 +8,7 @@ import pl.pawc.ewi.repository.MaszynaRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @RestController
 public class EwiRestController {
@@ -36,17 +37,28 @@ public class EwiRestController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        Maszyna maszynaDB = maszynaRepository.findById(maszyna.getId()).get();
+        Optional<Maszyna> byId = maszynaRepository.findById(maszyna.getId());
 
-        if(maszynaDB != null){
+        if(byId.isPresent()){
+            Maszyna maszynaDB = byId.get();
             maszynaDB.setNazwa(maszyna.getNazwa());
             maszynaDB.setPaliwo(maszyna.getPaliwo());
             maszynaDB.setOpis(maszyna.getOpis());
             maszynaRepository.save(maszynaDB);
         }
         else{
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            maszynaRepository.save(maszyna);
         }
+
+    }
+
+    @RequestMapping(value = "/usunMaszyne", method = RequestMethod.POST)
+    public void usunMaszyne(
+            @RequestParam Integer id,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+        maszynaRepository.deleteById(id);
 
     }
 

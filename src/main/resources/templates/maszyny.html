@@ -43,14 +43,19 @@
 
             })
 
-        var dialog, form, currentId
+        var dialog, dialogUsun, form, currentId
 
         function edytujBtn(id){
             currentId = id
+
+            $("span.ui-dialog-title").text('Edytuj maszynę');
+
             $.ajax({
                 url: '/maszyna/'+id
             })
             .done(maszyna => {
+                $("#numer").prop("disabled", true);
+                $('#numer').val(maszyna.id)
                 $('#nazwa').val(maszyna.nazwa)
                 $('#paliwo').val(maszyna.paliwo)
                 $('#opis').val(maszyna.opis)
@@ -61,18 +66,63 @@
             })
         }
 
+        function dodajBtn(){
+            currentId = 0
+            $("#numer").prop("disabled", false);
+            $('#nazwa').val('')
+            $('#paliwo').val('BENZYNA')
+            $('#opis').val('')
+            $("span.ui-dialog-title").text('Dodaj maszynę');
+            dialog.dialog("open");
+        }
+
+        function usunBtn(id){
+            currentId = id
+            $("span.ui-dialog-title").text('Usuń maszynę');
+            $('#dialog-confirm-p').text('Czy na pewno usunąć maszynę o numerze ' + id + ' ?');
+            dialogUsun.dialog("open");
+        }
+
         $(function() {
+
+            dialogUsun = $("#dialog-confirm").dialog({
+                autoOpen: false,
+                resizable: false,
+                height: "auto",
+                width: 400,
+                modal: true,
+                buttons: {
+                    "Tak": function() {
+                        $.ajax({
+                            url: '/usunMaszyne',
+                            data: {
+                                id: currentId
+                            },
+                            type: 'POST'
+                        })
+                        .done(() => {
+                            window.location.reload()
+                        })
+                        .fail(() => {
+                            alert('Problem z usunięciem maszyny o numerze ' + currentId)
+                        })
+                    },
+                    Anuluj: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            });
 
             dialog = $( "#dialog-form" ).dialog({
                 autoOpen: false,
-                height: 400,
+                height: 460,
                 width: 350,
                 modal: true,
                 buttons: {
-                    "Zapisz zmiany": function(){
+                    "Zapisz": function(){
 
                         var maszyna = {
-                            id: parseInt(currentId),
+                            id: parseInt($("#numer").val()),
                             nazwa: $('#nazwa').val(),
                             paliwo: parseInt($('#paliwo option:selected').attr('valueInt')),
                             opis: $('#opis').val()
@@ -86,6 +136,12 @@
                             type: 'POST',
                             data: JSON.stringify(maszyna),
                             headers: headers
+                        })
+                        .done(() => {
+                            window.location.reload()
+                        })
+                        .fail(() => {
+                            console.log('Problem z zapisem do bazy')
                         })
                     },
                     Anuluj: function() {
@@ -120,7 +176,7 @@
                     <th> Nazwa </th>
                     <th> Paliwo </th>
                     <th> Opis </th>
-                    <th>  </th>
+                    <th class="text-right"> <button class="btn btn-success" onclick="dodajBtn()">dodaj <i class="fas fa-plus-circle"></i></button> </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -132,19 +188,21 @@
                     <td><span th:text="${maszyna.nazwa}"> Nazwa </span></td>
                     <td><span th:text="${maszyna.paliwo} "> Paliwo </span></td>
                     <td><span th:text="${maszyna.opis}"> Opis  </span></td>
-                    <td>
+                    <td class="text-right">
                         <button class="btn btn-info" th:onclick="|edytujBtn('${maszyna.id}')|">edytuj <i class="fas fa-edit"></i></button>
-                        <button class="btn btn-danger" th:onclick="|usun('${maszyna.id}')|">usuń <i class="fas fa-trash-alt"></i></button>
+                        <button class="btn btn-danger" th:onclick="|usunBtn('${maszyna.id}')|">usuń <i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
-        <div id="dialog-form" title="Edytuj maszynę">
+        <div id="dialog-form" title="">
 
             <form>
                 <fieldset>
+                    <label for="numer">Numer</label>
+                    <input type="number" name="numer" id="numer" value="" class="text ui-widget-content ui-corner-all">
                     <label for="nazwa">Nazwa</label>
                     <input type="text" name="nazwa" id="nazwa" value="" class="text ui-widget-content ui-corner-all">
                     <label for="paliwo">Paliwo</label>
@@ -158,6 +216,11 @@
                     <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
                 </fieldset>
             </form>
+        </div>
+
+        <div id="dialog-confirm" title="Na pewno?">
+            <p id="dialog-confirm-p">?</p>
+            <p>Spowoduje to usunięcie wszystkich dokumentów z nią powiązanych.</p>
         </div>
 
     </body>

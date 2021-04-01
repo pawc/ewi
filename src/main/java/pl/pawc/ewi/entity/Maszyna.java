@@ -2,9 +2,8 @@ package pl.pawc.ewi.entity;
 
 import pl.pawc.ewi.model.Paliwo;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Maszyna {
@@ -20,6 +19,9 @@ public class Maszyna {
 
     @Column(name = "opis")
     private String opis;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    protected Set<Dokument> dokumenty;
 
     public Integer getId() {
         return id;
@@ -51,6 +53,14 @@ public class Maszyna {
 
     public void setOpis(String opis) {
         this.opis = opis;
+    }
+
+    public Set<Dokument> getDokumenty() {
+        return dokumenty;
+    }
+
+    public void setDokumenty(Set<Dokument> dokumenty) {
+        this.dokumenty = dokumenty;
     }
 
     @Override
