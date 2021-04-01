@@ -7,15 +7,35 @@
 
     <head>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet">
         <link href="/css/index.css" rel="stylesheet">
         <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
         <script src="/js/index.js"></script>
 
         <script>
             $(document).ready(() => {
                 $('#dokumentyLink').css("font-weight", "bold");
                 $('#dokumentyLink').css("text-decoration", "underline");
+
+               $('#dokumentyTable').DataTable({
+                	"language": {
+                        "search": "Szukaj",
+                        "emptyTable": "Brak dokumentów",
+                        "lengthMenu": "Pokaż _MENU_",
+                        "zeroRecords": "Nie znaleziono dokumentów",
+                        "paginate": {
+                            "first": "Pierwsza",
+                            "last": "Ostatnia",
+                            "next": "Następna",
+                            "previous": "Poprzednia"
+                        },
+                        "info": "_START_ do _END_ z _TOTAL_ dokumentów",
+                        "infoEmpty":      "",
+                        "infoFiltered":   "",
+				    }
+				});
             })
         </script>
     </head>
@@ -27,7 +47,7 @@
     <body>
 
         <div class="container">
-            <table class="table table-striped table-hover">
+            <table class="table" id="dokumentyTable">
                 <thead>
                 <tr>
                     <th> Numer </th>

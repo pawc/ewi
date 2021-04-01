@@ -7,16 +7,102 @@
 
     <head>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <link href="/css/index.css" rel="stylesheet">
         <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://kit.fontawesome.com/4d0e5d2f0b.js" crossorigin="anonymous"></script>
         <script src="/js/index.js"></script>
 
         <script>
+
             $(document).ready(() => {
                 $('#maszynyLink').css("font-weight", "bold");
                 $('#maszynyLink').css("text-decoration", "underline");
+
+                $('#maszynyTable').DataTable({
+                	"language": {
+                        "search": "Szukaj",
+                        "emptyTable": "Brak maszyn",
+                        "lengthMenu": "Pokaż _MENU_",
+                        "zeroRecords": "Nie znaleziono maszyn",
+                        "paginate": {
+                            "first": "Pierwsza",
+                            "last": "Ostatnia",
+                            "next": "Następna",
+                            "previous": "Poprzednia"
+                        },
+                        "info": "_START_ do _END_ z _TOTAL_ maszyn",
+                        "infoEmpty":      "",
+                        "infoFiltered":   "",
+				    }
+				});
+
             })
+
+        var dialog, form, currentId
+
+        function edytujBtn(id){
+            currentId = id
+            $.ajax({
+                url: '/maszyna/'+id
+            })
+            .done(maszyna => {
+                $('#nazwa').val(maszyna.nazwa)
+                $('#paliwo').val(maszyna.paliwo)
+                $('#opis').val(maszyna.opis)
+                dialog.dialog( "open" );
+            })
+            .fail(() => {
+                alert('Bład podczas pobrania danych maszyny ' + id)
+            })
+        }
+
+        $(function() {
+
+            dialog = $( "#dialog-form" ).dialog({
+                autoOpen: false,
+                height: 400,
+                width: 350,
+                modal: true,
+                buttons: {
+                    "Zapisz zmiany": function(){
+
+                        var maszyna = {
+                            id: parseInt(currentId),
+                            nazwa: $('#nazwa').val(),
+                            paliwo: parseInt($('#paliwo option:selected').attr('valueInt')),
+                            opis: $('#opis').val()
+                        }
+
+                        var headers = {};
+                        headers["Content-Type"] = "application/json; charset=utf-8";
+
+                        $.ajax({
+                            url: '/maszyna',
+                            type: 'POST',
+                            data: JSON.stringify(maszyna),
+                            headers: headers
+                        })
+                    },
+                    Anuluj: function() {
+                        dialog.dialog( "close" );
+                    }
+                },
+                close: function() {
+                    form[0].reset();
+                }
+            });
+
+            form = dialog.find( "form" ).on( "submit", function( event ) {
+                event.preventDefault();
+            });
+
+        });
+
         </script>
     </head>
 
@@ -27,13 +113,14 @@
     <body>
 
         <div class="container">
-            <table class="table table-striped table-hover">
+            <table class="table" id="maszynyTable">
                 <thead>
                 <tr>
                     <th> Numer </th>
                     <th> Nazwa </th>
                     <th> Paliwo </th>
                     <th> Opis </th>
+                    <th>  </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -41,13 +128,36 @@
                     <td colspan="2"> Brak maszyn </td>
                 </tr>
                 <tr th:each="maszyna : ${maszyny}">
-                    <td><span th:text="${maszyna.id}"> Numer </span></td>
+                    <td><span th:text="${maszyna.id}"> Numer </span> </td>
                     <td><span th:text="${maszyna.nazwa}"> Nazwa </span></td>
                     <td><span th:text="${maszyna.paliwo} "> Paliwo </span></td>
                     <td><span th:text="${maszyna.opis}"> Opis  </span></td>
+                    <td>
+                        <button class="btn btn-info" th:onclick="|edytujBtn('${maszyna.id}')|">edytuj <i class="fas fa-edit"></i></button>
+                        <button class="btn btn-danger" th:onclick="|usun('${maszyna.id}')|">usuń <i class="fas fa-trash-alt"></i></button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div id="dialog-form" title="Edytuj maszynę">
+
+            <form>
+                <fieldset>
+                    <label for="nazwa">Nazwa</label>
+                    <input type="text" name="nazwa" id="nazwa" value="" class="text ui-widget-content ui-corner-all">
+                    <label for="paliwo">Paliwo</label>
+                    <select name="paliwo" id="paliwo">
+                        <option value="BENZYNA" valueInt="0">Benzyna</option>
+                        <option value="OLEJ" valueInt="1">Olej</option>
+                    </select>
+                    <br><br>
+                    <label for="opis">Opis</label>
+                    <textarea name="opis" id="opis" rows="4" style="width: 95%;" class=""></textarea>
+                    <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+                </fieldset>
+            </form>
         </div>
 
     </body>
