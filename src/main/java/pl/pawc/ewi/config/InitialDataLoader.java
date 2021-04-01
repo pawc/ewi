@@ -29,7 +29,6 @@ public class InitialDataLoader implements ApplicationRunner {
         maszyna.setPaliwo(Paliwo.OLEJ);
         maszyna.setOpis("dodatkowy opis");
         maszyna.setNazwa("Snopowiązałka");
-
         maszynaRepository.save(maszyna);
 
         Dokument dokument = new Dokument();
@@ -39,6 +38,7 @@ public class InitialDataLoader implements ApplicationRunner {
         dokument.setMaszyna(maszyna);
 
         dokumentRepository.save(dokument);
+        maszyna.getDokumenty().add(dokument);
 
         dokument = new Dokument();
         dokument.setNumer("DEF456");
@@ -47,13 +47,15 @@ public class InitialDataLoader implements ApplicationRunner {
         dokument.setMaszyna(maszyna);
 
         dokumentRepository.save(dokument);
+        maszyna.getDokumenty().add(dokument);
+
+        maszynaRepository.save(maszyna);
 
         maszyna = new Maszyna();
         maszyna.setId(987);
         maszyna.setPaliwo(Paliwo.BENZYNA);
         maszyna.setOpis("Lorem ipsum dolor sit amet");
         maszyna.setNazwa("VW Caddy");
-
         maszynaRepository.save(maszyna);
 
         dokument = new Dokument();
@@ -63,6 +65,7 @@ public class InitialDataLoader implements ApplicationRunner {
         dokument.setMaszyna(maszyna);
 
         dokumentRepository.save(dokument);
+        maszyna.getDokumenty().add(dokument);
 
         dokument = new Dokument();
         dokument.setNumer("KJHS/2021");
@@ -71,6 +74,7 @@ public class InitialDataLoader implements ApplicationRunner {
         dokument.setMaszyna(maszyna);
 
         dokumentRepository.save(dokument);
+        maszyna.getDokumenty().add(dokument);
 
         dokument = new Dokument();
         dokument.setNumer("VBC/2/21");
@@ -79,6 +83,9 @@ public class InitialDataLoader implements ApplicationRunner {
         dokument.setMaszyna(maszyna);
 
         dokumentRepository.save(dokument);
+        maszyna.getDokumenty().add(dokument);
+
+        maszynaRepository.save(maszyna);
 
     }
 

@@ -2,8 +2,13 @@ package pl.pawc.ewi.entity;
 
 import pl.pawc.ewi.model.Paliwo;
 
-import javax.persistence.*;
-import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Maszyna {
@@ -20,8 +25,8 @@ public class Maszyna {
     @Column(name = "opis")
     private String opis;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    protected Set<Dokument> dokumenty;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Dokument> dokumenty = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -55,11 +60,11 @@ public class Maszyna {
         this.opis = opis;
     }
 
-    public Set<Dokument> getDokumenty() {
+    public List<Dokument> getDokumenty() {
         return dokumenty;
     }
 
-    public void setDokumenty(Set<Dokument> dokumenty) {
+    public void setDokumenty(List<Dokument> dokumenty) {
         this.dokumenty = dokumenty;
     }
 

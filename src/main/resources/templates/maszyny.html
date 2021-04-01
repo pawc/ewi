@@ -37,127 +37,127 @@
                         },
                         "info": "_START_ do _END_ z _TOTAL_ maszyn",
                         "infoEmpty":      "",
-                        "infoFiltered":   "",
+                        "infoFiltered":   ""
 				    }
 				});
 
             })
 
-        var dialog, dialogUsun, form, currentId
+            var dialog, dialogUsun, form, currentId
 
-        function edytujBtn(id){
-            currentId = id
+            function edytujBtn(id){
+                currentId = id
 
-            $("span.ui-dialog-title").text('Edytuj maszynę');
+                $("span.ui-dialog-title").text('Edytuj maszynę');
 
-            $.ajax({
-                url: '/maszyna/'+id
-            })
-            .done(maszyna => {
-                $("#numer").prop("disabled", true);
-                $('#numer').val(maszyna.id)
-                $('#nazwa').val(maszyna.nazwa)
-                $('#paliwo').val(maszyna.paliwo)
-                $('#opis').val(maszyna.opis)
-                dialog.dialog( "open" );
-            })
-            .fail(() => {
-                alert('Bład podczas pobrania danych maszyny ' + id)
-            })
-        }
+                $.ajax({
+                    url: '/maszyna/'+id
+                })
+                .done(maszyna => {
+                    $("#numer").prop("disabled", true);
+                    $('#numer').val(maszyna.id)
+                    $('#nazwa').val(maszyna.nazwa)
+                    $('#paliwo').val(maszyna.paliwo)
+                    $('#opis').val(maszyna.opis)
+                    dialog.dialog( "open" );
+                })
+                .fail(() => {
+                    alert('Bład podczas pobrania danych maszyny ' + id)
+                })
+            }
 
-        function dodajBtn(){
-            currentId = 0
-            $("#numer").prop("disabled", false);
-            $('#nazwa').val('')
-            $('#paliwo').val('BENZYNA')
-            $('#opis').val('')
-            $("span.ui-dialog-title").text('Dodaj maszynę');
-            dialog.dialog("open");
-        }
+            function dodajBtn(){
+                currentId = 0
+                $("#numer").prop("disabled", false);
+                $('#nazwa').val('')
+                $('#paliwo').val('BENZYNA')
+                $('#opis').val('')
+                $("span.ui-dialog-title").text('Dodaj maszynę');
+                dialog.dialog("open");
+            }
 
-        function usunBtn(id){
-            currentId = id
-            $("span.ui-dialog-title").text('Usuń maszynę');
-            $('#dialog-confirm-p').text('Czy na pewno usunąć maszynę o numerze ' + id + ' ?');
-            dialogUsun.dialog("open");
-        }
+            function usunBtn(id){
+                currentId = id
+                $("span.ui-dialog-title").text('Usuń maszynę');
+                $('#dialog-confirm-p').text('Czy na pewno usunąć maszynę o numerze ' + id + ' ?');
+                dialogUsun.dialog("open");
+            }
 
-        $(function() {
+            $(function() {
 
-            dialogUsun = $("#dialog-confirm").dialog({
-                autoOpen: false,
-                resizable: false,
-                height: "auto",
-                width: 400,
-                modal: true,
-                buttons: {
-                    "Tak": function() {
-                        $.ajax({
-                            url: '/usunMaszyne',
-                            data: {
-                                id: currentId
-                            },
-                            type: 'POST'
-                        })
-                        .done(() => {
-                            window.location.reload()
-                        })
-                        .fail(() => {
-                            alert('Problem z usunięciem maszyny o numerze ' + currentId)
-                        })
-                    },
-                    Anuluj: function() {
-                        $( this ).dialog( "close" );
-                    }
-                }
-            });
-
-            dialog = $( "#dialog-form" ).dialog({
-                autoOpen: false,
-                height: 460,
-                width: 350,
-                modal: true,
-                buttons: {
-                    "Zapisz": function(){
-
-                        var maszyna = {
-                            id: parseInt($("#numer").val()),
-                            nazwa: $('#nazwa').val(),
-                            paliwo: parseInt($('#paliwo option:selected').attr('valueInt')),
-                            opis: $('#opis').val()
+                dialogUsun = $("#dialog-confirm").dialog({
+                    autoOpen: false,
+                    resizable: false,
+                    height: "auto",
+                    width: 400,
+                    modal: true,
+                    buttons: {
+                        "Tak": function() {
+                            $.ajax({
+                                url: '/usunMaszyne',
+                                data: {
+                                    id: currentId
+                                },
+                                type: 'POST'
+                            })
+                            .done(() => {
+                                window.location.reload()
+                            })
+                            .fail(() => {
+                                alert('Problem z usunięciem maszyny o numerze ' + currentId)
+                            })
+                        },
+                        Anuluj: function() {
+                            $( this ).dialog( "close" );
                         }
-
-                        var headers = {};
-                        headers["Content-Type"] = "application/json; charset=utf-8";
-
-                        $.ajax({
-                            url: '/maszyna',
-                            type: 'POST',
-                            data: JSON.stringify(maszyna),
-                            headers: headers
-                        })
-                        .done(() => {
-                            window.location.reload()
-                        })
-                        .fail(() => {
-                            console.log('Problem z zapisem do bazy')
-                        })
-                    },
-                    Anuluj: function() {
-                        dialog.dialog( "close" );
                     }
-                },
-                close: function() {
-                    form[0].reset();
-                }
-            });
+                });
 
-            form = dialog.find( "form" ).on( "submit", function( event ) {
-                event.preventDefault();
-            });
+                dialog = $( "#dialog-form" ).dialog({
+                    autoOpen: false,
+                    height: 460,
+                    width: 350,
+                    modal: true,
+                    buttons: {
+                        "Zapisz": function(){
 
-        });
+                            var maszyna = {
+                                id: parseInt($("#numer").val()),
+                                nazwa: $('#nazwa').val(),
+                                paliwo: parseInt($('#paliwo option:selected').attr('valueInt')),
+                                opis: $('#opis').val()
+                            }
+
+                            var headers = {};
+                            headers["Content-Type"] = "application/json; charset=utf-8";
+
+                            $.ajax({
+                                url: '/maszyna',
+                                type: 'POST',
+                                data: JSON.stringify(maszyna),
+                                headers: headers
+                            })
+                            .done(() => {
+                                window.location.reload()
+                            })
+                            .fail(() => {
+                                console.log('Problem z zapisem do bazy')
+                            })
+                        },
+                        Anuluj: function() {
+                            dialog.dialog( "close" );
+                        }
+                    },
+                    close: function() {
+                        form[0].reset();
+                    }
+                });
+
+                form = dialog.find( "form" ).on( "submit", function( event ) {
+                    event.preventDefault();
+                });
+
+            });
 
         </script>
     </head>
@@ -216,6 +216,7 @@
                     <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
                 </fieldset>
             </form>
+
         </div>
 
         <div id="dialog-confirm" title="Na pewno?">

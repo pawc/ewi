@@ -7,7 +7,6 @@ import java.sql.Date;
 public class Dokument {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
     private String numer;
 
     @Column(name = "data")
@@ -16,8 +15,7 @@ public class Dokument {
     @Column(name = "ilosc")
     private double ilosc;
 
-    @ManyToOne
-    @JoinColumn(name="id", nullable=false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Maszyna maszyna;
 
     public String getNumer() {
@@ -58,7 +56,6 @@ public class Dokument {
                 "numer='" + numer + '\'' +
                 ", data=" + data +
                 ", ilosc=" + ilosc +
-                ", maszyna=" + maszyna +
                 '}';
     }
 
