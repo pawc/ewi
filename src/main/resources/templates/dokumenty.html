@@ -19,6 +19,8 @@
 
         <script>
 
+            var type = ''
+
             $(document).ready(() => {
                 $('#dokumentyLink').css("font-weight", "bold");
                 $('#dokumentyLink').css("text-decoration", "underline");
@@ -48,7 +50,30 @@
             })
 
             function edytujBtn(numer){
-                alert(numer);
+                $("span.ui-dialog-title").text('Edytuj dokument');
+                type = 'PUT'
+
+                var headers = {};
+                headers["Content-Type"] = "application/json; charset=utf-8";
+
+                $.ajax({
+                    url: '/dokument',
+                    data: {
+                        'numer': numer
+                    },
+                    headers: headers
+                })
+                .done(dokument => {
+                    $("#numer").prop("disabled", true);
+                    $('#numer').val(dokument.numer)
+                    $('#data').val(dokument.data)
+                    $("#maszyna option[value="+dokument.maszyna.id.toString()+"]").attr("selected", "selected");
+                    $('#ilosc').val(dokument.ilosc)
+                    dialog.dialog( "open" );
+                })
+                .fail(() => {
+                    alert('Bład podczas pobrania danych dokumentu ' + numer)
+                })
             }
 
             function usunBtn(numer){
@@ -57,6 +82,7 @@
 
             function dodajBtn(){
                 $("span.ui-dialog-title").text('Dodaj dokument');
+                type = 'POST'
                 dialog.dialog("open");
             }
 
@@ -84,7 +110,7 @@
 
                             $.ajax({
                                 url: '/dokument',
-                                type: 'POST',
+                                type: type,
                                 data: JSON.stringify(dokument),
                                 headers: headers
                             })
@@ -92,7 +118,7 @@
                                 window.location.reload()
                             })
                             .fail(() => {
-                                console.log('Problem z zapisem do bazy')
+                                alert('Problem z zapisem do bazy')
                             })
                         },
                         Anuluj: function() {
@@ -139,8 +165,8 @@
                         <span th:text="${dokument.maszyna.paliwo}"> Paliwo </span>
                     </td>
                     <td class="text-right">
-                        <button class="btn btn-info" th:onclick="edytujBtn('[[${dokument.numer}]]')">edytuj <i class="fas fa-edit"></i></button>
-                        <button class="btn btn-danger" th:onclick="usunBtn('[[${dokument.numer}]]')">usuń <i class="fas fa-trash-alt"></i></button>
+                        <button class="btn btn-info" th:onclick="edytujBtn([[${dokument.numer}]])">edytuj <i class="fas fa-edit"></i></button>
+                        <button class="btn btn-danger" th:onclick="usunBtn([[${dokument.numer}]])">usuń <i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
                 </tbody>

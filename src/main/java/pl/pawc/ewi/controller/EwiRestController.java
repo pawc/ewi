@@ -85,4 +85,56 @@ public class EwiRestController {
 
     }
 
+    @RequestMapping(value = "/dokument", method = RequestMethod.PUT)
+    public void dokumentPut(
+            @RequestBody Dokument dokument,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+
+        Optional<Dokument> byId = dokumentRepository.findById(dokument.getNumer());
+
+        if(byId.isPresent()){
+            Dokument dokumentDB = byId.get();
+
+            Maszyna maszynaOld = maszynaRepository.findById(dokumentDB.getMaszyna().getId()).get();
+            maszynaOld.getDokumenty().remove(dokumentDB);
+            maszynaRepository.save(maszynaOld);
+
+            Maszyna maszynaNew = maszynaRepository.findById(dokument.getMaszyna().getId()).get();
+
+            dokumentDB.setMaszyna(maszynaNew);
+            dokumentDB.setData(dokument.getData());
+            dokumentDB.setIlosc(dokument.getIlosc());
+            dokumentRepository.save(dokumentDB);
+
+            maszynaNew.getDokumenty().add(dokumentDB);
+            maszynaRepository.save(maszynaNew);
+
+        }
+        else{
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+
+
+    }
+
+    @RequestMapping("/dokument")
+    public Dokument dokumentGet(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @RequestParam("numer") String numer){
+
+        Dokument dokument = dokumentRepository.findById(numer).get();
+        Maszyna maszyna = dokument.getMaszyna();
+        Maszyna m = new Maszyna();
+        m.setId(maszyna.getId());
+        m.setPaliwo(maszyna.getPaliwo());
+        m.setNazwa(maszyna.getNazwa());
+        dokument.setMaszyna(m);
+
+        return dokument;
+
+    }
+
 }
