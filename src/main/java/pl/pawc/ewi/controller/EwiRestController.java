@@ -53,8 +53,8 @@ public class EwiRestController {
 
     }
 
-    @RequestMapping(value = "/usunMaszyne", method = RequestMethod.POST)
-    public void usunMaszyne(
+    @RequestMapping(value = "/maszyna", method = RequestMethod.DELETE)
+    public void maszynaDelete(
             @RequestParam Integer id,
             HttpServletRequest request,
             HttpServletResponse response) {
@@ -63,6 +63,23 @@ public class EwiRestController {
 
     }
 
+    @RequestMapping("/dokument")
+    public Dokument dokumentGet(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @RequestParam("numer") String numer){
+
+        Dokument dokument = dokumentRepository.findById(numer).get();
+        Maszyna maszyna = dokument.getMaszyna();
+        Maszyna m = new Maszyna();
+        m.setId(maszyna.getId());
+        m.setPaliwo(maszyna.getPaliwo());
+        m.setNazwa(maszyna.getNazwa());
+        dokument.setMaszyna(m);
+
+        return dokument;
+
+    }
 
     @RequestMapping(value = "/dokument", method = RequestMethod.POST)
     public void dokumentPost(
@@ -116,24 +133,24 @@ public class EwiRestController {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
 
-
     }
 
-    @RequestMapping("/dokument")
-    public Dokument dokumentGet(
+    @RequestMapping(value = "/dokument", method = RequestMethod.DELETE)
+    public void dokumentDelete(
+            @RequestParam("numer") String numer,
             HttpServletRequest request,
-            HttpServletResponse response,
-            @RequestParam("numer") String numer){
+            HttpServletResponse response) {
 
-        Dokument dokument = dokumentRepository.findById(numer).get();
-        Maszyna maszyna = dokument.getMaszyna();
-        Maszyna m = new Maszyna();
-        m.setId(maszyna.getId());
-        m.setPaliwo(maszyna.getPaliwo());
-        m.setNazwa(maszyna.getNazwa());
-        dokument.setMaszyna(m);
+        Optional<Dokument> byId = dokumentRepository.findById(numer);
 
-        return dokument;
+        if(byId.isPresent()) {
+            Dokument dokumentDB = byId.get();
+
+            Maszyna maszynaOld = maszynaRepository.findById(dokumentDB.getMaszyna().getId()).get();
+            maszynaOld.getDokumenty().remove(dokumentDB);
+            maszynaRepository.save(maszynaOld);
+
+        }
 
     }
 

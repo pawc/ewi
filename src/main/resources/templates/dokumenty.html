@@ -20,6 +20,8 @@
         <script>
 
             var type = ''
+            var dialog, dialogUsun
+            var currentNumer
 
             $(document).ready(() => {
                 $('#dokumentyLink').css("font-weight", "bold");
@@ -77,7 +79,10 @@
             }
 
             function usunBtn(numer){
-                alert(numer);
+                currentNumer = numer
+                $("span.ui-dialog-title").text('Usuń dokument');
+                $('#dialog-confirm-p').text('Czy na pewno usunąć dokument o numerze ' + numer + ' ?');
+                dialogUsun.dialog("open");
             }
 
             function dodajBtn(){
@@ -87,6 +92,34 @@
             }
 
             $(function() {
+
+                dialogUsun = $("#dialog-confirm").dialog({
+                    autoOpen: false,
+                    resizable: false,
+                    height: "auto",
+                    width: 400,
+                    modal: true,
+                    buttons: {
+                        "Tak": function() {
+                            $.ajax({
+                                url: '/dokument',
+                                data: {
+                                    numer: currentNumer
+                                },
+                                type: 'DELETE'
+                            })
+                            .done(() => {
+                                window.location.reload()
+                            })
+                            .fail(() => {
+                                alert('Problem z usunięciem dokumentu o numerze ' + currentNumer)
+                            })
+                        },
+                        Anuluj: function() {
+                            $(this).dialog( "close" );
+                        }
+                    }
+                });
 
                 dialog = $( "#dialog-form" ).dialog({
                     autoOpen: false,
@@ -193,6 +226,10 @@
                 </fieldset>
             </form>
 
+        </div>
+
+        <div id="dialog-confirm" title="Na pewno?">
+            <p id="dialog-confirm-p">?</p>
         </div>
 
     </body>

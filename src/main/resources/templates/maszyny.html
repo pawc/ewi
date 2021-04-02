@@ -94,11 +94,11 @@
                     buttons: {
                         "Tak": function() {
                             $.ajax({
-                                url: '/usunMaszyne',
+                                url: '/maszyna',
                                 data: {
                                     id: currentId
                                 },
-                                type: 'POST'
+                                type: 'DELETE'
                             })
                             .done(() => {
                                 window.location.reload()
