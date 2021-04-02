@@ -8,13 +8,17 @@
     <head>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
         <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <link href="/css/index.css" rel="stylesheet">
         <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+        <script src="https://kit.fontawesome.com/4d0e5d2f0b.js" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script src="/js/index.js"></script>
 
         <script>
+
             $(document).ready(() => {
                 $('#dokumentyLink').css("font-weight", "bold");
                 $('#dokumentyLink').css("text-decoration", "underline");
@@ -36,7 +40,75 @@
                         "infoFiltered":   "",
 				    }
 				});
+
+				$('#maszyna').change(() => {
+				    $('#paliwo').text($('#maszyna option:selected').attr('paliwo').toLowerCase());
+				})
+
             })
+
+            function edytujBtn(numer){
+                alert(numer);
+            }
+
+            function usunBtn(numer){
+                alert(numer);
+            }
+
+            function dodajBtn(){
+                $("span.ui-dialog-title").text('Dodaj dokument');
+                dialog.dialog("open");
+            }
+
+            $(function() {
+
+                dialog = $( "#dialog-form" ).dialog({
+                    autoOpen: false,
+                    height: 480,
+                    width: 350,
+                    modal: true,
+                    buttons: {
+                        "Zapisz": function(){
+
+                            var dokument = {
+                                numer: $('#numer').val(),
+                                data: $('#data').val(),
+                                maszyna: {
+                                    id: $('#maszyna option:selected').val()
+                                },
+                                ilosc: $('#ilosc').val()
+                            }
+
+                            var headers = {};
+                            headers["Content-Type"] = "application/json; charset=utf-8";
+
+                            $.ajax({
+                                url: '/dokument',
+                                type: 'POST',
+                                data: JSON.stringify(dokument),
+                                headers: headers
+                            })
+                            .done(() => {
+                                window.location.reload()
+                            })
+                            .fail(() => {
+                                console.log('Problem z zapisem do bazy')
+                            })
+                        },
+                        Anuluj: function() {
+                            dialog.dialog( "close" );
+                        }
+                    },
+                    close: function() {
+                        form[0].reset();
+                    }
+                });
+
+                form = dialog.find( "form" ).on( "submit", function( event ) {
+                    event.preventDefault();
+                });
+
+            });
         </script>
     </head>
 
@@ -54,22 +126,47 @@
                     <th> Data </th>
                     <th> Maszyna </th>
                     <th> Zużycie [litry] </th>
-                    <th> Paliwo </th>
+                    <th class="text-right"> <button class="btn btn-success" onclick="dodajBtn()">dodaj <i class="fas fa-plus-circle"></i></button> </th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:if="${dokumenty.empty}">
-                    <td colspan="2"> Brak dokumentów </td>
-                </tr>
                 <tr th:each="dokument : ${dokumenty}">
                     <td><span th:text="${dokument.numer}"> Numer </span></td>
                     <td><span th:text="${dokument.data}"> Data </span></td>
                     <td><span th:text="${dokument.maszyna.nazwa} + ' (' + ${dokument.maszyna.id} + ') '"> Maszyna </span></td>
-                    <td><span th:text="${dokument.ilosc}"> Zużycie [litry] </span></td>
-                    <td><span th:text="${dokument.maszyna.paliwo}"> Paliwo </span></td>
+                    <td>
+                        <span th:text="${dokument.ilosc}"> Zużycie [litry] </span>&nbsp
+                        <span th:text="${dokument.maszyna.paliwo}"> Paliwo </span>
+                    </td>
+                    <td class="text-right">
+                        <button class="btn btn-info" th:onclick="edytujBtn('[[${dokument.numer}]]')">edytuj <i class="fas fa-edit"></i></button>
+                        <button class="btn btn-danger" th:onclick="usunBtn('[[${dokument.numer}]]')">usuń <i class="fas fa-trash-alt"></i></button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div id="dialog-form" title="">
+
+            <form>
+                <fieldset>
+                    <label for="numer">Numer</label>
+                    <input type="text" name="numer" id="numer" value="" class="text ui-widget-content ui-corner-all">
+                    <label for="data">Data</label>
+                    <input type="date" name="data" id="data" value="" class="text ui-widget-content ui-corner-all">
+                    <label for="maszyna">Maszyna</label>
+                    <select name="maszyna" id="maszyna" size="6">
+                        <option th:each="maszyna : ${maszyny}" th:value="${maszyna.id}" th:paliwo="${maszyna.paliwo}">
+                            <span th:text="${maszyna.nazwa}"></span> (<span th:text="${maszyna.id}"></span>)
+                        </option>
+                    </select>
+                    <label for="ilosc">Zużycie <span id="paliwo"></span> [litry]</label>
+                    <input name="ilosc" id="ilosc" type="number" step="0.1">
+
+                </fieldset>
+            </form>
+
         </div>
 
     </body>

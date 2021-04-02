@@ -2,6 +2,7 @@ package pl.pawc.ewi.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.pawc.ewi.entity.Dokument;
 import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
@@ -59,6 +60,28 @@ public class EwiRestController {
             HttpServletResponse response) {
 
         maszynaRepository.deleteById(id);
+
+    }
+
+
+    @RequestMapping(value = "/dokument", method = RequestMethod.POST)
+    public void dokumentPost(
+            @RequestBody Dokument dokument,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+        Optional<Maszyna> byId = maszynaRepository.findById(dokument.getMaszyna().getId());
+
+        if(byId.isPresent()){
+            Maszyna maszynaDB = byId.get();
+            dokument.setMaszyna(maszynaDB);
+            dokumentRepository.save(dokument);
+            maszynaDB.getDokumenty().add(dokument);
+            maszynaRepository.save(maszynaDB);
+        }
+        else{
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
 
     }
 

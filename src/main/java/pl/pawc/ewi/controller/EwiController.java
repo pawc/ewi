@@ -36,6 +36,7 @@ public class EwiController {
             HttpServletResponse response) {
 
         model.addAttribute("dokumenty", dokumentRepository.findAll());
+        model.addAttribute("maszyny", maszynaRepository.findAll());
 
         return "dokumenty";
 

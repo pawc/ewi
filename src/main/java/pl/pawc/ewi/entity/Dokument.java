@@ -56,6 +56,7 @@ public class Dokument {
                 "numer='" + numer + '\'' +
                 ", data=" + data +
                 ", ilosc=" + ilosc +
+                ", maszyna=" + maszyna +
                 '}';
     }
 

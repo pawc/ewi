@@ -180,9 +180,6 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:if="${maszyny.empty}">
-                    <td colspan="2"> Brak maszyn </td>
-                </tr>
                 <tr th:each="maszyna : ${maszyny}">
                     <td><span th:text="${maszyna.id}"> Numer </span> </td>
                     <td><span th:text="${maszyna.nazwa}"> Nazwa </span></td>
