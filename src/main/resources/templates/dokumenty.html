@@ -82,6 +82,7 @@
                 .done(dokument => {
                     $("#zuzycieTable > tr").remove();
                     $("#numer").prop("disabled", true);
+                    $('#maszyna').prop("disabled", true);
                     $('#numer').val(dokument.numer)
                     $('#data').val(dokument.data)
                     $("#maszyna option[value="+dokument.maszyna.id.toString()+"]").attr("selected", "selected");
@@ -109,7 +110,13 @@
             }
 
             function dodajBtn(){
+                $("#zuzycieTable > tr").remove();
                 $("span.ui-dialog-title").text('Dodaj dokument');
+                $('#maszyna').prop("disabled", false);
+                $('#numer').prop("disabled", false);
+                $('#numer').val('');
+                $('#data').val();
+                $('#maszyna').val(-1);
                 type = 'POST'
                 dialog.dialog("open");
             }

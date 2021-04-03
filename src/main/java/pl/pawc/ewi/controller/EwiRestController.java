@@ -6,10 +6,8 @@ import pl.pawc.ewi.entity.Dokument;
 import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.entity.Norma;
 import pl.pawc.ewi.entity.Zuzycie;
-import pl.pawc.ewi.repository.DokumentRepository;
-import pl.pawc.ewi.repository.MaszynaRepository;
-import pl.pawc.ewi.repository.NormaRepository;
-import pl.pawc.ewi.repository.ZuzycieRepository;
+import pl.pawc.ewi.model.Raport;
+import pl.pawc.ewi.repository.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +28,9 @@ public class EwiRestController {
 
     @Autowired
     ZuzycieRepository zuzycieRepository;
+
+    @Autowired
+    RaportRepository raportRepository;
 
     @RequestMapping("/maszyna/{id}")
     public Maszyna maszynaGet(
@@ -152,7 +153,7 @@ public class EwiRestController {
         }
 
     }
-/*
+
     @RequestMapping(value = "/dokument", method = RequestMethod.PUT)
     public void dokumentPut(
             @RequestBody Dokument dokument,
@@ -165,26 +166,23 @@ public class EwiRestController {
         if(byId.isPresent()){
             Dokument dokumentDB = byId.get();
 
-            Maszyna maszynaOld = maszynaRepository.findById(dokumentDB.getMaszyna().getId()).get();
-            maszynaOld.getDokumenty().remove(dokumentDB);
-            maszynaRepository.save(maszynaOld);
-
-            Maszyna maszynaNew = maszynaRepository.findById(dokument.getMaszyna().getId()).get();
-
-            dokumentDB.setMaszyna(maszynaNew);
             dokumentDB.setData(dokument.getData());
-            dokumentDB.setIlosc(dokument.getIlosc());
             dokumentRepository.save(dokumentDB);
 
-            maszynaNew.getDokumenty().add(dokumentDB);
-            maszynaRepository.save(maszynaNew);
+            for(Zuzycie zuzycie : dokument.getZuzycie()) {
+                Zuzycie zuzycieDB = zuzycieRepository.findById(zuzycie.getId()).get();
+                if (zuzycieDB.getWartosc() != zuzycie.getWartosc()) {
+                    zuzycieDB.setWartosc(zuzycieDB.getWartosc());
+                    zuzycieRepository.save(zuzycieDB);
+                }
+            }
 
         }
         else{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
 
-    }*/
+    }
 
     @RequestMapping(value = "/dokument", method = RequestMethod.DELETE)
     public void dokumentDelete(
@@ -202,6 +200,19 @@ public class EwiRestController {
             dokumentRepository.delete(dokumentDB);
 
         }
+
+    }
+
+    @RequestMapping(value = "/raport", method = RequestMethod.GET)
+    public List<Raport> raport(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @RequestParam("rok") int rok,
+            @RequestParam("miesiac") int miesiac){
+
+        List<Raport> raport = raportRepository.getRaport(rok, miesiac);
+
+        return raport;
 
     }
 

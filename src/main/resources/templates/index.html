@@ -7,9 +7,11 @@
 
     <head>
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet">
         <link href="/css/index.css" rel="stylesheet">
         <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
         <script src="/js/index.js"></script>
 
         <script>
@@ -25,12 +27,84 @@
 
     <div th:insert="menu.html :: nav"> </div>
 
-    <body>
+    <script>
 
-        <div class="container">
-            <p>Strona główna</p>
-        </div>
+        $( document ).ready(function() {
 
-    </body>
+            t = $('#raportTable').DataTable({
+                "language": {
+                    "search": "Szukaj",
+                    "emptyTable": "Brak pozycji",
+                    "lengthMenu": "Pokaż _MENU_",
+                    "zeroRecords": "Nie znaleziono pozycji",
+                    "paginate": {
+                        "first": "Pierwsza",
+                        "last": "Ostatnia",
+                        "next": "Następna",
+                        "previous": "Poprzednia"
+                    },
+                    "info": "_START_ do _END_ z _TOTAL_ pozycji",
+                    "infoEmpty":      "",
+                    "infoFiltered":   ""
+                }
+            });
+
+            $('#miesiac').change(() => {
+                t.clear().draw();
+                var rok = $('#miesiac').val().split('-')[0]
+                var miesiac = $('#miesiac').val().split('-')[1]
+                $.ajax({
+                    url: '/raport',
+                    data: {
+                        rok: rok,
+                        miesiac: miesiac
+                    }
+                })
+                .done(pozycje => {
+                    console.log(pozycje);
+                    $.each(pozycje, (i, pozycja) => {
+                        t.row.add( [
+                            pozycja.maszyna,
+                            pozycja.jednostka,
+                            pozycja.suma
+                        ]).draw(false);
+                    })
+
+                })
+                .fail(() => {
+                    alert('Problem z pobraniem raportu za dany miesiąc')
+                })
+            })
+        });
+
+    </script>
+
+<body>
+
+    <div class="container">
+        <label for="miesiac">Miesiąc:</label>
+
+        <input type="month" id="miesiac"
+               min="2021-04" value="2021-04">
+
+        <p></p>
+    </div>
+
+    <div class="container">
+
+        <table class="table" id="raportTable">
+            <thead>
+            <tr>
+                <th> Maszyna </th>
+                <th> Jednostka </th>
+                <th> Ilość </th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+</body>
 
 </html>
