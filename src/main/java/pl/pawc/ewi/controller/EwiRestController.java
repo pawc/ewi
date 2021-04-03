@@ -5,9 +5,11 @@ import org.springframework.web.bind.annotation.*;
 import pl.pawc.ewi.entity.Dokument;
 import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.entity.Norma;
+import pl.pawc.ewi.entity.Zuzycie;
 import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
 import pl.pawc.ewi.repository.NormaRepository;
+import pl.pawc.ewi.repository.ZuzycieRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +27,9 @@ public class EwiRestController {
 
     @Autowired
     NormaRepository normaRepository;
+
+    @Autowired
+    ZuzycieRepository zuzycieRepository;
 
     @RequestMapping("/maszyna/{id}")
     public Maszyna maszynaGet(
@@ -104,7 +109,6 @@ public class EwiRestController {
         }
 
     }
-/*
 
     @RequestMapping("/dokument")
     public Dokument dokumentGet(
@@ -113,12 +117,12 @@ public class EwiRestController {
             @RequestParam("numer") String numer){
 
         Dokument dokument = dokumentRepository.findById(numer).get();
-        Maszyna maszyna = dokument.getMaszyna();
-        Maszyna m = new Maszyna();
-        m.setId(maszyna.getId());
-        m.setPaliwo(maszyna.getPaliwo());
-        m.setNazwa(maszyna.getNazwa());
-        dokument.setMaszyna(m);
+        List<Zuzycie> zuzycieList = zuzycieRepository.findByDokumentId(dokument.getNumer());
+        for(Zuzycie zuzycie : zuzycieList){
+            zuzycie.setDokument(null);
+            zuzycie.getNorma().setMaszyna(null);
+        }
+        dokument.setZuzycie(zuzycieList);
 
         return dokument;
 
@@ -130,21 +134,25 @@ public class EwiRestController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        Optional<Maszyna> byId = maszynaRepository.findById(dokument.getMaszyna().getId());
-
-        if(byId.isPresent()){
-            Maszyna maszynaDB = byId.get();
-            dokument.setMaszyna(maszynaDB);
-            dokumentRepository.save(dokument);
-            maszynaDB.getDokumenty().add(dokument);
-            maszynaRepository.save(maszynaDB);
+        List<Zuzycie> zuzycia = dokument.getZuzycie();
+        for(Zuzycie zuzycie : zuzycia){
+            Norma norma = normaRepository.findById(zuzycie.getNorma().getId()).get();
+            zuzycie.setNorma(norma);
+            zuzycieRepository.save(zuzycie);
         }
-        else{
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+
+        Maszyna maszyna = maszynaRepository.findById(dokument.getMaszyna().getId()).get();
+        dokument.setMaszyna(maszyna);
+
+        dokumentRepository.save(dokument);
+
+        for(Zuzycie zuzycie : zuzycia){
+            zuzycie.setDokument(dokument);
+            zuzycieRepository.save(zuzycie);
         }
 
     }
-
+/*
     @RequestMapping(value = "/dokument", method = RequestMethod.PUT)
     public void dokumentPut(
             @RequestBody Dokument dokument,
@@ -176,7 +184,7 @@ public class EwiRestController {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
 
-    }
+    }*/
 
     @RequestMapping(value = "/dokument", method = RequestMethod.DELETE)
     public void dokumentDelete(
@@ -189,12 +197,12 @@ public class EwiRestController {
         if(byId.isPresent()) {
             Dokument dokumentDB = byId.get();
 
-            Maszyna maszynaOld = maszynaRepository.findById(dokumentDB.getMaszyna().getId()).get();
-            maszynaOld.getDokumenty().remove(dokumentDB);
-            maszynaRepository.save(maszynaOld);
+            List<Zuzycie> zuzycieList = zuzycieRepository.findByDokumentId(dokumentDB.getNumer());
+            zuzycieRepository.deleteAll(zuzycieList);
+            dokumentRepository.delete(dokumentDB);
 
         }
 
-    }*/
+    }
 
 }

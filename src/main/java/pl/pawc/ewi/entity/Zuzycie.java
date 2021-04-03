@@ -7,10 +7,14 @@ public class Zuzycie {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 
     @Column(name = "wartosc")
     private double wartosc;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Norma norma;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Dokument dokument;
@@ -31,6 +35,14 @@ public class Zuzycie {
         this.wartosc = wartosc;
     }
 
+    public Norma getNorma() {
+        return norma;
+    }
+
+    public void setNorma(Norma norma) {
+        this.norma = norma;
+    }
+
     public Dokument getDokument() {
         return dokument;
     }
@@ -44,6 +56,7 @@ public class Zuzycie {
         return "Zuzycie{" +
                 "id=" + id +
                 ", wartosc=" + wartosc +
+                ", norma=" + norma +
                 ", dokument=" + dokument +
                 '}';
     }

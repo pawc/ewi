@@ -1,12 +1,6 @@
 package pl.pawc.ewi.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +17,7 @@ public class Dokument {
     @ManyToOne(fetch = FetchType.LAZY)
     private Maszyna maszyna;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @Transient
     private List<Zuzycie> zuzycie = new ArrayList<>();
 
     public String getNumer() {
