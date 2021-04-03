@@ -72,16 +72,39 @@ public class EwiRestController {
         }
 
     }
-/*
-    @RequestMapping(value = "/maszyna", method = RequestMethod.DELETE)
-    public void maszynaDelete(
-            @RequestParam Integer id,
+
+    @RequestMapping(value = "/maszyna", method = RequestMethod.PUT)
+    public void maszynaPut(
+            @RequestBody Maszyna maszyna,
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        maszynaRepository.deleteById(id);
+        Optional<Maszyna> byId = maszynaRepository.findById(maszyna.getId());
+
+        if(byId.isPresent()){
+            Maszyna maszynaDB = byId.get();
+            maszynaDB.setNazwa(maszyna.getNazwa());
+            maszynaDB.setOpis(maszyna.getOpis());
+
+            List<Norma> normy = normaRepository.findByMaszynaId(maszyna.getId());
+            for(Norma normaNew : maszyna.getNormy()){
+                boolean test = false;
+                for(Norma normaOld : normy){
+                    if(normaOld.getJednostka().equals(normaNew.getJednostka())) test = true;
+                }
+                if(!test){
+                    normaNew.setMaszyna(maszynaDB);
+                    normaRepository.save(normaNew);
+                }
+            }
+            maszynaRepository.save(maszynaDB);
+        }
+        else{
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
 
     }
+/*
 
     @RequestMapping("/dokument")
     public Dokument dokumentGet(
