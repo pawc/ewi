@@ -6,9 +6,12 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import pl.pawc.ewi.entity.Dokument;
 import pl.pawc.ewi.entity.Maszyna;
-import pl.pawc.ewi.model.Paliwo;
+import pl.pawc.ewi.entity.Norma;
+import pl.pawc.ewi.entity.Zuzycie;
 import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
+import pl.pawc.ewi.repository.NormaRepository;
+import pl.pawc.ewi.repository.ZuzycieRepository;
 
 import java.sql.Date;
 
@@ -21,71 +24,32 @@ public class InitialDataLoader implements ApplicationRunner {
     @Autowired
     DokumentRepository dokumentRepository;
 
+    @Autowired
+    NormaRepository normaRepository;
+
+    @Autowired
+    ZuzycieRepository zuzycieRepository;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        Maszyna maszyna = new Maszyna();
+        /*Maszyna maszyna = new Maszyna();
         maszyna.setId(123);
-        maszyna.setPaliwo(Paliwo.OLEJ);
-        maszyna.setOpis("dodatkowy opis");
-        maszyna.setNazwa("Snopowiązałka");
+        maszyna.setNazwa("Wózek");
+        maszyna.setOpis("Przykładowy opis wózka");
         maszynaRepository.save(maszyna);
 
-        Dokument dokument = new Dokument();
-        dokument.setNumer("ABC123");
-        dokument.setIlosc(12.4);
-        dokument.setData(Date.valueOf("2021-03-12"));
-        dokument.setMaszyna(maszyna);
+        Norma norma = new Norma();
+        norma.setJednostka("litrów oleju/motogodzinę");
+        norma.setWartosc(11.2);
+        norma.setMaszyna(maszyna);
+        normaRepository.save(norma);
 
-        dokumentRepository.save(dokument);
-        maszyna.getDokumenty().add(dokument);
-
-        dokument = new Dokument();
-        dokument.setNumer("DEF456");
-        dokument.setIlosc(6.9);
-        dokument.setData(Date.valueOf("2021-01-23"));
-        dokument.setMaszyna(maszyna);
-
-        dokumentRepository.save(dokument);
-        maszyna.getDokumenty().add(dokument);
-
-        maszynaRepository.save(maszyna);
-
-        maszyna = new Maszyna();
-        maszyna.setId(987);
-        maszyna.setPaliwo(Paliwo.BENZYNA);
-        maszyna.setOpis("Lorem ipsum dolor sit amet");
-        maszyna.setNazwa("VW Caddy");
-        maszynaRepository.save(maszyna);
-
-        dokument = new Dokument();
-        dokument.setNumer("GHI423/12");
-        dokument.setIlosc(11.2);
-        dokument.setData(Date.valueOf("2021-02-18"));
-        dokument.setMaszyna(maszyna);
-
-        dokumentRepository.save(dokument);
-        maszyna.getDokumenty().add(dokument);
-
-        dokument = new Dokument();
-        dokument.setNumer("KJHS/2021");
-        dokument.setIlosc(7.11);
-        dokument.setData(Date.valueOf("2021-01-25"));
-        dokument.setMaszyna(maszyna);
-
-        dokumentRepository.save(dokument);
-        maszyna.getDokumenty().add(dokument);
-
-        dokument = new Dokument();
-        dokument.setNumer("VBC/2/21");
-        dokument.setIlosc(8.2);
-        dokument.setData(Date.valueOf("2021-02-01"));
-        dokument.setMaszyna(maszyna);
-
-        dokumentRepository.save(dokument);
-        maszyna.getDokumenty().add(dokument);
-
-        maszynaRepository.save(maszyna);
+        norma = new Norma();
+        norma.setJednostka("litrów etyliny/motogodzinę");
+        norma.setWartosc(5.25);
+        norma.setMaszyna(maszyna);
+        normaRepository.save(norma);*/
 
     }
 

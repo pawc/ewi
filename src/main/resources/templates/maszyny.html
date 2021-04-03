@@ -41,11 +41,26 @@
 				    }
 				});
 
+				$('#dodajNormaBtn').click(() => {
+				    $('#normyTable').append('\
+                        <tr class="norma">\
+                            <td><input type="numeric" class="form-control" style="width: 60px;"></input></td>\
+                            <td><input type="text" class="form-control" placeholder="jednostka"></input></td>\
+                            <td><button class="btn usunNormaBtn" onclick="$(this).parents(\'tr\').first().remove()">usuń</button></td>\
+                        </tr>\
+				    ')
+				})
+
+				$('.usunNormaBtn').on('click', function (){
+                    $(this).parents('tr').first().remove();
+                });
+
             })
 
             var dialog, dialogUsun, form, currentId
 
             function edytujBtn(id){
+                $("#normyTable > tr").remove();
                 currentId = id
 
                 $("span.ui-dialog-title").text('Edytuj maszynę');
@@ -57,8 +72,17 @@
                     $("#numer").prop("disabled", true);
                     $('#numer').val(maszyna.id)
                     $('#nazwa').val(maszyna.nazwa)
-                    $('#paliwo').val(maszyna.paliwo)
                     $('#opis').val(maszyna.opis)
+                    $.each(maszyna.normy, (i, norma) => {
+                        $('#normyTable').append('\
+                            <tr class="norma">\
+                                <td><input type="numeric" step="0.01" id="'+norma.id+'-wartosc" class="form-control" style="width: 60px;"></input></td>\
+                                <td><input type="text" id="'+norma.id+'-jednostka" class="form-control" placeholder="jednostka"></input></td>\
+                            </tr>\
+				        ')
+				        $('#'+norma.id+'-wartosc').val(norma.wartosc)
+				        $('#'+norma.id+'-jednostka').val(norma.jednostka)
+                    })
                     dialog.dialog( "open" );
                 })
                 .fail(() => {
@@ -67,6 +91,7 @@
             }
 
             function dodajBtn(){
+                $("#normyTable > tr").remove();
                 currentId = 0
                 $("#numer").prop("disabled", false);
                 $('#nazwa').val('')
@@ -115,17 +140,28 @@
 
                 dialog = $( "#dialog-form" ).dialog({
                     autoOpen: false,
-                    height: 460,
-                    width: 350,
+                    height: 570,
+                    width: 400,
                     modal: true,
                     buttons: {
                         "Zapisz": function(){
 
+                            var normy = [];
+                            $('.norma').each(function(i, tr){
+                                var wartosc = $(this).find('td:eq(0) > input').val()
+                                var jednostka = $(this).find('td:eq(1) > input').val()
+                                var norma = {
+                                    wartosc: wartosc,
+                                    jednostka: jednostka
+                                }
+                                if(jednostka && wartosc) normy.push(norma);
+                            })
+
                             var maszyna = {
                                 id: parseInt($("#numer").val()),
                                 nazwa: $('#nazwa').val(),
-                                paliwo: parseInt($('#paliwo option:selected').attr('valueInt')),
-                                opis: $('#opis').val()
+                                opis: $('#opis').val(),
+                                normy: normy
                             }
 
                             var headers = {};
@@ -174,7 +210,6 @@
                 <tr>
                     <th> Numer </th>
                     <th> Nazwa </th>
-                    <th> Paliwo </th>
                     <th> Opis </th>
                     <th class="text-right"> <button class="btn btn-success" onclick="dodajBtn()">dodaj <i class="fas fa-plus-circle"></i></button> </th>
                 </tr>
@@ -183,7 +218,6 @@
                 <tr th:each="maszyna : ${maszyny}">
                     <td><span th:text="${maszyna.id}"> Numer </span> </td>
                     <td><span th:text="${maszyna.nazwa}"> Nazwa </span></td>
-                    <td><span th:text="${maszyna.paliwo} "> Paliwo </span></td>
                     <td><span th:text="${maszyna.opis}"> Opis  </span></td>
                     <td class="text-right">
                         <button class="btn btn-info" th:onclick="|edytujBtn('${maszyna.id}')|">edytuj <i class="fas fa-edit"></i></button>
@@ -197,21 +231,17 @@
         <div id="dialog-form" title="">
 
             <form>
-                <fieldset>
-                    <label for="numer">Numer</label>
-                    <input type="number" name="numer" id="numer" value="" class="text ui-widget-content ui-corner-all">
-                    <label for="nazwa">Nazwa</label>
-                    <input type="text" name="nazwa" id="nazwa" value="" class="text ui-widget-content ui-corner-all">
-                    <label for="paliwo">Paliwo</label>
-                    <select name="paliwo" id="paliwo">
-                        <option value="BENZYNA" valueInt="0">Benzyna</option>
-                        <option value="OLEJ" valueInt="1">Olej</option>
-                    </select>
-                    <br><br>
-                    <label for="opis">Opis</label>
-                    <textarea name="opis" id="opis" rows="4" style="width: 95%;" class=""></textarea>
-                    <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-                </fieldset>
+                <label for="numer">Numer</label>
+                <input type="number" name="numer" id="numer" value="" class="text ui-widget-content ui-corner-all">
+                <label for="nazwa">Nazwa</label>
+                <input type="text" name="nazwa" id="nazwa" value="" class="text ui-widget-content ui-corner-all">
+                <label for="normy">Normy</label><button class="btn" id="dodajNormaBtn">dodaj</button>
+                <div id="normy" class="container">
+                    <table class="table" id="normyTable"></table>
+                </div>
+                <label for="opis">Opis</label>
+                <textarea name="opis" id="opis" rows="4" style="width: 95%;" class=""></textarea>
+                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
             </form>
 
         </div>

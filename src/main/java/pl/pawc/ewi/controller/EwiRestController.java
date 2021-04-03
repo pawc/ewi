@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.pawc.ewi.entity.Dokument;
 import pl.pawc.ewi.entity.Maszyna;
+import pl.pawc.ewi.entity.Norma;
 import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
+import pl.pawc.ewi.repository.NormaRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -20,13 +23,21 @@ public class EwiRestController {
     @Autowired
     MaszynaRepository maszynaRepository;
 
+    @Autowired
+    NormaRepository normaRepository;
+
     @RequestMapping("/maszyna/{id}")
     public Maszyna maszynaGet(
             HttpServletRequest request,
             HttpServletResponse response,
-            @PathVariable Integer id){
+            @PathVariable long id){
 
         Maszyna maszyna = maszynaRepository.findById(id).get();
+        List<Norma> normy = normaRepository.findByMaszynaId(id);
+        for(Norma norma : normy){
+            norma.setMaszyna(null);
+        }
+        maszyna.setNormy(normy);
 
         return maszyna;
 
@@ -40,19 +51,28 @@ public class EwiRestController {
 
         Optional<Maszyna> byId = maszynaRepository.findById(maszyna.getId());
 
-        if(byId.isPresent()){
-            Maszyna maszynaDB = byId.get();
-            maszynaDB.setNazwa(maszyna.getNazwa());
-            maszynaDB.setPaliwo(maszyna.getPaliwo());
-            maszynaDB.setOpis(maszyna.getOpis());
-            maszynaRepository.save(maszynaDB);
+        if(!byId.isPresent()){
+            Maszyna maszynaNew = new Maszyna();
+            maszynaNew.setId(maszyna.getId());
+            maszynaNew.setNazwa(maszyna.getNazwa());
+            maszynaNew.setOpis(maszyna.getOpis());
+            maszynaRepository.save(maszynaNew);
+
+            Norma normaNew;
+            for(Norma norma : maszyna.getNormy()){
+                normaNew = new Norma();
+                normaNew.setJednostka(norma.getJednostka());
+                normaNew.setWartosc(norma.getWartosc());
+                normaNew.setMaszyna(maszynaNew);
+                normaRepository.save(normaNew);
+            }
         }
         else{
-            maszynaRepository.save(maszyna);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
 
     }
-
+/*
     @RequestMapping(value = "/maszyna", method = RequestMethod.DELETE)
     public void maszynaDelete(
             @RequestParam Integer id,
@@ -152,6 +172,6 @@ public class EwiRestController {
 
         }
 
-    }
+    }*/
 
 }

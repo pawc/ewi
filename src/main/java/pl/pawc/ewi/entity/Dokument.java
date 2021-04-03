@@ -1,7 +1,15 @@
 package pl.pawc.ewi.entity;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Dokument {
@@ -12,11 +20,11 @@ public class Dokument {
     @Column(name = "data")
     private Date data;
 
-    @Column(name = "ilosc")
-    private double ilosc;
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Maszyna maszyna;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Zuzycie> zuzycie = new ArrayList<>();
 
     public String getNumer() {
         return numer;
@@ -34,14 +42,6 @@ public class Dokument {
         this.data = data;
     }
 
-    public double getIlosc() {
-        return ilosc;
-    }
-
-    public void setIlosc(double ilosc) {
-        this.ilosc = ilosc;
-    }
-
     public Maszyna getMaszyna() {
         return maszyna;
     }
@@ -50,13 +50,21 @@ public class Dokument {
         this.maszyna = maszyna;
     }
 
+    public List<Zuzycie> getZuzycie() {
+        return zuzycie;
+    }
+
+    public void setZuzycie(List<Zuzycie> zuzycie) {
+        this.zuzycie = zuzycie;
+    }
+
     @Override
     public String toString() {
         return "Dokument{" +
                 "numer='" + numer + '\'' +
                 ", data=" + data +
-                ", ilosc=" + ilosc +
                 ", maszyna=" + maszyna +
+                ", zuzycie=" + zuzycie +
                 '}';
     }
 

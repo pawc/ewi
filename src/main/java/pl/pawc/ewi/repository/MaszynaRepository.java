@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import pl.pawc.ewi.entity.Maszyna;
 
 @Repository
-public interface MaszynaRepository extends CrudRepository<Maszyna, Integer> {
+public interface MaszynaRepository extends CrudRepository<Maszyna, Long> {
 
 }
