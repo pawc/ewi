@@ -11,7 +11,7 @@ public class Maszyna {
 
     @Id
     @Column(name = "id")
-    private long id;
+    private String id;
 
     @Column(name = "nazwa")
     private String nazwa;
@@ -22,11 +22,11 @@ public class Maszyna {
     @Transient
     private List<Norma> normy;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

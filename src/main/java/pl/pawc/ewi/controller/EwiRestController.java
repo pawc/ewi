@@ -1,7 +1,12 @@
 package pl.pawc.ewi.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import pl.pawc.ewi.entity.Dokument;
 import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.entity.Norma;
@@ -36,7 +41,7 @@ public class EwiRestController {
     public Maszyna maszynaGet(
             HttpServletRequest request,
             HttpServletResponse response,
-            @PathVariable long id){
+            @PathVariable String id){
 
         Maszyna maszyna = maszynaRepository.findById(id).get();
         List<Norma> normy = normaRepository.findByMaszynaId(id);
@@ -160,7 +165,6 @@ public class EwiRestController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-
         Optional<Dokument> byId = dokumentRepository.findById(dokument.getNumer());
 
         if(byId.isPresent()){
@@ -172,7 +176,7 @@ public class EwiRestController {
             for(Zuzycie zuzycie : dokument.getZuzycie()) {
                 Zuzycie zuzycieDB = zuzycieRepository.findById(zuzycie.getId()).get();
                 if (zuzycieDB.getWartosc() != zuzycie.getWartosc()) {
-                    zuzycieDB.setWartosc(zuzycieDB.getWartosc());
+                    zuzycieDB.setWartosc(zuzycie.getWartosc());
                     zuzycieRepository.save(zuzycieDB);
                 }
             }

@@ -11,6 +11,6 @@ import java.util.List;
 public interface NormaRepository extends CrudRepository<Norma, Long> {
 
     @Query("SELECT n FROM Norma n WHERE n.maszyna.id = ?1")
-    List<Norma> findByMaszynaId(long maszynaId);
+    List<Norma> findByMaszynaId(String maszynaId);
 
 }

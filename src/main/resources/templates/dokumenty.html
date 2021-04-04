@@ -57,10 +57,15 @@
 				        $.each(maszyna.normy, (i, norma) => {
 				            $('#zuzycieTable').append('\
                             <tr class="zuzycie">\
-                                <td><input type="number" step="0.01" id="'+norma.id+'" class="form-control" style="width: 90px;"></input></td>\
-                                <td><label>'+norma.jednostka+'</label></td>\
+                                <td><input type="number" step="0.01" id="'+norma.id+'" normaId="'+norma.id+'" class="form-control" style="width: 90px;"></input></td>\
+                                <td><span>[h] * <b>'+norma.wartosc+'</b> ['+norma.jednostka+'] = </span><b><span id="wynik-'+norma.id+'"></span></b></td>\
                             </tr>\
                             ')
+                            $('#'+norma.id).keyup(() => {
+                                var wpisana = $('#'+norma.id).val()
+                                var wynik = Math.round(((wpisana * norma.wartosc) + Number.EPSILON) * 100)/100
+                                $('#wynik-'+norma.id).text(wynik);
+                            });
                         })
 				    })
 				})
@@ -91,11 +96,18 @@
                     $.each(dokument.zuzycie, (i, zuzycie) => {
                         $('#zuzycieTable').append('\
                         <tr class="zuzycie">\
-                            <td><input type="number" step="0.01" id="'+zuzycie.id+'" class="form-control" style="width: 90px;"></input></td>\
-                            <td><label>'+zuzycie.norma.jednostka+'</label></td>\
+                            <td><input type="number" step="0.01" id="'+zuzycie.id+'" normaId="'+zuzycie.norma.id+'" class="form-control" style="width: 90px;"></input></td>\
+                            <td><span>[h] * <b>'+zuzycie.norma.wartosc+'</b> ['+zuzycie.norma.jednostka+'] = </span><b><span id="wynik-'+zuzycie.norma.id+'"></span></b></td>\
                         </tr>\
                         ')
                         $('#'+zuzycie.id).val(zuzycie.wartosc);
+                        var wynik = Math.round(((zuzycie.wartosc * zuzycie.norma.wartosc) + Number.EPSILON) * 100)/100
+                        $('#wynik-'+zuzycie.norma.id).text(wynik);
+                        $('#'+zuzycie.id).keyup(() => {
+                            var wpisana = $('#'+zuzycie.id).val()
+                            var wynik = Math.round(((wpisana * zuzycie.norma.wartosc) + Number.EPSILON) * 100)/100
+                            $('#wynik-'+zuzycie.norma.id).text(wynik);
+                        });
                     })
                     dialog.dialog( "open" );
                 })
@@ -156,7 +168,7 @@
                 dialog = $( "#dialog-form" ).dialog({
                     autoOpen: false,
                     height: 490,
-                    width: 410,
+                    width: 610,
                     modal: true,
                     buttons: {
                         "Zapisz": function(){
@@ -164,9 +176,11 @@
                              var zuzycie = []
                              $('.zuzycie').each(function(i, tr){
                                 var wartosc = $(this).find('td:eq(0) > input').val()
-                                var normaId = $(this).find('td:eq(0) > input').attr('ID')
+                                var zuzycieId = $(this).find('td:eq(0) > input').attr('ID')
+                                var normaId = $(this).find('td:eq(0) > input').attr('normaId')
                                 var z = {
                                     wartosc: wartosc,
+                                    id: zuzycieId,
                                     norma: {
                                         id: normaId
                                     }

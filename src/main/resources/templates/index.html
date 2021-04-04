@@ -52,8 +52,12 @@
                     },
                     "info": "_START_ do _END_ z _TOTAL_ pozycji",
                     "infoEmpty":      "",
-                    "infoFiltered":   ""
-                }
+                    "infoFiltered":   "",
+                },
+                columnDefs: [{
+                    targets: -1,
+                    className: 'dt-body-center'
+                }]
             });
 
             updateTable();
@@ -108,7 +112,7 @@
             <tr>
                 <th> Maszyna </th>
                 <th> Jednostka </th>
-                <th> Ilość </th>
+                <th class="text-center"> Suma zużytych litrów w miesiącu </th>
             </tr>
             </thead>
             <tbody>

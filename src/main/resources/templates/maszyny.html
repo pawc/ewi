@@ -44,7 +44,7 @@
 				$('#dodajNormaBtn').click(() => {
 				    $('#normyTable').append('\
                         <tr class="norma">\
-                            <td><input type="numeric" class="form-control" style="width: 60px;"></input></td>\
+                            <td><input type="number" step="0.01" class="form-control" style="width: 90px;"></input></td>\
                             <td><input type="text" class="form-control" placeholder="jednostka"></input></td>\
                             <td><button class="btn usunNormaBtn" onclick="$(this).parents(\'tr\').first().remove()">usuń</button></td>\
                         </tr>\
@@ -107,7 +107,7 @@
                 dialog = $( "#dialog-form" ).dialog({
                     autoOpen: false,
                     height: 570,
-                    width: 400,
+                    width: 430,
                     modal: true,
                     buttons: {
                         "Zapisz": function(){
@@ -134,7 +134,7 @@
                             })
 
                             var maszyna = {
-                                id: parseInt($("#numer").val()),
+                                id: $("#numer").val(),
                                 nazwa: $('#nazwa').val(),
                                 opis: $('#opis').val(),
                                 normy: normy
@@ -153,7 +153,7 @@
                                 window.location.reload()
                             })
                             .fail(() => {
-                                console.log('Problem z zapisem do bazy')
+                                alert('Problem z zapisem do bazy')
                             })
                         },
                         Anuluj: function() {
@@ -193,7 +193,7 @@
                     <td><span th:text="${maszyna.nazwa}"> Nazwa </span></td>
                     <td><span th:text="${maszyna.opis}"> Opis  </span></td>
                     <td class="text-right">
-                        <button class="btn btn-info" th:onclick="|edytujBtn('${maszyna.id}')|">edytuj <i class="fas fa-edit"></i></button>
+                        <button class="btn btn-info" th:onclick="edytujBtn([[${maszyna.id}]])">edytuj <i class="fas fa-edit"></i></button>
                     </td>
                 </tr>
                 </tbody>
@@ -204,7 +204,7 @@
 
             <form>
                 <label for="numer">Numer</label>
-                <input type="number" name="numer" id="numer" value="" class="text ui-widget-content ui-corner-all">
+                <input type="text" name="numer" id="numer" value="" class="text ui-widget-content ui-corner-all">
                 <label for="nazwa">Nazwa</label>
                 <input type="text" name="nazwa" id="nazwa" value="" class="text ui-widget-content ui-corner-all">
                 <label for="normy">Normy</label><button class="btn btn-success" id="dodajNormaBtn">dodaj</button>
