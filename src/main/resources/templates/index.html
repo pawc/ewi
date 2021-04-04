@@ -29,7 +29,14 @@
 
     <script>
 
+        var t;
         $( document ).ready(function() {
+
+            var month = new Date().getMonth()+1
+            if(month < 10) month = '0' + month
+
+            var year = new Date().getFullYear()
+            $('miesiac').val(year + '-' + month)
 
             t = $('#raportTable').DataTable({
                 "language": {
@@ -49,8 +56,15 @@
                 }
             });
 
+            updateTable();
+
             $('#miesiac').change(() => {
-                t.clear().draw();
+                updateTable();
+            })
+        });
+
+        function updateTable(){
+               t.clear().draw();
                 var rok = $('#miesiac').val().split('-')[0]
                 var miesiac = $('#miesiac').val().split('-')[1]
                 $.ajax({
@@ -61,7 +75,6 @@
                     }
                 })
                 .done(pozycje => {
-                    console.log(pozycje);
                     $.each(pozycje, (i, pozycja) => {
                         t.row.add( [
                             pozycja.maszyna,
@@ -69,13 +82,11 @@
                             pozycja.suma
                         ]).draw(false);
                     })
-
                 })
                 .fail(() => {
                     alert('Problem z pobraniem raportu za dany miesiąc')
                 })
-            })
-        });
+        }
 
     </script>
 
@@ -85,7 +96,7 @@
         <label for="miesiac">Miesiąc:</label>
 
         <input type="month" id="miesiac"
-               min="2021-04" value="2021-04">
+               min="2021-01" value="2021-04">
 
         <p></p>
     </div>

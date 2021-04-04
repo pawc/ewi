@@ -20,14 +20,14 @@
         <script>
 
             var type = ''
-            var dialog, dialogUsun
+            var dialog, dialogUsun, t
             var currentNumer
 
             $(document).ready(() => {
                 $('#dokumentyLink').css("font-weight", "bold");
                 $('#dokumentyLink').css("text-decoration", "underline");
 
-               $('#dokumentyTable').DataTable({
+               t = $('#dokumentyTable').DataTable({
                 	"language": {
                         "search": "Szukaj",
                         "emptyTable": "Brak dokumentów",
@@ -44,6 +44,8 @@
                         "infoFiltered":   "",
 				    }
 				});
+
+				t.order([1, 'desc']).draw()
 
 				$('#maszyna').change(() => {
 				    $("#zuzycieTable > tr").remove();
