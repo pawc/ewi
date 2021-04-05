@@ -144,7 +144,6 @@ public class EwiRestController {
         for(Zuzycie zuzycie : zuzycia){
             Norma norma = normaRepository.findById(zuzycie.getNorma().getId()).get();
             zuzycie.setNorma(norma);
-            zuzycieRepository.save(zuzycie);
         }
 
         Maszyna maszyna = maszynaRepository.findById(dokument.getMaszyna().getId()).get();
