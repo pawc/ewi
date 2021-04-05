@@ -75,6 +75,7 @@ function dodajBtn(){
     $("#normyTable > tr").remove();
     currentId = 0
     $("#numer").prop("disabled", false);
+    $("#numer").val('')
     $('#nazwa').val('')
     $('#opis').val('')
     $("span.ui-dialog-title").text('Dodaj maszynę');
@@ -122,17 +123,35 @@ $(function() {
                 var headers = {};
                 headers["Content-Type"] = "application/json; charset=utf-8";
 
-                $.ajax({
-                    url: '/maszyna',
-                    type: type,
-                    data: JSON.stringify(maszyna),
-                    headers: headers
-                })
-                .done(() => {
-                    window.location.reload()
-                })
-                .fail(() => {
-                    alert('Problem z zapisem do bazy')
+                var preCalls = []
+                if(type == 'POST'){
+                    preCalls = [
+                        $.ajax({
+                            url: '/maszyna/' + maszyna.id,
+                            headers: headers
+                        })
+                        .done((response) => {
+                            if(response.id != null){
+                                alert('Maszyna o podanym numerze już istnieje w bazie');
+                                throw new Error('Maszyna o podanym numerze już istnieje w bazie')
+                            }
+                        })
+                    ]
+                }
+
+                $.when.apply($, preCalls).then(() => {
+                    $.ajax({
+                        url: '/maszyna',
+                        type: type,
+                        data: JSON.stringify(maszyna),
+                        headers: headers
+                    })
+                    .done(() => {
+                        window.location.reload()
+                    })
+                    .fail(() => {
+                        alert('Problem z zapisem do bazy')
+                    })
                 })
             },
             Anuluj: function() {

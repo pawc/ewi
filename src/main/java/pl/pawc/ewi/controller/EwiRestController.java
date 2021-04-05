@@ -43,13 +43,20 @@ public class EwiRestController {
             HttpServletResponse response,
             @PathVariable String id){
 
-        Maszyna maszyna = maszynaRepository.findById(id).get();
-        List<Norma> normy = normaRepository.findByMaszynaId(id);
-        for(Norma norma : normy){
-            norma.setMaszyna(null);
+        Optional<Maszyna> result = maszynaRepository.findById(id);
+        Maszyna maszyna = null;
+        if(result.isPresent()){
+            maszyna = result.get();
+            List<Norma> normy = normaRepository.findByMaszynaId(id);
+            for(Norma norma : normy){
+                norma.setMaszyna(null);
+            }
+            maszyna.setNormy(normy);
+            return maszyna;
         }
-        maszyna.setNormy(normy);
-
+        else{
+            maszyna = new Maszyna();
+        }
         return maszyna;
 
     }

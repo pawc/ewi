@@ -108,7 +108,7 @@ function dodajBtn(){
     $('#maszyna').prop("disabled", false);
     $('#numer').prop("disabled", false);
     $('#numer').val('');
-    $('#data').val();
+    $('#data').val('');
     $('#maszyna').val(-1);
     type = 'POST'
     dialog.dialog("open");
