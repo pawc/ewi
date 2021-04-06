@@ -30,7 +30,10 @@ $(document).ready(() => {
         $("#zuzycieTable > tr").remove();
         var maszynaId = $('#maszyna option:selected').val();
         $.ajax({
-            url: '/maszyna/' + maszynaId
+            url: '/maszyna',
+            data: {
+                id: maszynaId
+            }
         })
         .done(maszyna => {
             $.each(maszyna.normy, (i, norma) => {
@@ -47,6 +50,11 @@ $(document).ready(() => {
                 });
             })
         })
+    })
+
+    $('#error').hide();
+    $('#numer').keypress(() => {
+        $('#error').hide();
     })
 
 })
@@ -179,17 +187,37 @@ $(function() {
                 var headers = {};
                 headers["Content-Type"] = "application/json; charset=utf-8";
 
-                $.ajax({
-                    url: '/dokument',
-                    type: type,
-                    data: JSON.stringify(dokument),
-                    headers: headers
-                })
-                .done(() => {
-                    window.location.reload()
-                })
-                .fail(() => {
-                    alert('Problem z zapisem do bazy')
+                var preCalls = []
+                if(type == 'POST'){
+                    preCalls = [
+                        $.ajax({
+                            url: '/dokument',
+                            data: {
+                                numer: dokument.numer
+                            },
+                            headers: headers
+                        })
+                        .done((response) => {
+                            if(response.numer != null){
+                                $('#error').show();
+                                throw new Error('Dokument o podanym numerze już istnieje')
+                            }
+                        })
+                    ]
+                }
+                $.when.apply($, preCalls).then(() => {
+                    $.ajax({
+                        url: '/dokument',
+                        type: type,
+                        data: JSON.stringify(dokument),
+                        headers: headers
+                    })
+                    .done(() => {
+                        window.location.href = "/dokumenty?success="+dokument.numer;
+                    })
+                    .fail(() => {
+                        alert('Problem z zapisem do bazy')
+                    })
                 })
             },
             Anuluj: function() {

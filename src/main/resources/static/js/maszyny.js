@@ -34,6 +34,11 @@ $(document).ready(() => {
         $(this).parents('tr').first().remove();
     });
 
+    $('#error').hide();
+    $('#numer').keypress(() => {
+        $('#error').hide();
+    })
+
 })
 
 var dialog, form, currentId, type
@@ -46,7 +51,10 @@ function edytujBtn(id){
     $("span.ui-dialog-title").text('Edytuj maszynę');
 
     $.ajax({
-        url: '/maszyna/'+id
+        url: '/maszyna',
+        data: {
+            id: id
+        }
     })
     .done(maszyna => {
         $("#numer").prop("disabled", true);
@@ -127,12 +135,15 @@ $(function() {
                 if(type == 'POST'){
                     preCalls = [
                         $.ajax({
-                            url: '/maszyna/' + maszyna.id,
+                            url: '/maszyna',
+                            data: {
+                                id: maszyna.id
+                            },
                             headers: headers
                         })
                         .done((response) => {
                             if(response.id != null){
-                                alert('Maszyna o podanym numerze już istnieje w bazie');
+                                $('#error').show();
                                 throw new Error('Maszyna o podanym numerze już istnieje w bazie')
                             }
                         })
@@ -147,7 +158,7 @@ $(function() {
                         headers: headers
                     })
                     .done(() => {
-                        window.location.reload()
+                        window.location.href = "/maszyny?success="+maszyna.id;
                     })
                     .fail(() => {
                         alert('Problem z zapisem do bazy')

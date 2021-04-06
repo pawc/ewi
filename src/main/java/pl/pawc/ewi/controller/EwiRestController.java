@@ -37,11 +37,11 @@ public class EwiRestController {
     @Autowired
     RaportRepository raportRepository;
 
-    @RequestMapping("/maszyna/{id}")
+    @RequestMapping("/maszyna")
     public Maszyna maszynaGet(
             HttpServletRequest request,
             HttpServletResponse response,
-            @PathVariable String id){
+            @RequestParam("id") String id){
 
         Optional<Maszyna> result = maszynaRepository.findById(id);
         Maszyna maszyna = null;
@@ -129,14 +129,20 @@ public class EwiRestController {
             HttpServletResponse response,
             @RequestParam("numer") String numer){
 
-        Dokument dokument = dokumentRepository.findById(numer).get();
-        List<Zuzycie> zuzycieList = zuzycieRepository.findByDokumentId(dokument.getNumer());
-        for(Zuzycie zuzycie : zuzycieList){
-            zuzycie.setDokument(null);
-            zuzycie.getNorma().setMaszyna(null);
+        Optional<Dokument> result = dokumentRepository.findById(numer);
+        Dokument dokument = null;
+        if(result.isPresent()){
+            dokument = result.get();
+            List<Zuzycie> zuzycieList = zuzycieRepository.findByDokumentId(dokument.getNumer());
+            for(Zuzycie zuzycie : zuzycieList){
+                zuzycie.setDokument(null);
+                zuzycie.getNorma().setMaszyna(null);
+            }
+            dokument.setZuzycie(zuzycieList);
         }
-        dokument.setZuzycie(zuzycieList);
-
+        else{
+            dokument = new Dokument();
+        }
         return dokument;
 
     }
