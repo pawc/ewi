@@ -1,4 +1,5 @@
 $(document).ready(() => {
+
     $('#maszynyLink').css("font-weight", "bold");
     $('#maszynyLink').css("text-decoration", "underline");
 
@@ -129,7 +130,10 @@ $(function() {
                 }
 
                 var headers = {};
+                var token = $("meta[name='_csrf']").attr("content");
+                var header = $("meta[name='_csrf_header']").attr("content");
                 headers["Content-Type"] = "application/json; charset=utf-8";
+                headers[header] = token;
 
                 var preCalls = []
                 if(type == 'POST'){
@@ -158,7 +162,12 @@ $(function() {
                         headers: headers
                     })
                     .done(() => {
-                        window.location.href = "/maszyny?success="+maszyna.id;
+                        if(type == 'POST'){
+                            window.location.href = "/maszyny?success="+maszyna.id
+                        }
+                        else{
+                            window.location.href = "/maszyny"
+                        }
                     })
                     .fail(() => {
                         alert('Problem z zapisem do bazy')

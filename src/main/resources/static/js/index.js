@@ -34,10 +34,16 @@ $(document).ready(function(){
 
     offSetManager();
 
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    var headers = {};
+    headers[header] = token;
+
     $('#logout').click(() => {
         $.ajax({
             url: '/logout',
-            type: 'POST'
+            type: 'POST',
+            headers: headers
         })
         .done(() => {
             window.location.href = '/'

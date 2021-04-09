@@ -132,12 +132,17 @@ $(function() {
         modal: true,
         buttons: {
             "Tak": function() {
+                var headers = {};
+                var header = $("meta[name='_csrf_header']").attr("content");
+                var token = $("meta[name='_csrf']").attr("content");
+                headers[header] = token;
                 $.ajax({
                     url: '/dokument',
                     data: {
                         numer: currentNumer
                     },
-                    type: 'DELETE'
+                    type: 'DELETE',
+                    headers: headers
                 })
                 .done(() => {
                     window.location.reload()
@@ -186,6 +191,9 @@ $(function() {
 
                 var headers = {};
                 headers["Content-Type"] = "application/json; charset=utf-8";
+                var header = $("meta[name='_csrf_header']").attr("content");
+                var token = $("meta[name='_csrf']").attr("content");
+                headers[header] = token;
 
                 var preCalls = []
                 if(type == 'POST'){
@@ -213,7 +221,12 @@ $(function() {
                         headers: headers
                     })
                     .done(() => {
-                        window.location.href = "/dokumenty?success="+dokument.numer;
+                        if(type == 'POST'){
+                            window.location.href = "/dokumenty?success="+dokument.numer;
+                        }
+                        else{
+                            window.location.href = "/dokumenty"
+                        }
                     })
                     .fail(() => {
                         alert('Problem z zapisem do bazy')
