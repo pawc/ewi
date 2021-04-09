@@ -1,36 +1,47 @@
 $(document).ready(function(){
 
-var myNavBar = {
+    var myNavBar = {
 
-    flagAdd: true,
+        flagAdd: true,
 
-    elements: [],
+        elements: [],
 
-    init: function (elements) {
-        this.elements = elements;
+        init: function (elements) {
+            this.elements = elements;
+        }
+
+    };
+
+    myNavBar.init(  [
+        "header",
+        "header-container",
+        "brand"
+    ]);
+
+    function offSetManager(){
+
+        var yOffset = 0;
+        var currYOffSet = window.pageYOffset;
+
+        if(yOffset < currYOffSet) {
+        }
+
     }
 
-};
-
-myNavBar.init(  [
-    "header",
-    "header-container",
-    "brand"
-]);
-
-function offSetManager(){
-
-    var yOffset = 0;
-    var currYOffSet = window.pageYOffset;
-
-    if(yOffset < currYOffSet) {
+    window.onscroll = function(e) {
+        offSetManager();
     }
 
-}
-
-window.onscroll = function(e) {
     offSetManager();
-}
 
-offSetManager();
+    $('#logout').click(() => {
+        $.ajax({
+            url: '/logout',
+            type: 'POST'
+        })
+        .done(() => {
+            window.location.href = '/'
+        })
+    })
+
 });

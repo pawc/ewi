@@ -54,4 +54,13 @@ public class EwiController {
 
     }
 
+    @RequestMapping("/login")
+    public String login(
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+        return "login";
+
+    }
+
 }
