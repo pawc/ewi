@@ -1,7 +1,7 @@
 package pl.pawc.ewi.controller;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +21,8 @@ import java.util.Optional;
 
 @RestController
 public class EwiRestController {
+
+    private static final Logger logger = Logger.getLogger(EwiRestController.class);
 
     @Autowired
     DokumentRepository dokumentRepository;
@@ -52,9 +54,11 @@ public class EwiRestController {
                 norma.setMaszyna(null);
             }
             maszyna.setNormy(normy);
+            logger.info("["+request.getRemoteAddr()+"] - /maszyna GET id="+id );
             return maszyna;
         }
         else{
+            logger.info("["+request.getRemoteAddr()+"] - /maszyna GET id="+id + ". Nie odnaleziono");
             maszyna = new Maszyna();
         }
         return maszyna;
@@ -84,9 +88,11 @@ public class EwiRestController {
                 normaNew.setMaszyna(maszynaNew);
                 normaRepository.save(normaNew);
             }
+            logger.info("["+request.getRemoteAddr()+"] - /maszyna POST id="+maszyna.getId());
         }
         else{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.info("["+request.getRemoteAddr()+"] - /maszyna POST - BAD REQUEST");
         }
 
     }
@@ -116,9 +122,11 @@ public class EwiRestController {
                 }
             }
             maszynaRepository.save(maszynaDB);
+            logger.info("["+request.getRemoteAddr()+"] - /maszyna PUT id="+maszyna.getId());
         }
         else{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.warn("["+request.getRemoteAddr()+"] - /maszyna PUT - BAD REQUEST");
         }
 
     }
@@ -139,9 +147,11 @@ public class EwiRestController {
                 zuzycie.getNorma().setMaszyna(null);
             }
             dokument.setZuzycie(zuzycieList);
+            logger.info("["+request.getRemoteAddr()+"] - /dokument GET numer="+numer);
         }
         else{
             dokument = new Dokument();
+            logger.warn("["+request.getRemoteAddr()+"] - /dokument GET numer="+numer + ". Nie odnaleziono");
         }
         return dokument;
 
@@ -169,6 +179,8 @@ public class EwiRestController {
             zuzycieRepository.save(zuzycie);
         }
 
+        logger.info("["+request.getRemoteAddr()+"] - /dokument POST numer="+dokument.getNumer());
+
     }
 
     @RequestMapping(value = "/dokument", method = RequestMethod.PUT)
@@ -193,9 +205,12 @@ public class EwiRestController {
                 }
             }
 
+            logger.info("["+request.getRemoteAddr()+"] - /dokument PUT numer="+dokument.getNumer());
+
         }
         else{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.info("["+request.getRemoteAddr()+"] - /dokument PUT - BAD REQUEST");
         }
 
     }
@@ -217,6 +232,8 @@ public class EwiRestController {
 
         }
 
+        logger.info("["+request.getRemoteAddr()+"] - /dokument DELETE numer="+numer);
+
     }
 
     @RequestMapping(value = "/raport", method = RequestMethod.GET)
@@ -227,6 +244,7 @@ public class EwiRestController {
             @RequestParam("miesiac") int miesiac){
 
         List<Raport> raport = raportRepository.getRaport(rok, miesiac);
+        logger.info("["+request.getRemoteAddr()+"] - /raport GET " + rok + "-" + miesiac);
 
         return raport;
 
