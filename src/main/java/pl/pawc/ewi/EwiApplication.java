@@ -17,6 +17,7 @@ public class EwiApplication extends WebSecurityConfigurerAdapter {
 	Environment env;
 
 	public static void main(String[] args) {
+		System.setProperty("server.servlet.context-path", "/ewi");
 		SpringApplication.run(EwiApplication.class, args);
 	}
 

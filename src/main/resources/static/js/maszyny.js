@@ -52,7 +52,7 @@ function edytujBtn(id){
     $("span.ui-dialog-title").text('Edytuj maszynę');
 
     $.ajax({
-        url: '/maszyna',
+        url: contextRoot + 'maszyna',
         data: {
             id: id
         }
@@ -139,7 +139,7 @@ $(function() {
                 if(type == 'POST'){
                     preCalls = [
                         $.ajax({
-                            url: '/maszyna',
+                            url: contextRoot + 'maszyna',
                             data: {
                                 id: maszyna.id
                             },
@@ -156,17 +156,17 @@ $(function() {
 
                 $.when.apply($, preCalls).then(() => {
                     $.ajax({
-                        url: '/maszyna',
+                        url: contextRoot + 'maszyna',
                         type: type,
                         data: JSON.stringify(maszyna),
                         headers: headers
                     })
                     .done(() => {
                         if(type == 'POST'){
-                            window.location.href = "/maszyny?success="+maszyna.id
+                            window.location.href = contextRoot + "maszyny?success="+maszyna.id
                         }
                         else{
-                            window.location.href = "/maszyny"
+                            window.location.href = contextRoot + "maszyny"
                         }
                     })
                     .fail(() => {

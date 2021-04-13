@@ -41,12 +41,12 @@ $(document).ready(function(){
 
     $('#logout').click(() => {
         $.ajax({
-            url: '/logout',
+            url: contextRoot + 'logout',
             type: 'POST',
             headers: headers
         })
         .done(() => {
-            window.location.href = '/'
+            window.location.href = contextRoot
         })
     })
 

@@ -44,7 +44,7 @@ function updateTable(){
     var rok = $('#miesiac').val().split('-')[0]
     var miesiac = $('#miesiac').val().split('-')[1]
     $.ajax({
-        url: '/raport',
+        url: contextRoot + 'raport',
         data: {
             rok: rok,
             miesiac: miesiac

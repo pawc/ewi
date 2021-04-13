@@ -30,7 +30,7 @@ $(document).ready(() => {
         $("#zuzycieTable > tr").remove();
         var maszynaId = $('#maszyna option:selected').val();
         $.ajax({
-            url: '/maszyna',
+            url: contextRoot + 'maszyna',
             data: {
                 id: maszynaId
             }
@@ -67,7 +67,7 @@ function edytujBtn(numer){
     headers["Content-Type"] = "application/json; charset=utf-8";
 
     $.ajax({
-        url: '/dokument',
+        url: contextRoot + 'dokument',
         data: {
             'numer': numer
         },
@@ -137,7 +137,7 @@ $(function() {
                 var token = $("meta[name='_csrf']").attr("content");
                 headers[header] = token;
                 $.ajax({
-                    url: '/dokument',
+                    url: contextRoot + 'dokument',
                     data: {
                         numer: currentNumer
                     },
@@ -199,7 +199,7 @@ $(function() {
                 if(type == 'POST'){
                     preCalls = [
                         $.ajax({
-                            url: '/dokument',
+                            url: contextRoot + 'dokument',
                             data: {
                                 numer: dokument.numer
                             },
@@ -215,17 +215,17 @@ $(function() {
                 }
                 $.when.apply($, preCalls).then(() => {
                     $.ajax({
-                        url: '/dokument',
+                        url: contextRoot + 'dokument',
                         type: type,
                         data: JSON.stringify(dokument),
                         headers: headers
                     })
                     .done(() => {
                         if(type == 'POST'){
-                            window.location.href = "/dokumenty?success="+dokument.numer;
+                            window.location.href = contextRoot + "dokumenty?success="+dokument.numer;
                         }
                         else{
-                            window.location.href = "/dokumenty"
+                            window.location.href = contextRoot + "dokumenty"
                         }
                     })
                     .fail(() => {
