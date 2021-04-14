@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mariadb:latest
+    restart: unless-stopped
+    container_name: mysql
+    environment:
+      - MYSQL_DATABASE=ewidb
+      - MYSQL_USER=ewiuser
+      - MYSQL_PASSWORD=ewiuser_password
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_ROOT_HOST=%
+  ewi-prod:
+    image: pawc/ewi:latest
+    container_name: ewi-prod
+    restart: unless-stopped
+    ports:
+      - "80:8080"
+    environment:
+      - spring.datasource.url=jdbc:mysql://mysql:3306/ewidb
+      - spring.jpa.hibernate.ddl-auto=update
+      - spring.datasource.username=ewiuser
+      - spring.datasource.password=ewiuser_password
+      - spring.jackson.serialization.FAIL_ON_EMPTY_BEANS=false
+    depends_on:
+      - mysql
