@@ -79,7 +79,7 @@ function edytujBtn(numer){
         $('#maszyna').prop("disabled", true);
         $('#numer').val(dokument.numer)
         $('#data').val(dokument.data)
-        $("#maszyna option[value="+dokument.maszyna.id.toString()+"]").attr("selected", "selected");
+        $("#maszyna option[value='"+dokument.maszyna.id.toString()+"']").attr("selected", "selected");
         $.each(dokument.zuzycie, (i, zuzycie) => {
             $('#zuzycieTable').append('\
             <tr class="zuzycie">\
