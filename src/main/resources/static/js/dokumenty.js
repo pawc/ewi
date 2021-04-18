@@ -6,7 +6,13 @@ $(document).ready(() => {
     $('#dokumentyLink').css("font-weight", "bold");
     $('#dokumentyLink').css("text-decoration", "underline");
 
-   t = $('#dokumentyTable').DataTable({
+    var month = new Date().getMonth()+1
+    if(month < 10) month = '0' + month
+
+    var year = new Date().getFullYear()
+    $('miesiac').val(year + '-' + month)
+
+    t = $('#dokumentyTable').DataTable({
         "language": {
             "search": "Szukaj",
             "emptyTable": "Brak dokumentów",
@@ -21,10 +27,14 @@ $(document).ready(() => {
             "info": "_START_ do _END_ z _TOTAL_ dokumentów",
             "infoEmpty":      "",
             "infoFiltered":   "",
-        }
+        },
     });
 
-    t.order([1, 'desc']).draw()
+    updateTable();
+
+    $('#miesiac').change(() => {
+        updateTable();
+    })
 
     $('#maszyna').change(() => {
         $("#zuzycieTable > tr").remove();
@@ -58,6 +68,31 @@ $(document).ready(() => {
     })
 
 })
+
+function updateTable(){
+
+    $.ajax({
+        url: contextRoot + 'dokumentyGet',
+        data: {
+            rok: $('#miesiac').val().split('-')[0],
+            miesiac: $('#miesiac').val().split('-')[1]
+        }
+    })
+    .done(dokumenty => {
+        t.clear().draw();
+        $.each(dokumenty, (i, dokument) => {
+            t.row.add([
+                '<label class="dokNumer">' + dokument.numer + '</label>',
+                dokument.data,
+                dokument.maszyna.nazwa + '(' + dokument.maszyna.id + ')',
+                '<button class="btn btn-info" onclick="edytujBtn(\''+dokument.numer+'\')">edytuj <i class="fas fa-edit"></i></button>'
+                 +'<button class="btn btn-danger" onclick="usunBtn(\''+dokument.numer+'\')">usuń <i class="fas fa-trash-alt"></i></button>'
+            ]).draw(false);
+        })
+    })
+
+    t.order([1, 'desc']).draw()
+}
 
 function edytujBtn(numer){
     $("span.ui-dialog-title").text('Edytuj dokument');
@@ -115,11 +150,44 @@ function dodajBtn(){
     $("span.ui-dialog-title").text('Dodaj dokument');
     $('#maszyna').prop("disabled", false);
     $('#numer').prop("disabled", false);
-    $('#numer').val('');
-    $('#data').val('');
+
+    var max = 0;
+    var temp;
+
+    $.each($('.dokNumer'), (i, row) => {
+        var n = row.textContent.split("/");
+        if(n.length > 2 && n[0] && n[1] && n[2]){
+            max = Math.max(max, parseInt(n[0]))
+            temp = "/" + n[1] + "/" + n[2]
+        }
+    })
+
+    if(!((max+1) + temp)){
+        max = 0;
+        temp = '/' + $('#miesiac').val().split('-')[1] + '/' + $('#miesiac').val().split('-')[0]
+    }
+
+    $('#numer').val((max+1) + temp);
+
+    $('#data').val(formatDate(new Date()));
+
     $('#maszyna').val(-1);
-    type = 'POST'
+    type = 'POST';
     dialog.dialog("open");
+}
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
 }
 
 $(function() {

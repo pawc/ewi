@@ -1,6 +1,7 @@
 package pl.pawc.ewi.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ import pl.pawc.ewi.repository.NormaRepository;
 import pl.pawc.ewi.repository.ZuzycieRepository;
 
 import java.sql.Date;
+import java.util.Calendar;
 
 @Component
 public class InitialDataLoader implements ApplicationRunner {
@@ -30,64 +32,81 @@ public class InitialDataLoader implements ApplicationRunner {
     @Autowired
     ZuzycieRepository zuzycieRepository;
 
+    @Value( "${testDataLoad}" )
+    private String testDataLoadString;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        Maszyna maszyna = new Maszyna();
-        maszyna.setId("W123");
-        maszyna.setNazwa("Wózek");
-        maszyna.setOpis("Przykładowy opis wózka");
-        maszynaRepository.save(maszyna);
+        Boolean testDataLoad = Boolean.valueOf(testDataLoadString);
 
-        Norma norma = new Norma();
-        norma.setJednostka("litrów oleju/motogodzinę");
-        norma.setWartosc(7.5);
-        norma.setMaszyna(maszyna);
-        normaRepository.save(norma);
+        if(testDataLoad){
 
-        Zuzycie zuzycie1 = new Zuzycie();
-        zuzycie1.setNorma(norma);
-        zuzycie1.setWartosc(3);
+            Calendar cal = Calendar.getInstance();
+            Date today = new Date(System.currentTimeMillis());
+            cal.setTime(today);
+            int month = cal.get(Calendar.MONTH)+1;
+            int year = cal.get(Calendar.YEAR);
+            String docNumberSuffix = "/" + String.valueOf(month) + "/" + String.valueOf(year);
 
-        Zuzycie zuzycie3 = new Zuzycie();
-        zuzycie3.setNorma(norma);
-        zuzycie3.setWartosc(4);
+            Maszyna maszyna = new Maszyna();
+            maszyna.setId("W123");
+            maszyna.setNazwa("Wózek");
+            maszyna.setOpis("Przykładowy opis wózka");
+            maszynaRepository.save(maszyna);
 
-        norma = new Norma();
-        norma.setJednostka("litrów opału/godzinę");
-        norma.setWartosc(2.1);
-        norma.setMaszyna(maszyna);
-        normaRepository.save(norma);
+            Norma norma = new Norma();
+            norma.setJednostka("litrów oleju/motogodzinę");
+            norma.setWartosc(7.5);
+            norma.setMaszyna(maszyna);
+            normaRepository.save(norma);
 
-        Zuzycie zuzycie2 = new Zuzycie();
-        zuzycie2.setNorma(norma);
-        zuzycie2.setWartosc(3);
+            Zuzycie zuzycie1 = new Zuzycie();
+            zuzycie1.setNorma(norma);
+            zuzycie1.setWartosc(3);
 
-        Zuzycie zuzycie4 = new Zuzycie();
-        zuzycie4.setNorma(norma);
-        zuzycie4.setWartosc(4);
+            Zuzycie zuzycie3 = new Zuzycie();
+            zuzycie3.setNorma(norma);
+            zuzycie3.setWartosc(4);
 
-        Dokument dokument = new Dokument();
-        dokument.setData(new Date(System.currentTimeMillis()));
-        dokument.setNumer("DOK-1/2021");
-        dokument.setMaszyna(maszyna);
-        dokumentRepository.save(dokument);
+            norma = new Norma();
+            norma.setJednostka("litrów opału/godzinę");
+            norma.setWartosc(2.1);
+            norma.setMaszyna(maszyna);
+            normaRepository.save(norma);
 
-        zuzycie1.setDokument(dokument);
-        zuzycie2.setDokument(dokument);
-        zuzycieRepository.save(zuzycie1);
-        zuzycieRepository.save(zuzycie2);
+            Zuzycie zuzycie2 = new Zuzycie();
+            zuzycie2.setNorma(norma);
+            zuzycie2.setWartosc(3);
 
-        dokument = new Dokument();
-        dokument.setData(new Date(System.currentTimeMillis()));
-        dokument.setNumer("DOK-2/2021");
-        dokument.setMaszyna(maszyna);
-        dokumentRepository.save(dokument);
+            Zuzycie zuzycie4 = new Zuzycie();
+            zuzycie4.setNorma(norma);
+            zuzycie4.setWartosc(4);
 
-        zuzycie3.setDokument(dokument);
-        zuzycie4.setDokument(dokument);
-        zuzycieRepository.save(zuzycie3);
-        zuzycieRepository.save(zuzycie4);
+            Dokument dokument = new Dokument();
+            dokument.setData(today);
+
+            dokument.setNumer("1" + docNumberSuffix);
+            dokument.setMaszyna(maszyna);
+            dokumentRepository.save(dokument);
+
+            zuzycie1.setDokument(dokument);
+            zuzycie2.setDokument(dokument);
+            zuzycieRepository.save(zuzycie1);
+            zuzycieRepository.save(zuzycie2);
+
+            dokument = new Dokument();
+            dokument.setData(today);
+            dokument.setNumer("2" + docNumberSuffix);
+            dokument.setMaszyna(maszyna);
+            dokumentRepository.save(dokument);
+
+            zuzycie3.setDokument(dokument);
+            zuzycie4.setDokument(dokument);
+            zuzycieRepository.save(zuzycie3);
+            zuzycieRepository.save(zuzycie4);
+
+        }
 
     }
 

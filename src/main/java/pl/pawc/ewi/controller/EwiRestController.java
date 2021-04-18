@@ -157,6 +157,17 @@ public class EwiRestController {
 
     }
 
+    @RequestMapping("/dokumentyGet")
+    public List<Dokument> dokumentyGet(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @RequestParam("rok") int rok,
+            @RequestParam("miesiac") int miesiac){
+
+        return dokumentRepository.getDokumenty(rok, miesiac);
+
+    }
+
     @RequestMapping(value = "/dokument", method = RequestMethod.POST)
     public void dokumentPost(
             @RequestBody Dokument dokument,

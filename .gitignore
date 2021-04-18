@@ -34,4 +34,4 @@ build/
 /ewi.sqlite
 
 .gradle
-
+*.log

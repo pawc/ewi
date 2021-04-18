@@ -33,6 +33,19 @@
     <body>
 
         <div class="container">
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <label for="miesiac">Miesiąc:</label>
+                    <input type="month" id="miesiac" min="2021-01" value="2021-04">
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-right">
+                    <button class="btn btn-success" onclick="dodajBtn()">dodaj dokument <i class="fas fa-plus-circle"></i></button>
+                </div>
+            </div>
+            <p></p>
+        </div>
+
+        <div class="container">
             <div class="alert alert-success text-center" role="alert" th:if="${(param.success != null)}">
                 Dodano dokument o numerze <b> [[${param.success}]] </b>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -45,19 +58,10 @@
                     <th> Numer </th>
                     <th> Data </th>
                     <th> Maszyna </th>
-                    <th class="text-right"> <button class="btn btn-success" onclick="dodajBtn()">dodaj <i class="fas fa-plus-circle"></i></button> </th>
+                    <th class="text-right"></th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="dokument : ${dokumenty}">
-                    <td><span th:text="${dokument.numer}"> Numer </span></td>
-                    <td><span th:text="${dokument.data}"> Data </span></td>
-                    <td><span th:text="${dokument.maszyna.nazwa} + ' (' + ${dokument.maszyna.id} + ') '"> Maszyna </span></td>
-                    <td class="text-right">
-                        <button class="btn btn-info" th:onclick="edytujBtn([[${dokument.numer}]])">edytuj <i class="fas fa-edit"></i></button>
-                        <button class="btn btn-danger" th:onclick="usunBtn([[${dokument.numer}]])">usuń <i class="fas fa-trash-alt"></i></button>
-                    </td>
-                </tr>
                 </tbody>
             </table>
         </div>

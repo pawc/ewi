@@ -39,7 +39,6 @@ public class EwiController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        model.addAttribute("dokumenty", dokumentRepository.findAll());
         model.addAttribute("maszyny", maszynaRepository.findAll());
         logger.info("["+request.getRemoteAddr()+"] - /dokumenty" );
 
