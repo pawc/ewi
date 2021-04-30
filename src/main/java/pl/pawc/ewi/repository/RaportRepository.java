@@ -11,7 +11,7 @@ import java.util.List;
 public interface RaportRepository extends CrudRepository<Raport, String> {
 
     @Query(value = "select concat(m.nazwa, ' (', m.id, ')') as maszyna, n.jednostka, "+
-        "round(sum(z.wartosc*n.wartosc), 2) as suma, concat(m.nazwa, n.jednostka) as id "+
+        "round(sum(z.wartosc*n.wartosc), 1) as suma, concat(m.nazwa, n.jednostka) as id "+
         "from maszyna m " +
         "join dokument d on year(d.data) = ?1 and month(d.data) = ?2 " +
         "and m.id = d.maszyna_id " +

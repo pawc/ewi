@@ -55,7 +55,7 @@ $(document).ready(() => {
                 ')
                 $('#'+norma.id).keyup(() => {
                     var wpisana = $('#'+norma.id).val()
-                    var wynik = Math.round(((wpisana * norma.wartosc) + Number.EPSILON) * 100)/100
+                    var wynik = Math.round(((wpisana * norma.wartosc) + Number.EPSILON) * 10)/10
                     $('#wynik-'+norma.id).text(wynik);
                 });
             })
@@ -123,11 +123,11 @@ function edytujBtn(numer){
             </tr>\
             ')
             $('#'+zuzycie.id).val(zuzycie.wartosc);
-            var wynik = Math.round(((zuzycie.wartosc * zuzycie.norma.wartosc) + Number.EPSILON) * 100)/100
+            var wynik = Math.round(((zuzycie.wartosc * zuzycie.norma.wartosc) + Number.EPSILON) * 10)/10
             $('#wynik-'+zuzycie.norma.id).text(wynik);
             $('#'+zuzycie.id).keyup(() => {
                 var wpisana = $('#'+zuzycie.id).val()
-                var wynik = Math.round(((wpisana * zuzycie.norma.wartosc) + Number.EPSILON) * 100)/100
+                var wynik = Math.round(((wpisana * zuzycie.norma.wartosc) + Number.EPSILON) * 10)/10
                 $('#wynik-'+zuzycie.norma.id).text(wynik);
             });
         })
