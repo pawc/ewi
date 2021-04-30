@@ -37,8 +37,22 @@ $(document).ready(() => {
     })
 
     $('#maszyna').change(() => {
-        $("#zuzycieTable > tr").remove();
+
         var maszynaId = $('#maszyna option:selected').val();
+
+        var maxRelDoc = 0;
+        $.each($('.dokNumer'), (i, row) => {
+            if(row.textContent.includes(maszynaId)){
+                maxRelDoc = parseInt(row.textContent.split('/')[0])
+            }
+        })
+
+        var docMonth = $('#data').val().substr(5,2);
+        var docYear = $('#data').val().substr(0,4);
+        $('#numer').val((maxRelDoc+1) + '/' + docMonth + '/' + docYear + '/' + maszynaId)
+
+        $("#zuzycieTable > tr").remove();
+
         $.ajax({
             url: contextRoot + 'maszyna',
             data: {
@@ -150,24 +164,6 @@ function dodajBtn(){
     $("span.ui-dialog-title").text('Dodaj dokument');
     $('#maszyna').prop("disabled", false);
     $('#numer').prop("disabled", false);
-
-    var max = 0;
-    var temp;
-
-    $.each($('.dokNumer'), (i, row) => {
-        var n = row.textContent.split("/");
-        if(n.length > 2 && n[0] && n[1] && n[2]){
-            max = Math.max(max, parseInt(n[0]))
-            temp = "/" + n[1] + "/" + n[2]
-        }
-    })
-
-    if(!((max+1) + temp)){
-        max = 0;
-        temp = '/' + $('#miesiac').val().split('-')[1] + '/' + $('#miesiac').val().split('-')[0]
-    }
-
-    $('#numer').val((max+1) + temp);
 
     $('#data').val(formatDate(new Date()));
 
