@@ -25,11 +25,7 @@ $(document).ready(function() {
             "info": "_START_ do _END_ z _TOTAL_ pozycji",
             "infoEmpty":      "",
             "infoFiltered":   "",
-        },
-        columnDefs: [{
-            targets: -1,
-            className: 'dt-body-center'
-        }]
+        }
     });
 
     updateTable();
@@ -55,7 +51,9 @@ function updateTable(){
             t.row.add( [
                 pozycja.maszyna,
                 pozycja.jednostka,
-                pozycja.suma
+                pozycja.suma,
+                pozycja.zatankowano,
+                Math.round(((pozycja.suma - pozycja.zatankowano) + Number.EPSILON) * 10)/10
             ]).draw(false);
         })
     })

@@ -9,6 +9,7 @@ public class Raport {
     private String maszyna;
     private String jednostka;
     private double suma;
+    private double zatankowano;
 
     @Id
     private String Id;
@@ -37,6 +38,14 @@ public class Raport {
         this.suma = suma;
     }
 
+    public double getZatankowano() {
+        return zatankowano;
+    }
+
+    public void setZatankowano(double zatankowano) {
+        this.zatankowano = zatankowano;
+    }
+
     public String getId() {
         return Id;
     }
@@ -51,6 +60,8 @@ public class Raport {
                 "maszyna='" + maszyna + '\'' +
                 ", jednostka='" + jednostka + '\'' +
                 ", suma=" + suma +
+                ", zatankowano=" + zatankowano +
+                ", Id='" + Id + '\'' +
                 '}';
     }
 
