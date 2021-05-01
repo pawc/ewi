@@ -14,7 +14,8 @@ public interface RaportRepository extends CrudRepository<Raport, String> {
             "n.jednostka, " +
             "sum(round(z.wartosc*n.wartosc, 1)) as suma, " +
             "sum(round(z.zatankowano, 1)) as zatankowano, " +
-            "concat(m.nazwa, n.jednostka) as id " +
+            "concat(m.nazwa, n.jednostka) as id, " +
+            "z.norma_id " +
             "from maszyna m  " +
             "join dokument d on year(d.data) = ?1 and month(d.data) = ?2  " +
             "and m.id = d.maszyna_id  " +

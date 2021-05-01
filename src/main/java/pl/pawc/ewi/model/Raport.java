@@ -10,6 +10,7 @@ public class Raport {
     private String jednostka;
     private double suma;
     private double zatankowano;
+    private long normaId;
 
     @Id
     private String Id;
@@ -46,6 +47,14 @@ public class Raport {
         this.zatankowano = zatankowano;
     }
 
+    public long getNormaId() {
+        return normaId;
+    }
+
+    public void setNormaId(long normaId) {
+        this.normaId = normaId;
+    }
+
     public String getId() {
         return Id;
     }
@@ -61,6 +70,7 @@ public class Raport {
                 ", jednostka='" + jednostka + '\'' +
                 ", suma=" + suma +
                 ", zatankowano=" + zatankowano +
+                ", normaId=" + normaId +
                 ", Id='" + Id + '\'' +
                 '}';
     }

@@ -47,17 +47,38 @@ function updateTable(){
         }
     })
     .done(pozycje => {
+        var nextMonthVal = nextMonth()
         $.each(pozycje, (i, pozycja) => {
+            var endState = Math.round(((pozycja.suma - pozycja.zatankowano) + Number.EPSILON) * 10)/10
             t.row.add( [
                 pozycja.maszyna,
                 pozycja.jednostka,
                 pozycja.suma,
                 pozycja.zatankowano,
-                Math.round(((pozycja.suma - pozycja.zatankowano) + Number.EPSILON) * 10)/10
+                endState,
+                `<button class="btn btn-info" onclick="save('${nextMonthVal}', ${pozycja.normaId}, ${endState})">\
+                Zapisz jako stan <br>początkowy na ${nextMonthVal}</button>`
             ]).draw(false);
         })
     })
     .fail(() => {
         alert('Problem z pobraniem raportu za dany miesiąc')
     })
+}
+
+function nextMonth(){
+    var year = parseInt($('#miesiac').val().split('-')[0])
+    var month = parseInt($('#miesiac').val().split('-')[1]) + 1
+
+    if(month > 12){
+        month = 1
+        year += 1
+    }
+
+    var monthString = (month > 9) ? month : '0' + month
+    return `${year}-${monthString}`
+}
+
+function save(nextMonthVal, normaId, endState){
+    alert(nextMonthVal + '\n' + normaId + '\n' + endState)
 }

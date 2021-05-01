@@ -64,10 +64,12 @@ public class InitialDataLoader implements ApplicationRunner {
             Zuzycie zuzycie1 = new Zuzycie();
             zuzycie1.setNorma(norma);
             zuzycie1.setWartosc(3);
+            zuzycie1.setZatankowano(0);
 
             Zuzycie zuzycie3 = new Zuzycie();
             zuzycie3.setNorma(norma);
             zuzycie3.setWartosc(4);
+            zuzycie3.setZatankowano(0);
 
             norma = new Norma();
             norma.setJednostka("litrów opału/godzinę");
@@ -78,10 +80,12 @@ public class InitialDataLoader implements ApplicationRunner {
             Zuzycie zuzycie2 = new Zuzycie();
             zuzycie2.setNorma(norma);
             zuzycie2.setWartosc(3);
+            zuzycie2.setZatankowano(0);
 
             Zuzycie zuzycie4 = new Zuzycie();
             zuzycie4.setNorma(norma);
             zuzycie4.setWartosc(4);
+            zuzycie4.setZatankowano(0);
 
             Dokument dokument = new Dokument();
             dokument.setData(today);
