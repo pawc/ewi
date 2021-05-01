@@ -10,7 +10,7 @@ $(document).ready(() => {
     if(month < 10) month = '0' + month
 
     var year = new Date().getFullYear()
-    $('miesiac').val(year + '-' + month)
+    $('#miesiac').val(year + '-' + month)
 
     t = $('#dokumentyTable').DataTable({
         "language": {
@@ -52,7 +52,6 @@ $(document).ready(() => {
         $('#numer').val((maxRelDoc+1) + '/' + docMonth + '/' + docYear + '/' + maszynaId)
 
         $("#zuzycieTable > tr").remove();
-        $("#zuzycieTable > tbody > tr").remove();
 
         $.ajax({
             url: contextRoot + 'maszyna',
@@ -61,18 +60,18 @@ $(document).ready(() => {
             }
         })
         .done(maszyna => {
-            $('#zuzycieTable').append('<tr><th>zużycie</th><th>zużycie * norma = wynik</th><th>tankowanie</th></tr>')
             $.each(maszyna.normy, (i, norma) => {
                 $('#zuzycieTable').append('\
                 <tr class="zuzycie">\
                     <td><input type="number" step="0.01" id="'+norma.id+'" normaId="'+norma.id+'" class="form-control" style="width: 90px;" value="0"></input></td>\
-                    <td><span>[h] * <b>'+norma.wartosc+'</b> ['+norma.jednostka+'] = </span><b><span id="wynik-'+norma.id+'">0</span></b></td>\
+                    <td><b><span id="input-'+norma.id+'">0</span></b><span> * <b>'+norma.wartosc+'</b> ['+norma.jednostka+'] = </span><b><span id="wynik-'+norma.id+'">0</span></b></td>\
                     <td><input type="number" step="0.01" id="tankowanie-'+norma.id+'" normaId="'+norma.id+'" class="form-control" style="width: 90px;" value="0"></input></td>\
                 </tr>\
                 ')
                 $('#'+norma.id).keyup(() => {
                     var wpisana = $('#'+norma.id).val()
                     var wynik = Math.round(((wpisana * norma.wartosc) + Number.EPSILON) * 10)/10
+                    $('#input-'+norma.id).text(wpisana);
                     $('#wynik-'+norma.id).text(wynik);
                 });
             })
@@ -101,7 +100,7 @@ function updateTable(){
             t.row.add([
                 '<label class="dokNumer">' + dokument.numer + '</label>',
                 dokument.data,
-                dokument.maszyna.nazwa + '(' + dokument.maszyna.id + ')',
+                dokument.maszyna.nazwa + ' (' + dokument.maszyna.id + ')',
                 '<button class="btn btn-info" onclick="edytujBtn(\''+dokument.numer+'\')">edytuj <i class="fas fa-edit"></i></button>'
                  +'<button class="btn btn-danger" onclick="usunBtn(\''+dokument.numer+'\')">usuń <i class="fas fa-trash-alt"></i></button>'
             ]).draw(false);
@@ -132,19 +131,25 @@ function edytujBtn(numer){
         $('#numer').val(dokument.numer)
         $('#data').val(dokument.data)
         $("#maszyna option[value='"+dokument.maszyna.id.toString()+"']").attr("selected", "selected");
+        $("#zuzycieTable > tbody > tr").remove();
+        $('#zuzycieTable').append('<tr><th>zużycie</th><th>zużycie * norma = wynik</th><th>tankowanie</th></tr>')
         $.each(dokument.zuzycie, (i, zuzycie) => {
             $('#zuzycieTable').append('\
             <tr class="zuzycie">\
                 <td><input type="number" step="0.01" id="'+zuzycie.id+'" normaId="'+zuzycie.norma.id+'" class="form-control" style="width: 90px;"></input></td>\
-                <td><span>[h] * <b>'+zuzycie.norma.wartosc+'</b> ['+zuzycie.norma.jednostka+'] = </span><b><span id="wynik-'+zuzycie.norma.id+'"></span></b></td>\
+                <td><b><span id="input-'+zuzycie.norma.id+'"></span></b><span> * <b>'+zuzycie.norma.wartosc+'</b> ['+zuzycie.norma.jednostka+'] = </span><b><span id="wynik-'+zuzycie.norma.id+'"></span></b></td>\
+                <td><input type="number" step="0.01" id="tankowanie-'+zuzycie.norma.id+'" normaId="'+zuzycie.norma.id+'" class="form-control" style="width: 90px;" value="0"></input></td>\
             </tr>\
             ')
             $('#'+zuzycie.id).val(zuzycie.wartosc);
+            $('#input-'+zuzycie.norma.id).text(zuzycie.wartosc);
+            $('#tankowanie-'+zuzycie.norma.id).val(zuzycie.zatankowano);
             var wynik = Math.round(((zuzycie.wartosc * zuzycie.norma.wartosc) + Number.EPSILON) * 10)/10
             $('#wynik-'+zuzycie.norma.id).text(wynik);
             $('#'+zuzycie.id).keyup(() => {
                 var wpisana = $('#'+zuzycie.id).val()
                 var wynik = Math.round(((wpisana * zuzycie.norma.wartosc) + Number.EPSILON) * 10)/10
+                $('#input-'+zuzycie.norma.id).text(wpisana);
                 $('#wynik-'+zuzycie.norma.id).text(wynik);
             });
         })
@@ -169,7 +174,8 @@ function dodajBtn(){
     $('#numer').prop("disabled", false);
 
     $('#data').val(formatDate(new Date()));
-
+    $("#zuzycieTable > tbody > tr").remove();
+    $('#zuzycieTable').append('<tr><th>zużycie</th><th>zużycie * norma = wynik</th><th>tankowanie</th></tr>')
     $('#maszyna').val(-1);
     type = 'POST';
     dialog.dialog("open");
@@ -235,6 +241,7 @@ $(function() {
                  var zuzycie = []
                  $('.zuzycie').each(function(i, tr){
                     var wartosc = $(this).find('td:eq(0) > input').val()
+                    var zatankowano =  $(this).find('td:eq(2) > input').val()
                     var zuzycieId = $(this).find('td:eq(0) > input').attr('ID')
                     var normaId = $(this).find('td:eq(0) > input').attr('normaId')
                     var z = {
@@ -242,7 +249,8 @@ $(function() {
                         id: zuzycieId,
                         norma: {
                             id: normaId
-                        }
+                        },
+                        zatankowano: zatankowano
                     }
                     zuzycie.push(z)
                 })

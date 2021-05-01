@@ -8,7 +8,7 @@ $(document).ready(function() {
     if(month < 10) month = '0' + month
 
     var year = new Date().getFullYear()
-    $('miesiac').val(year + '-' + month)
+    $('#miesiac').val(year + '-' + month)
 
     t = $('#raportTable').DataTable({
         "language": {

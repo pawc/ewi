@@ -210,8 +210,9 @@ public class EwiRestController {
 
             for(Zuzycie zuzycie : dokument.getZuzycie()) {
                 Zuzycie zuzycieDB = zuzycieRepository.findById(zuzycie.getId()).get();
-                if (zuzycieDB.getWartosc() != zuzycie.getWartosc()) {
+                if (zuzycieDB.getWartosc() != zuzycie.getWartosc() || zuzycieDB.getZatankowano() != zuzycie.getZatankowano()) {
                     zuzycieDB.setWartosc(zuzycie.getWartosc());
+                    zuzycieDB.setZatankowano(zuzycie.getZatankowano());
                     zuzycieRepository.save(zuzycieDB);
                 }
             }
