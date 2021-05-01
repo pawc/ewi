@@ -19,6 +19,9 @@ public class Zuzycie {
     @ManyToOne(fetch = FetchType.LAZY)
     private Dokument dokument;
 
+    @Column(name = "zatankowano")
+    private double zatankowano;
+
     public long getId() {
         return id;
     }
@@ -43,6 +46,14 @@ public class Zuzycie {
         this.norma = norma;
     }
 
+    public double getZatankowano() {
+        return zatankowano;
+    }
+
+    public void setZatankowano(double zatankowano) {
+        this.zatankowano = zatankowano;
+    }
+
     public Dokument getDokument() {
         return dokument;
     }
@@ -58,6 +69,7 @@ public class Zuzycie {
                 ", wartosc=" + wartosc +
                 ", norma=" + norma +
                 ", dokument=" + dokument +
+                ", zatankowano=" + zatankowano +
                 '}';
     }
 

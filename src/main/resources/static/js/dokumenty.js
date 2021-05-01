@@ -52,6 +52,7 @@ $(document).ready(() => {
         $('#numer').val((maxRelDoc+1) + '/' + docMonth + '/' + docYear + '/' + maszynaId)
 
         $("#zuzycieTable > tr").remove();
+        $("#zuzycieTable > tbody > tr").remove();
 
         $.ajax({
             url: contextRoot + 'maszyna',
@@ -60,11 +61,13 @@ $(document).ready(() => {
             }
         })
         .done(maszyna => {
+            $('#zuzycieTable').append('<tr><th>zużycie</th><th>zużycie * norma = wynik</th><th>tankowanie</th></tr>')
             $.each(maszyna.normy, (i, norma) => {
                 $('#zuzycieTable').append('\
                 <tr class="zuzycie">\
-                    <td><input type="number" step="0.01" id="'+norma.id+'" normaId="'+norma.id+'" class="form-control" style="width: 90px;"></input></td>\
-                    <td><span>[h] * <b>'+norma.wartosc+'</b> ['+norma.jednostka+'] = </span><b><span id="wynik-'+norma.id+'"></span></b></td>\
+                    <td><input type="number" step="0.01" id="'+norma.id+'" normaId="'+norma.id+'" class="form-control" style="width: 90px;" value="0"></input></td>\
+                    <td><span>[h] * <b>'+norma.wartosc+'</b> ['+norma.jednostka+'] = </span><b><span id="wynik-'+norma.id+'">0</span></b></td>\
+                    <td><input type="number" step="0.01" id="tankowanie-'+norma.id+'" normaId="'+norma.id+'" class="form-control" style="width: 90px;" value="0"></input></td>\
                 </tr>\
                 ')
                 $('#'+norma.id).keyup(() => {
@@ -224,7 +227,7 @@ $(function() {
     dialog = $( "#dialog-form" ).dialog({
         autoOpen: false,
         height: 490,
-        width: 610,
+        width: 670,
         modal: true,
         buttons: {
             "Zapisz": function(){
