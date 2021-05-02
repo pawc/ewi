@@ -57,10 +57,8 @@ function updateTable(){
                 pozycja.suma,
                 pozycja.zatankowano,
                 endState,
-                `<button class="btn btn-info btn-stan" year="${nextMonthVal[0]}" month="${nextMonthVal[1]}" \
-                    normaId="${pozycja.normaId}" endState="${endState}" \
-                    onclick="save(${nextMonthVal[0]}, ${nextMonthVal[1]}, ${pozycja.normaId}, ${endState})">\
-                    Zapisz stan końcowy</button>`
+                `<label class="label-stan" year="${nextMonthVal[0]}" month="${nextMonthVal[1]}" \
+                    normaId="${pozycja.normaId}" endState="${endState}"</label>`
             ]).draw(false);
         })
     })
@@ -82,37 +80,6 @@ function nextMonth(){
     return [year, month, `${year}-${monthString}`]
 }
 
-function save(rok, miesiac, normaId, endState){
-
-    var stan = {
-        rok: rok,
-        miesiac: miesiac,
-        norma : {
-            id : normaId
-        },
-        wartosc : endState
-    }
-
-    var headers = {};
-    headers["Content-Type"] = "application/json; charset=utf-8";
-    var header = $("meta[name='_csrf_header']").attr("content");
-    var token = $("meta[name='_csrf']").attr("content");
-    headers[header] = token;
-    $.ajax({
-        url: contextRoot + 'stan',
-        data: JSON.stringify(stan),
-        type: 'POST',
-        headers: headers
-    })
-    .done(() => {
-        window.location.href = contextRoot + "?stanSuccess=true"
-    })
-    .fail(() => {
-        window.location.href = contextRoot + "?stanSuccess=false"
-    })
-
-}
-
 function prepareAjax(properties) {
   var defer = $.Deferred();
 
@@ -128,7 +95,7 @@ function prepareAjax(properties) {
 function saveAll(){
 
     var stany = []
-    $.each($('.btn-stan'), (i, btn) => {
+    $.each($('.label-stan'), (i, btn) => {
         var stan = {
             rok : $(btn).attr('year'),
             miesiac : $(btn).attr('month'),

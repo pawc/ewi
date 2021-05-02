@@ -81,3 +81,7 @@ table {
 #stanyTable > tbody > tr > td:nth-child(4){
     text-align: center;
 }
+
+#saveButtonDiv {
+    text-align: right;
+}
