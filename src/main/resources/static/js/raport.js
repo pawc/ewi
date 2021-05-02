@@ -49,15 +49,18 @@ function updateTable(){
     .done(pozycje => {
         var nextMonthVal = nextMonth()
         $.each(pozycje, (i, pozycja) => {
-            var endState = Math.round(((pozycja.suma - pozycja.zatankowano) + Number.EPSILON) * 10)/10
+            var endState = Math.round(((pozycja.stanPoprz - pozycja.suma + pozycja.zatankowano) + Number.EPSILON) * 10)/10
             t.row.add( [
                 pozycja.maszyna,
                 pozycja.jednostka,
+                pozycja.stanPoprz,
                 pozycja.suma,
                 pozycja.zatankowano,
                 endState,
-                `<button class="btn bstn-info btn-stan" onclick="save(${nextMonthVal[0]}, ${nextMonthVal[1]}, ${pozycja.normaId}, ${endState})">\
-                Zapisz jako stan <br>początkowy na ${nextMonthVal[2]}</button>`
+                `<button class="btn btn-info btn-stan" year="${nextMonthVal[0]}" month="${nextMonthVal[1]}" \
+                    normaId="${pozycja.normaId}" endState="${endState}" \
+                    onclick="save(${nextMonthVal[0]}, ${nextMonthVal[1]}, ${pozycja.normaId}, ${endState})">\
+                    Zapisz stan końcowy</button>`
             ]).draw(false);
         })
     })
@@ -106,6 +109,55 @@ function save(rok, miesiac, normaId, endState){
     })
     .fail(() => {
         window.location.href = contextRoot + "?stanSuccess=false"
+    })
+
+}
+
+function prepareAjax(properties) {
+  var defer = $.Deferred();
+
+  var promise = defer.promise();
+
+  return $.extend(promise, {
+    execute: function () {
+      return $.ajax(properties).then(defer.resolve.bind(defer), defer.reject.bind(defer));
+    }
+  });
+}
+
+function saveAll(){
+
+    var stany = []
+    $.each($('.btn-stan'), (i, btn) => {
+        var stan = {
+            rok : $(btn).attr('year'),
+            miesiac : $(btn).attr('month'),
+            norma : {
+                id : $(btn).attr('normaid')
+            },
+            wartosc : $(btn).attr('endstate')
+        }
+        stany.push(stan)
+    })
+
+    var headers = {};
+    headers["Content-Type"] = "application/json; charset=utf-8";
+    var header = $("meta[name='_csrf_header']").attr("content");
+    var token = $("meta[name='_csrf']").attr("content");
+    headers[header] = token
+    var properties = {
+        url: contextRoot + 'stany',
+        data: JSON.stringify(stany),
+        type: 'POST',
+        headers: headers
+    }
+
+    $.ajax(properties)
+    .done(() => {
+        window.location.href = contextRoot + "?stanySuccess=true"
+    })
+    .fail(() => {
+        window.location.href = contextRoot + "?stanySuccess=false"
     })
 
 }

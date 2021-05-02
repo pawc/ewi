@@ -11,6 +11,7 @@ public class Raport {
     private double suma;
     private double zatankowano;
     private long normaId;
+    private double stanPoprz;
 
     @Id
     private String Id;
@@ -47,6 +48,14 @@ public class Raport {
         this.zatankowano = zatankowano;
     }
 
+    public double getStanPoprz() {
+        return stanPoprz;
+    }
+
+    public void setStanPoprz(double stanPoprz) {
+        this.stanPoprz = stanPoprz;
+    }
+
     public long getNormaId() {
         return normaId;
     }
@@ -71,6 +80,7 @@ public class Raport {
                 ", suma=" + suma +
                 ", zatankowano=" + zatankowano +
                 ", normaId=" + normaId +
+                ", stanPoprz=" + stanPoprz +
                 ", Id='" + Id + '\'' +
                 '}';
     }

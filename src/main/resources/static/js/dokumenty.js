@@ -102,7 +102,7 @@ function updateTable(){
                 dokument.data,
                 dokument.maszyna.nazwa + ' (' + dokument.maszyna.id + ')',
                 '<button class="btn btn-info" onclick="edytujBtn(\''+dokument.numer+'\')">edytuj <i class="fas fa-edit"></i></button>'
-                 +'<button class="btn btn-danger" onclick="usunBtn(\''+dokument.numer+'\')">usuń <i class="fas fa-trash-alt"></i></button>'
+                 +'<button class="btn btn-warning" onclick="usunBtn(\''+dokument.numer+'\')">usuń <i class="fas fa-trash-alt"></i></button>'
             ]).draw(false);
         })
     })
@@ -173,7 +173,10 @@ function dodajBtn(){
     $('#maszyna').prop("disabled", false);
     $('#numer').prop("disabled", false);
 
-    $('#data').val(formatDate(new Date()));
+    var today = new Date().getDate();
+    var todayS = (today > 9) ? today : '0' + today
+    $('#data').val($('#miesiac').val()+'-'+todayS)
+
     $("#zuzycieTable > tbody > tr").remove();
     $('#zuzycieTable').append('<tr><th>zużycie</th><th>zużycie * norma = wynik</th><th>tankowanie</th></tr>')
     $('#maszyna').val(-1);

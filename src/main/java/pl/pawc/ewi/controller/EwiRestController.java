@@ -286,4 +286,27 @@ public class EwiRestController {
         }
     }
 
+    @PostMapping("stany")
+    public void stanyPost(
+            @RequestBody List<Stan> stany,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+        List<Stan> byParams = null;
+        Stan stanDB = null;
+        for(Stan stan : stany){
+            byParams = stanRepository.findBy(stan.getNorma().getId(), stan.getRok(), stan.getMiesiac());
+            if(byParams.isEmpty()){
+                stanRepository.save(stan);
+                logger.info("["+request.getRemoteAddr()+"] - /stany POST - dodano - " + stan.toString() + " - normaID=" + stan.getNorma().getId());
+            }
+            else{
+                stanDB = byParams.get(0);
+                stanDB.setWartosc(stan.getWartosc());
+                stanRepository.save(stanDB);
+                logger.info("["+request.getRemoteAddr()+"] - /stany POST - zaktualizowano - " + stan.toString() + " - normaID=" + stan.getNorma().getId());
+            }
+        }
+    }
+
 }
