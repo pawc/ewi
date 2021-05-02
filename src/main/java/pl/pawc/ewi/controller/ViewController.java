@@ -5,19 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-public class EwiController {
+public class ViewController {
 
-    private static final Logger logger = Logger.getLogger(EwiController.class);
-
-    @Autowired
-    DokumentRepository dokumentRepository;
+    private static final Logger logger = Logger.getLogger(ViewController.class);
 
     @Autowired
     MaszynaRepository maszynaRepository;
