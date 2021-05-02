@@ -59,6 +59,16 @@ public class EwiController {
 
     }
 
+    @RequestMapping("/stany")
+    public String stany(
+            Model model,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+        return "stany";
+
+    }
+
     @RequestMapping("/login")
     public String login(
             HttpServletRequest request,

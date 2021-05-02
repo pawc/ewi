@@ -66,6 +66,18 @@ table {
     padding-right: 15px;
 }
 
-#raportTable > tbody > tr {
+#raportTable > tbody > tr  {
+    text-align: center;
+}
+
+#stanyTable > tbody > tr > td:nth-child(3){
+    display:flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+#stanyTable > tbody > tr > td:nth-child(4){
     text-align: center;
 }
