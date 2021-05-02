@@ -6,24 +6,28 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Norma {
+public class Stan {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 
-    @Column(name = "jednostka")
-    private String jednostka;
+    @Column
+    private int miesiac;
 
-    @Column(name = "wartosc")
-    private double wartosc;
+    @Column
+    private int rok;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Maszyna maszyna;
+    @JoinColumn(name="norma_id", nullable=false)
+    private Norma norma;
+
+    @Column(columnDefinition = "double default 0")
+    private double wartosc;
 
     public long getId() {
         return id;
@@ -33,12 +37,12 @@ public class Norma {
         this.id = id;
     }
 
-    public String getJednostka() {
-        return jednostka;
+    public Norma getNorma() {
+        return norma;
     }
 
-    public void setJednostka(String jednostka) {
-        this.jednostka = jednostka;
+    public void setNorma(Norma norma) {
+        this.norma = norma;
     }
 
     public double getWartosc() {
@@ -49,21 +53,30 @@ public class Norma {
         this.wartosc = wartosc;
     }
 
-    public Maszyna getMaszyna() {
-        return maszyna;
+    public int getMiesiac() {
+        return miesiac;
     }
 
-    public void setMaszyna(Maszyna maszyna) {
-        this.maszyna = maszyna;
+    public void setMiesiac(int miesiac) {
+        this.miesiac = miesiac;
+    }
+
+    public int getRok() {
+        return rok;
+    }
+
+    public void setRok(int rok) {
+        this.rok = rok;
     }
 
     @Override
     public String toString() {
-        return "Norma{" +
+        return "Stan{" +
                 "id=" + id +
-                ", jednostka='" + jednostka + '\'' +
+                ", miesiac=" + miesiac +
+                ", rok=" + rok +
+                ", norma=" + norma.getId() +
                 ", wartosc=" + wartosc +
-                ", maszyna=" + maszyna +
                 '}';
     }
 

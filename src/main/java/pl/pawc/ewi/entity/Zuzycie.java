@@ -1,6 +1,12 @@
 package pl.pawc.ewi.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Zuzycie {
@@ -19,7 +25,7 @@ public class Zuzycie {
     @ManyToOne(fetch = FetchType.LAZY)
     private Dokument dokument;
 
-    @Column(name = "zatankowano")
+    @Column(columnDefinition = "double default 0")
     private double zatankowano;
 
     public long getId() {

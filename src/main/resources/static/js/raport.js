@@ -56,8 +56,8 @@ function updateTable(){
                 pozycja.suma,
                 pozycja.zatankowano,
                 endState,
-                `<button class="btn btn-info" onclick="save('${nextMonthVal}', ${pozycja.normaId}, ${endState})">\
-                Zapisz jako stan <br>początkowy na ${nextMonthVal}</button>`
+                `<button class="btn bstn-info btn-stan" onclick="save(${nextMonthVal[0]}, ${nextMonthVal[1]}, ${pozycja.normaId}, ${endState})">\
+                Zapisz jako stan <br>początkowy na ${nextMonthVal[2]}</button>`
             ]).draw(false);
         })
     })
@@ -76,9 +76,36 @@ function nextMonth(){
     }
 
     var monthString = (month > 9) ? month : '0' + month
-    return `${year}-${monthString}`
+    return [year, month, `${year}-${monthString}`]
 }
 
-function save(nextMonthVal, normaId, endState){
-    alert(nextMonthVal + '\n' + normaId + '\n' + endState)
+function save(rok, miesiac, normaId, endState){
+
+    var stan = {
+        rok: rok,
+        miesiac: miesiac,
+        norma : {
+            id : normaId
+        },
+        wartosc : endState
+    }
+
+    var headers = {};
+    headers["Content-Type"] = "application/json; charset=utf-8";
+    var header = $("meta[name='_csrf_header']").attr("content");
+    var token = $("meta[name='_csrf']").attr("content");
+    headers[header] = token;
+    $.ajax({
+        url: contextRoot + 'stan',
+        data: JSON.stringify(stan),
+        type: 'POST',
+        headers: headers
+    })
+    .done(() => {
+        window.location.href = contextRoot + "?stanSuccess=true"
+    })
+    .fail(() => {
+        window.location.href = contextRoot + "?stanSuccess=false"
+    })
+
 }

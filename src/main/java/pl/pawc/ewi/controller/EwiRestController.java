@@ -2,6 +2,7 @@ package pl.pawc.ewi.controller;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.pawc.ewi.entity.Dokument;
 import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.entity.Norma;
+import pl.pawc.ewi.entity.Stan;
 import pl.pawc.ewi.entity.Zuzycie;
 import pl.pawc.ewi.model.Raport;
 import pl.pawc.ewi.repository.*;
@@ -38,6 +40,9 @@ public class EwiRestController {
 
     @Autowired
     RaportRepository raportRepository;
+
+    @Autowired
+    StanRepository stanRepository;
 
     @RequestMapping("/maszyna")
     public Maszyna maszynaGet(
@@ -260,6 +265,25 @@ public class EwiRestController {
 
         return raport;
 
+    }
+
+    @PostMapping("stan")
+    public void stanPost(
+            @RequestBody Stan stan,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+        List<Stan> byParams = stanRepository.findBy(stan.getNorma().getId(), stan.getRok(), stan.getMiesiac());
+        if(byParams.isEmpty()){
+            stanRepository.save(stan);
+            logger.info("["+request.getRemoteAddr()+"] - /stan POST - dodano - " + stan.toString() + " - normaID=" + stan.getNorma().getId());
+        }
+        else{
+            Stan stanDB = byParams.get(0);
+            stanDB.setWartosc(stan.getWartosc());
+            stanRepository.save(stanDB);
+            logger.info("["+request.getRemoteAddr()+"] - /stan POST - zaktualizowano - " + stan.toString() + " - normaID=" + stan.getNorma().getId());
+        }
     }
 
 }
