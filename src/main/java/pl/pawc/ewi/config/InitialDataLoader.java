@@ -49,25 +49,33 @@ public class InitialDataLoader implements ApplicationRunner {
     @Value("${testDataLoad}")
     private String testDataLoadString;
 
-    @Value("${dummyUser}")
-    private String dummyUserString;
+    @Value("${myUser}")
+    private String myUser;
+
+    @Value("${myPassword}")
+    private String myPassword;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
         testData();
-        dummyUser();
+        myUser();
 
     }
 
-    private void dummyUser() {
-        Boolean dummyUser = Boolean.valueOf(dummyUserString);
-        if(dummyUser && !userRepository.findById("admin").isPresent()){
-            User user = new User();
-            user.setLogin("admin");
-            String password = passwordEncoder.encode("admin");
-            user.setPassword(password);
-            userRepository.save(user);;
+    private void myUser() {
+        User user = new User();
+        if(myUser.length() > 4 && myPassword.length() > 4 && !userRepository.findById(myUser).isPresent()){
+            user.setLogin(myUser);
+            user.setPassword(passwordEncoder.encode(myPassword));
+            userRepository.save(user);
+        }
+        else {
+            if(!userRepository.findById(myUser).isPresent()){
+                user.setLogin("admin");
+                user.setPassword(passwordEncoder.encode("admin"));
+                userRepository.save(user);
+            }
         }
     }
 

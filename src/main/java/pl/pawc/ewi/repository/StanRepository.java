@@ -21,9 +21,9 @@ public interface StanRepository extends CrudRepository<Stan, String> {
         "n.id as normaid, " +
         "if(s.id is null, -1, s.id) as stanid, " +
         "IF(s.wartosc IS NULL, 0, s.wartosc) AS stanpoczatkowy " +
-        "FROM Norma n " +
-        "JOIN Maszyna m ON n.maszyna_id = m.id " +
-        "left join Stan s ON n.id = s.norma_id " +
+        "FROM norma n " +
+        "JOIN maszyna m ON n.maszyna_id = m.id " +
+        "left join stan s ON n.id = s.norma_id " +
         "AND s.rok = ?1 AND s.miesiac = ?2", nativeQuery = true)
     List<StanRaport> findBy(int rok, int miesiac);
 
