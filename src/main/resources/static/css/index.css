@@ -85,3 +85,11 @@ table {
 #saveButtonDiv {
     text-align: right;
 }
+
+#maszyna {
+    width: 100%;
+}
+
+#dialog-form {
+  overflow-x: hidden;
+}

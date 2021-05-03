@@ -1,6 +1,11 @@
 package pl.pawc.ewi.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +18,9 @@ public class Dokument {
 
     @Column(name = "data")
     private Date data;
+
+    @Column(columnDefinition = "double default 0")
+    private double kilometry;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Maszyna maszyna;
@@ -52,12 +60,21 @@ public class Dokument {
         this.zuzycie = zuzycie;
     }
 
+    public double getKilometry() {
+        return kilometry;
+    }
+
+    public void setKilometry(double kilometry) {
+        this.kilometry = kilometry;
+    }
+
     @Override
     public String toString() {
         return "Dokument{" +
                 "numer='" + numer + '\'' +
                 ", data=" + data +
-                ", maszyna=" + maszyna +
+                ", kilometry=" + kilometry +
+                ", maszyna=" + maszyna.getId() +
                 ", zuzycie=" + zuzycie +
                 '}';
     }

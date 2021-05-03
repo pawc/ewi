@@ -12,8 +12,11 @@
                 <li><a th:href="@{/stany}" id="stanyLink"><i class="fas fa-gas-pump"></i> Stany<br>początkowe</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Wyloguj się</a></li>
+                <li><a href="javascript: document.logoutForm.submit()"><i class="fas fa-sign-out-alt"></i> Wyloguj się</a></li>
             </ul>
+            <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+                <input hidden type="submit"/>
+            </form>
         </div>
     </div>
 </nav>

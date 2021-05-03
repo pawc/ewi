@@ -11,6 +11,7 @@ import java.util.List;
 public interface RaportRepository extends CrudRepository<Raport, String> {
 
     @Query(value = "select concat(m.nazwa, ' (', m.id, ')') as maszyna, " +
+            "sum(round(d.kilometry, 1)) as kilometry, "+
             "n.jednostka, " +
             "sum(round(z.wartosc*n.wartosc, 1)) as suma, " +
             "sum(round(z.zatankowano, 1)) as zatankowano, " +

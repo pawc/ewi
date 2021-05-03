@@ -52,6 +52,7 @@ function updateTable(){
             var endState = Math.round(((pozycja.stanPoprz - pozycja.suma + pozycja.zatankowano) + Number.EPSILON) * 10)/10
             t.row.add( [
                 pozycja.maszyna,
+                pozycja.kilometry,
                 pozycja.jednostka,
                 pozycja.stanPoprz,
                 pozycja.suma,

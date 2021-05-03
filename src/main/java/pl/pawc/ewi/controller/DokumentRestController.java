@@ -109,6 +109,7 @@ public class DokumentRestController {
             Dokument dokumentDB = byId.get();
 
             dokumentDB.setData(dokument.getData());
+            dokumentDB.setKilometry(dokument.getKilometry());
             dokumentRepository.save(dokumentDB);
 
             for(Zuzycie zuzycie : dokument.getZuzycie()) {

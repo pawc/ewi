@@ -7,6 +7,7 @@ import javax.persistence.Id;
 public class Raport {
 
     private String maszyna;
+    private double kilometry;
     private String jednostka;
     private double suma;
     private double zatankowano;
@@ -72,10 +73,19 @@ public class Raport {
         Id = id;
     }
 
+    public double getKilometry() {
+        return kilometry;
+    }
+
+    public void setKilometry(double kilometry) {
+        this.kilometry = kilometry;
+    }
+
     @Override
     public String toString() {
         return "Raport{" +
                 "maszyna='" + maszyna + '\'' +
+                ", kilometry=" + kilometry +
                 ", jednostka='" + jednostka + '\'' +
                 ", suma=" + suma +
                 ", zatankowano=" + zatankowano +

@@ -68,33 +68,35 @@
 
         <div id="dialog-form" title="">
 
-            <table>
-                <tr>
-                    <td style="vertical-align: text-top;">
-                        <label for="numer">Numer</label>
-                        <input type="text" name="numer" id="numer" autocomplete="off" value="" class="text ui-widget-content ui-corner-all">
-                        <label class="text-danger" id="error">Dokument o podanym numerze już istnieje.</label>
-                    </td>
-                    <td style="vertical-align: text-top;">
-                        <label for="data">Data</label>
-                        <input type="date" name="data" id="data" value="" class="text ui-widget-content ui-corner-all">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="maszyna">Maszyna</label>
-                        <select name="maszyna" id="maszyna" size="15">
-                            <option th:each="maszyna : ${maszyny}" th:value="${maszyna.id}">
-                                <span th:text="${maszyna.nazwa}"></span> (<span th:text="${maszyna.id}"></span>)
-                            </option>
-                        </select>
-                    </td>
-                    <td style="vertical-align: text-top;">
-                        <br>
-                        <table class="table" id="zuzycieTable"></table>
-                    </td>
-                </tr>
-            </table>
+            <div class="row">
+                <div class="col-lg-4" style="vertical-align: text-top;">
+                    <label for="numer">Numer</label>
+                    <input type="text" name="numer" id="numer" autocomplete="off" value="" class="text ui-widget-content ui-corner-all">
+                    <label class="text-danger" id="error">Dokument o podanym numerze już istnieje.</label>
+                </div>
+                <div class="col-lg-4" style="vertical-align: text-top;">
+                    <label for="data">Data</label>
+                    <input type="date" name="data" id="data" value="" class="text ui-widget-content ui-corner-all">
+                </div>
+                <div class="col-lg-4" style="vertical-align: text-top;">
+                    <label for="kilometry">Kilometry</label>
+                    <input type="number" step="0.1" name="kilometry" id="kilometry" autocomplete="off" value="" class="text ui-widget-content ui-corner-all">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <label for="maszyna">Maszyna</label>
+                    <select name="maszyna" id="maszyna" size="15">
+                        <option th:each="maszyna : ${maszyny}" th:value="${maszyna.id}">
+                            <span th:text="${maszyna.nazwa}"></span> (<span th:text="${maszyna.id}"></span>)
+                        </option>
+                    </select>
+                </div>
+                <div class="col-lg-8">
+                    <table class="table" id="zuzycieTable"></table>
+                </div>
+            </div>
 
         </div>
 
