@@ -4,14 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.pawc.ewi.entity.Dokument;
 import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.entity.Norma;
+import pl.pawc.ewi.entity.Stan;
+import pl.pawc.ewi.entity.User;
 import pl.pawc.ewi.entity.Zuzycie;
 import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
 import pl.pawc.ewi.repository.NormaRepository;
+import pl.pawc.ewi.repository.StanRepository;
+import pl.pawc.ewi.repository.UserRepository;
 import pl.pawc.ewi.repository.ZuzycieRepository;
 
 import java.sql.Date;
@@ -32,14 +37,42 @@ public class InitialDataLoader implements ApplicationRunner {
     @Autowired
     ZuzycieRepository zuzycieRepository;
 
-    @Value( "${testDataLoad}" )
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    StanRepository stanRepository;
+
+    @Value("${testDataLoad}")
     private String testDataLoadString;
+
+    @Value("${dummyUser}")
+    private String dummyUserString;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        Boolean testDataLoad = Boolean.valueOf(testDataLoadString);
+        testData();
+        dummyUser();
 
+    }
+
+    private void dummyUser() {
+        Boolean dummyUser = Boolean.valueOf(dummyUserString);
+        if(dummyUser && !userRepository.findById("admin").isPresent()){
+            User user = new User();
+            user.setLogin("admin");
+            String password = passwordEncoder.encode("admin");
+            user.setPassword(password);
+            userRepository.save(user);;
+        }
+    }
+
+    private void testData() {
+        Boolean testDataLoad = Boolean.valueOf(testDataLoadString);
         if(testDataLoad){
 
             Calendar cal = Calendar.getInstance();
@@ -51,15 +84,22 @@ public class InitialDataLoader implements ApplicationRunner {
 
             Maszyna maszyna = new Maszyna();
             maszyna.setId("W123");
-            maszyna.setNazwa("Wózek");
-            maszyna.setOpis("Przykładowy opis wózka");
+            maszyna.setNazwa("Woz");
+            maszyna.setOpis("Opis 1");
             maszynaRepository.save(maszyna);
 
             Norma norma = new Norma();
-            norma.setJednostka("litrów oleju/motogodzinę");
+            norma.setJednostka("ON/H");
             norma.setWartosc(7.5);
             norma.setMaszyna(maszyna);
             normaRepository.save(norma);
+
+            Stan stan = new Stan();
+            stan.setNorma(norma);
+            stan.setMiesiac(month);
+            stan.setRok(year);
+            stan.setWartosc(200);
+            stanRepository.save(stan);
 
             Zuzycie zuzycie1 = new Zuzycie();
             zuzycie1.setNorma(norma);
@@ -72,10 +112,17 @@ public class InitialDataLoader implements ApplicationRunner {
             zuzycie3.setZatankowano(0);
 
             norma = new Norma();
-            norma.setJednostka("litrów opału/godzinę");
+            norma.setJednostka("A/H");
             norma.setWartosc(2.1);
             norma.setMaszyna(maszyna);
             normaRepository.save(norma);
+
+            stan = new Stan();
+            stan.setNorma(norma);
+            stan.setMiesiac(month);
+            stan.setRok(year);
+            stan.setWartosc(20);
+            stanRepository.save(stan);
 
             Zuzycie zuzycie2 = new Zuzycie();
             zuzycie2.setNorma(norma);
@@ -111,7 +158,6 @@ public class InitialDataLoader implements ApplicationRunner {
             zuzycieRepository.save(zuzycie4);
 
         }
-
     }
 
 }
