@@ -57,9 +57,10 @@ function updateTable(){
                 pozycja.stanPoprz,
                 pozycja.suma,
                 pozycja.zatankowano,
-                endState+
-                `<label class="label-stan" year="${nextMonthVal[0]}" month="${nextMonthVal[1]}" \
-                    normaId="${pozycja.normaId}" endState="${endState}"></label>`
+                endState,
+                pozycja.normaId,
+                nextMonthVal[0],
+                nextMonthVal[1]
             ]).draw(false);
         })
     })
@@ -96,14 +97,15 @@ function prepareAjax(properties) {
 function saveAll(){
 
     var stany = []
-    $.each($('.label-stan'), (i, lbl) => {
+    var rows = $('#raportTable').DataTable().rows().data()
+    $.each(rows, (i, row) => {
         var stan = {
-            rok : $(lbl).attr('year'),
-            miesiac : $(lbl).attr('month'),
+            rok : row[8],
+            miesiac : row[9],
             norma : {
-                id : $(lbl).attr('normaid')
+                id : row[7]
             },
-            wartosc : $(lbl).attr('endstate')
+            wartosc : row[6]
         }
         stany.push(stan)
     })

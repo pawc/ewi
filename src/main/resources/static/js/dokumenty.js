@@ -6,11 +6,19 @@ $(document).ready(() => {
     $('#dokumentyLink').css("font-weight", "bold");
     $('#dokumentyLink').css("text-decoration", "underline");
 
-    var month = new Date().getMonth()+1
-    if(month < 10) month = '0' + month
+    var queryString = window.location.search;
+    var urlParams = new URLSearchParams(queryString);
+    var monthParam = urlParams.get('month');
+    if(monthParam){
+        $('#miesiac').val(monthParam)
+    }
+    else{
+        var month = new Date().getMonth()+1
+        if(month < 10) month = '0' + month
 
-    var year = new Date().getFullYear()
-    $('#miesiac').val(year + '-' + month)
+        var year = new Date().getFullYear()
+        $('#miesiac').val(year + '-' + month)
+    }
 
     t = $('#dokumentyTable').DataTable({
         "language": {
@@ -41,9 +49,10 @@ $(document).ready(() => {
         var maszynaId = $('#maszyna option:selected').val();
 
         var maxRelDoc = 0;
-        $.each($('.dokNumer'), (i, row) => {
-            if(row.textContent.includes(maszynaId)){
-                maxRelDoc = parseInt(row.textContent.split('/')[0])
+        var rows = $('#dokumentyTable').DataTable().rows().data()
+        $.each(rows, (i, row) => {
+            if(row[0].includes(maszynaId)){
+                maxRelDoc = Math.max(parseInt(row[0].split('/')[0]), maxRelDoc)
             }
         })
 
@@ -98,7 +107,7 @@ function updateTable(){
         t.clear().draw();
         $.each(dokumenty, (i, dokument) => {
             t.row.add([
-                '<label class="dokNumer">' + dokument.numer + '</label>',
+                dokument.numer,
                 dokument.data,
                 dokument.maszyna.nazwa + ' (' + dokument.maszyna.id + ')',
                 '<button class="btn btn-info" onclick="edytujBtn(\''+dokument.numer+'\')">edytuj <i class="fas fa-edit"></i></button>'
@@ -303,10 +312,10 @@ $(function() {
                     })
                     .done(() => {
                         if(type == 'POST'){
-                            window.location.href = contextRoot + "dokumenty?success="+dokument.numer;
+                            window.location.href = contextRoot + "dokumenty?success="+dokument.numer+'&month='+$('#miesiac').val();
                         }
                         else{
-                            window.location.href = contextRoot + "dokumenty"
+                            window.location.href = contextRoot + "dokumenty?month="+$('#miesiac').val()
                         }
                     })
                     .fail(() => {
