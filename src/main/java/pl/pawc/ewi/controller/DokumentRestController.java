@@ -38,7 +38,8 @@ public class DokumentRestController {
     public Dokument dokumentGet(
             HttpServletRequest request,
             HttpServletResponse response,
-            @RequestParam("numer") String numer){
+            @RequestParam("numer") String numer,
+            @RequestParam(name = "miesiac", required = false) String miesiac){
 
         Optional<Dokument> result = dokumentRepository.findById(numer);
         Dokument dokument = null;
@@ -46,10 +47,26 @@ public class DokumentRestController {
             dokument = result.get();
             List<Zuzycie> zuzycieList = zuzycieRepository.findByDokumentId(dokument.getNumer());
             for(Zuzycie zuzycie : zuzycieList){
+                if(miesiac != null){
+                    int year;
+                    int month;
+
+                    try{
+                        year = Integer.parseInt(miesiac.split("-")[0]);
+                        month = Integer.parseInt(miesiac.split("-")[1]);
+                        Double suma = dokumentRepository.getSuma(zuzycie.getNorma().getId(), year, month);
+                        zuzycie.getNorma().setSuma(suma);
+                    }
+                    catch(NumberFormatException e){
+                        // skip
+                    }
+                }
+
                 zuzycie.setDokument(null);
                 zuzycie.getNorma().setMaszyna(null);
             }
             dokument.setZuzycie(zuzycieList);
+
             logger.info("["+request.getRemoteAddr()+"] - /dokument GET numer="+numer);
         }
         else{

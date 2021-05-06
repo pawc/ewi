@@ -1,12 +1,6 @@
 package pl.pawc.ewi.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class Norma {
@@ -24,6 +18,9 @@ public class Norma {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Maszyna maszyna;
+
+    @Transient
+    private Double suma;
 
     public long getId() {
         return id;
@@ -57,6 +54,14 @@ public class Norma {
         this.maszyna = maszyna;
     }
 
+    public Double getSuma() {
+        return suma;
+    }
+
+    public void setSuma(Double suma) {
+        this.suma = suma;
+    }
+
     @Override
     public String toString() {
         return "Norma{" +
@@ -64,6 +69,7 @@ public class Norma {
                 ", jednostka='" + jednostka + '\'' +
                 ", wartosc=" + wartosc +
                 ", maszyna=" + maszyna +
+                ", suma=" + suma +
                 '}';
     }
 

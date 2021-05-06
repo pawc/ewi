@@ -60,12 +60,12 @@ table {
     border: 1px solid black;
     text-align: center;
 }
-
+/*
 #zuzycieTable > tr > td:nth-child(2) {
     padding-left: 15px;
     padding-right: 15px;
 }
-
+*/
 #raportTable > tbody > tr  {
     text-align: center;
 }

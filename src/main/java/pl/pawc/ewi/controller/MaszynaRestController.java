@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.entity.Norma;
+import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
 import pl.pawc.ewi.repository.NormaRepository;
 
@@ -22,13 +23,17 @@ public class MaszynaRestController {
     @Autowired
     NormaRepository normaRepository;
 
+    @Autowired
+    DokumentRepository dokumentRepository;
+
     private static final Logger logger = Logger.getLogger(MaszynaRestController.class);
 
     @RequestMapping("/maszyna")
     public Maszyna maszynaGet(
             HttpServletRequest request,
             HttpServletResponse response,
-            @RequestParam("id") String id){
+            @RequestParam("id") String id,
+            @RequestParam(name = "miesiac", required = false) String miesiac){
 
         Optional<Maszyna> result = maszynaRepository.findById(id);
         Maszyna maszyna = null;
@@ -37,6 +42,18 @@ public class MaszynaRestController {
             List<Norma> normy = normaRepository.findByMaszynaId(id);
             for(Norma norma : normy){
                 norma.setMaszyna(null);
+                int year;
+                int month;
+
+                try{
+                    year = Integer.parseInt(miesiac.split("-")[0]);
+                    month = Integer.parseInt(miesiac.split("-")[1]);
+                    Double suma = dokumentRepository.getSuma(norma.getId(), year, month);
+                    norma.setSuma(suma);
+                }
+                catch(NumberFormatException e){
+                    // skip
+                }
             }
             maszyna.setNormy(normy);
             logger.info("["+request.getRemoteAddr()+"] - /maszyna GET id="+id );
