@@ -260,10 +260,10 @@ $(function() {
 
                  var zuzycie = []
                  $('.zuzycie').each(function(i, tr){
-                    var wartosc = $(this).find('td:eq(0) > input').val()
-                    var zatankowano =  $(this).find('td:eq(2) > input').val()
-                    var zuzycieId = $(this).find('td:eq(0) > input').attr('ID')
-                    var normaId = $(this).find('td:eq(0) > input').attr('normaId')
+                    var wartosc = $(this).find('td:eq(1) > input').val()
+                    var zatankowano =  $(this).find('td:eq(3) > input').val()
+                    var zuzycieId = $(this).find('td:eq(1) > input').attr('ID')
+                    var normaId = $(this).find('td:eq(1) > input').attr('normaId')
                     var z = {
                         wartosc: wartosc,
                         id: zuzycieId,
