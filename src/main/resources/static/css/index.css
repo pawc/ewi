@@ -94,10 +94,10 @@ table {
   overflow-x: hidden;
 }
 
-#zuzycieTable > tbody > tr > td:nth-child(1),
-#zuzycieTable > tbody > tr > th:nth-child(1),
-#zuzycieTable > tbody > tr > td:nth-child(5),
-#zuzycieTable > tbody > tr > th:nth-child(5)
+#zuzycieTable > tbody > tr > th:first-child,
+#zuzycieTable > tbody > tr > th:last-child,
+#zuzycieTable > tbody > tr > td:first-child,
+#zuzycieTable > tbody > tr > td:last-child
 {
     background-color: #8fcbf2;
 }

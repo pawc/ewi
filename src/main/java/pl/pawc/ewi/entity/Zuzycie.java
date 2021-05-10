@@ -28,6 +28,9 @@ public class Zuzycie {
     @Column(columnDefinition = "double default 0")
     private double zatankowano;
 
+    @Column(columnDefinition = "double default 0")
+    private double ogrzewanie;
+
     public long getId() {
         return id;
     }
@@ -68,6 +71,14 @@ public class Zuzycie {
         this.dokument = dokument;
     }
 
+    public double getOgrzewanie() {
+        return ogrzewanie;
+    }
+
+    public void setOgrzewanie(double ogrzewanie) {
+        this.ogrzewanie = ogrzewanie;
+    }
+
     @Override
     public String toString() {
         return "Zuzycie{" +
@@ -76,6 +87,7 @@ public class Zuzycie {
                 ", norma=" + norma +
                 ", dokument=" + dokument +
                 ", zatankowano=" + zatankowano +
+                ", ogrzewanie=" + ogrzewanie +
                 '}';
     }
 

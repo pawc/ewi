@@ -60,7 +60,7 @@ $(document).ready(() => {
         var docYear = $('#data').val().substr(0,4);
         $('#numer').val((maxRelDoc+1) + '/' + docMonth + '/' + docYear + '/' + maszynaId)
 
-        $("#zuzycieTable > tbody > tr > td").remove();
+        $("#zuzycieTable > tbody > tr").remove();
 
         $.ajax({
             url: contextRoot + 'maszyna',
@@ -70,6 +70,19 @@ $(document).ready(() => {
             }
         })
         .done(maszyna => {
+
+            var czyOgrzewanie = false;
+            $.each(maszyna.normy, (i, norma) => {
+                czyOgrzewanie = czyOgrzewanie || norma.czyOgrzewanie
+            })
+
+            if(czyOgrzewanie){
+                $('#zuzycieTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">ogrzewanie [L]</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
+            }
+            else{
+                $('#zuzycieTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
+            }
+
             $.each(maszyna.normy, (i, norma) => {
                 var normaSuma = (norma.suma == null) ? 0 : norma.suma
 
@@ -87,7 +100,7 @@ $(document).ready(() => {
                     type: 'number',
                     step: '0.01',
                     normaId: norma.id,
-                    class: 'form-control',
+                    class: 'form-control zuzycie-val',
                     value : '0'
                 }).appendTo(td2)
 
@@ -103,8 +116,29 @@ $(document).ready(() => {
                     inputZuzycieEcho.html(inputZuzycie.val())
                     wynik.html(Math.round(((inputZuzycie.val() * norma.wartosc) + Number.EPSILON) * 10)/10)
                     var inputTankowanieVal = (inputTankowanie.val() == '') ? 0 : parseFloat(inputTankowanie.val())
-                    td5.html(normaSuma + parseFloat(wynik.html()) + inputTankowanieVal)
+                    inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : parseFloat(inputOgrzewanie.val())
+                    td5.html(normaSuma - parseFloat(wynik.html()) + inputTankowanieVal - inputOgrzewanieVal)
                 })
+
+                console.log(czyOgrzewanie)
+                if(czyOgrzewanie){
+                    var tdOgrzewanie = $('<td>')
+
+                    if(norma.czyOgrzewanie){
+                        var inputOgrzewanie = $('<input>').attr({
+                            type: 'number',
+                            step: '0.01',
+                            normaId: norma.id,
+                            class: 'form-control ogrzewanie-val',
+                            value : '0'
+                        }).appendTo(tdOgrzewanie)
+                        .keyup(() => {
+                            wynik.html(Math.round(((inputZuzycie.val() * norma.wartosc) + Number.EPSILON) * 10)/10)
+                            td5.html(normaSuma - parseFloat(wynik.html()) + parseFloat(inputTankowanie.val()) - parseFloat(inputOgrzewanie.val()))
+                        })
+                    }
+                    tdOgrzewanie.appendTo(tr)
+                }
 
                 var td4 = $('<td>')
                 td4.appendTo(tr)
@@ -113,7 +147,7 @@ $(document).ready(() => {
                     type: 'number',
                     step: '0.01',
                     normaId: norma.id,
-                    class: 'form-control',
+                    class: 'form-control tankowanie-val',
                     value : '0'
                 }).appendTo(td4)
 
@@ -122,7 +156,8 @@ $(document).ready(() => {
 
                 inputTankowanie.keyup(() => {
                     wynik.html(Math.round(((inputZuzycie.val() * norma.wartosc) + Number.EPSILON) * 10)/10)
-                    td5.html(normaSuma + parseFloat(wynik.html()) + parseFloat(inputTankowanie.val()))
+                    inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : parseFloat(inputOgrzewanie.val())
+                    td5.html(normaSuma - parseFloat(wynik.html()) + parseFloat(inputTankowanie.val()) - inputOgrzewanieVal)
                 })
 
             })
@@ -234,7 +269,6 @@ function dodajBtn(){
     $('#kilometry').val(0)
 
     $("#zuzycieTable > tbody > tr").remove();
-    $('#zuzycieTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">tankowanie</th><th width="60px;">suma po</th></tr>')
     $('#maszyna').val(-1);
     type = 'POST';
     dialog.dialog("open");
@@ -299,17 +333,21 @@ $(function() {
 
                  var zuzycie = []
                  $('.zuzycie').each(function(i, tr){
-                    var wartosc = $(this).find('td:eq(1) > input').val()
-                    var zatankowano =  $(this).find('td:eq(3) > input').val()
-                    var zuzycieId = $(this).find('td:eq(1) > input').attr('ID')
-                    var normaId = $(this).find('td:eq(1) > input').attr('normaId')
+                    var wartosc = $(this).find('td > input.zuzycie-val').val()
+                    var zatankowano =  $(this).find('td > input.tankowanie-val').val()
+                    var ogrzewanie = $(this).find('td > input.ogrzewanie-val').val()
+                    if(!ogrzewanie) ogrzewanie = '0'
+                    var zuzycieId = $(this).find('td > input.zuzycie-val').attr('ID')
+                    var normaId = $(this).find('td > input.zuzycie-val').attr('normaId')
                     var z = {
                         wartosc: wartosc,
                         id: zuzycieId,
                         norma: {
                             id: normaId
                         },
-                        zatankowano: zatankowano
+                        zatankowano: zatankowano,
+                        ogrzewanie: ogrzewanie
+
                     }
                     zuzycie.push(z)
                 })
