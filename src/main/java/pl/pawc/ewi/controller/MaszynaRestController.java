@@ -45,15 +45,18 @@ public class MaszynaRestController {
                 int year;
                 int month;
 
-                try{
-                    year = Integer.parseInt(miesiac.split("-")[0]);
-                    month = Integer.parseInt(miesiac.split("-")[1]);
-                    Double suma = dokumentRepository.getSuma(norma.getId(), year, month);
-                    norma.setSuma(suma);
+                if(miesiac != null){
+                    try{
+                        year = Integer.parseInt(miesiac.split("-")[0]);
+                        month = Integer.parseInt(miesiac.split("-")[1]);
+                        Double suma = dokumentRepository.getSuma(norma.getId(), year, month);
+                        norma.setSuma(suma);
+                    }
+                    catch(NumberFormatException e){
+                        // skip
+                    }
                 }
-                catch(NumberFormatException e){
-                    // skip
-                }
+
             }
             maszyna.setNormy(normy);
             logger.info("["+request.getRemoteAddr()+"] - /maszyna GET id="+id );
@@ -88,6 +91,7 @@ public class MaszynaRestController {
                 normaNew.setJednostka(norma.getJednostka());
                 normaNew.setWartosc(norma.getWartosc());
                 normaNew.setMaszyna(maszynaNew);
+                normaNew.setCzyOgrzewanie(norma.isCzyOgrzewanie());
                 normaRepository.save(normaNew);
             }
             logger.info("["+request.getRemoteAddr()+"] - /maszyna POST id="+maszyna.getId());

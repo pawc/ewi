@@ -22,6 +22,13 @@ public class Norma {
     @Transient
     private Double suma;
 
+    @Column(name = "czy_ogrzewanie")
+    private boolean czyOgrzewanie;
+
+    @Transient
+    @Column(name = "suma_ogrzewania")
+    private double sumaOgrzewania;
+
     public long getId() {
         return id;
     }
@@ -62,6 +69,22 @@ public class Norma {
         this.suma = suma;
     }
 
+    public boolean isCzyOgrzewanie() {
+        return czyOgrzewanie;
+    }
+
+    public void setCzyOgrzewanie(boolean czyOgrzewanie) {
+        this.czyOgrzewanie = czyOgrzewanie;
+    }
+
+    public double getSumaOgrzewania() {
+        return sumaOgrzewania;
+    }
+
+    public void setSumaOgrzewania(double sumaOgrzewania) {
+        this.sumaOgrzewania = sumaOgrzewania;
+    }
+
     @Override
     public String toString() {
         return "Norma{" +
@@ -70,6 +93,8 @@ public class Norma {
                 ", wartosc=" + wartosc +
                 ", maszyna=" + maszyna +
                 ", suma=" + suma +
+                ", czyOgrzewanie=" + czyOgrzewanie +
+                ", sumaOgrzewania=" + sumaOgrzewania +
                 '}';
     }
 

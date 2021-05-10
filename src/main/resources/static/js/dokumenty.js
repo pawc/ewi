@@ -60,7 +60,7 @@ $(document).ready(() => {
         var docYear = $('#data').val().substr(0,4);
         $('#numer').val((maxRelDoc+1) + '/' + docMonth + '/' + docYear + '/' + maszynaId)
 
-        $("#zuzycieTable > tr").remove();
+        $("#zuzycieTable > tbody > tr > td").remove();
 
         $.ajax({
             url: contextRoot + 'maszyna',
@@ -72,20 +72,59 @@ $(document).ready(() => {
         .done(maszyna => {
             $.each(maszyna.normy, (i, norma) => {
                 var normaSuma = (norma.suma == null) ? 0 : norma.suma
-                $('#zuzycieTable').append(`\
-                <tr class="zuzycie">\
-                    <td><span>${normaSuma}</span></td>\
-                    <td style="width: 100px;"><input type="number" step="0.01" id="${norma.id}" normaId="${norma.id}" class="form-control" value="0"></input></td>\
-                    <td><b><span id="input-${norma.id}">0</span></b><span> * <b>${norma.wartosc}</b> [${norma.jednostka}] = </span><b><span id="wynik-${norma.id}">0</span></b></td>\
-                    <td style="width: 100px;"><input type="number" step="0.01" id="tankowanie-${norma.id}" normaId="${norma.id}" class="form-control" value="0"></input></td>\
-                </tr>\
-                `)
-                $('#'+norma.id).keyup(() => {
-                    var wpisana = $('#'+norma.id).val()
-                    var wynik = Math.round(((wpisana * norma.wartosc) + Number.EPSILON) * 10)/10
-                    $('#input-'+norma.id).text(wpisana);
-                    $('#wynik-'+norma.id).text(wynik);
-                });
+
+                var tr = $('<tr>').attr({
+                    class: 'zuzycie'
+                }).appendTo($('#zuzycieTable'))
+
+                var td1 = $('<td>').html(normaSuma)
+                td1.appendTo(tr)
+
+                var td2 = $('<td>')
+                td2.appendTo(tr)
+
+                var inputZuzycie = $('<input>').attr({
+                    type: 'number',
+                    step: '0.01',
+                    normaId: norma.id,
+                    class: 'form-control',
+                    value : '0'
+                }).appendTo(td2)
+
+                var td3 = $('<td>')
+                td3.appendTo(tr)
+
+                var inputZuzycieEcho = $('<span>').html(0).appendTo(td3)
+                td3.append(` * ${norma.wartosc} [${norma.jednostka}] = `)
+
+                var wynik = $('<span>').html(0).appendTo(td3)
+
+                inputZuzycie.keyup(() => {
+                    inputZuzycieEcho.html(inputZuzycie.val())
+                    wynik.html(Math.round(((inputZuzycie.val() * norma.wartosc) + Number.EPSILON) * 10)/10)
+                    var inputTankowanieVal = (inputTankowanie.val() == '') ? 0 : parseFloat(inputTankowanie.val())
+                    td5.html(normaSuma + parseFloat(wynik.html()) + inputTankowanieVal)
+                })
+
+                var td4 = $('<td>')
+                td4.appendTo(tr)
+
+                var inputTankowanie = $('<input>').attr({
+                    type: 'number',
+                    step: '0.01',
+                    normaId: norma.id,
+                    class: 'form-control',
+                    value : '0'
+                }).appendTo(td4)
+
+                var td5 = $('<td>')
+                td5.appendTo(tr)
+
+                inputTankowanie.keyup(() => {
+                    wynik.html(Math.round(((inputZuzycie.val() * norma.wartosc) + Number.EPSILON) * 10)/10)
+                    td5.html(normaSuma + parseFloat(wynik.html()) + parseFloat(inputTankowanie.val()))
+                })
+
             })
         })
     })
@@ -146,7 +185,7 @@ function edytujBtn(numer){
         $('#data').val(dokument.data)
         $("#maszyna option[value='"+dokument.maszyna.id.toString()+"']").attr("selected", "selected");
         $("#zuzycieTable > tbody > tr").remove();
-        $('#zuzycieTable').append('<tr><th>suma</th><th>zużycie</th><th>zużycie * norma = wynik</th><th>tankowanie</th></tr>')
+        $('#zuzycieTable').append('<tr><th>suma przed</th><th>zużycie</th><th>zużycie * norma</th><th>tankowanie</th><th>suma po</th></tr>')
         $.each(dokument.zuzycie, (i, zuzycie) => {
             var normaSuma = (zuzycie.norma.suma == null) ? 0 : zuzycie.norma.suma
             $('#zuzycieTable').append(`\
@@ -195,7 +234,7 @@ function dodajBtn(){
     $('#kilometry').val(0)
 
     $("#zuzycieTable > tbody > tr").remove();
-    $('#zuzycieTable').append('<tr><th>suma</th><th>zużycie</th><th>zużycie * norma = wynik</th><th>tankowanie</th></tr>')
+    $('#zuzycieTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">tankowanie</th><th width="60px;">suma po</th></tr>')
     $('#maszyna').val(-1);
     type = 'POST';
     dialog.dialog("open");
@@ -253,7 +292,7 @@ $(function() {
     dialog = $( "#dialog-form" ).dialog({
         autoOpen: false,
         height: 490,
-        width: 880,
+        width: 1100,
         modal: true,
         buttons: {
             "Zapisz": function(){

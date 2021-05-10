@@ -56,7 +56,7 @@ table {
     margin: auto;
 }
 
-#zuzycieTable > tbody > tr > th, #zuzycieTable > tr > td {
+#zuzycieTable > tbody > tr > th, #zuzycieTable > tbody > tr > td {
     border: 1px solid black;
     text-align: center;
 }
@@ -92,4 +92,17 @@ table {
 
 #dialog-form {
   overflow-x: hidden;
+}
+
+#zuzycieTable > tbody > tr > td:nth-child(1),
+#zuzycieTable > tbody > tr > th:nth-child(1),
+#zuzycieTable > tbody > tr > td:nth-child(5),
+#zuzycieTable > tbody > tr > th:nth-child(5)
+{
+    background-color: #8fcbf2;
+}
+
+#normyTable > tbody > tr > td {
+    padding-right: 15px;
+    padding-top: 15px;
 }
