@@ -131,9 +131,13 @@ public class DokumentRestController {
 
             for(Zuzycie zuzycie : dokument.getZuzycie()) {
                 Zuzycie zuzycieDB = zuzycieRepository.findById(zuzycie.getId()).get();
-                if (zuzycieDB.getWartosc() != zuzycie.getWartosc() || zuzycieDB.getZatankowano() != zuzycie.getZatankowano()) {
+                if (zuzycieDB.getWartosc() != zuzycie.getWartosc() ||
+                    zuzycieDB.getZatankowano() != zuzycie.getZatankowano() ||
+                    zuzycieDB.getOgrzewanie() != zuzycie.getOgrzewanie()) {
+
                     zuzycieDB.setWartosc(zuzycie.getWartosc());
                     zuzycieDB.setZatankowano(zuzycie.getZatankowano());
+                    zuzycieDB.setOgrzewanie(zuzycie.getOgrzewanie());
                     zuzycieRepository.save(zuzycieDB);
                 }
             }
