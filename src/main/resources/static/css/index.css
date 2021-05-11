@@ -70,8 +70,9 @@ table {
     text-align: center;
 }
 
-#stanyTable > tbody > tr > td:nth-child(3){
-    display:flex;
+#stanyTable > tbody > tr > td:nth-child(3),
+#kilometryTable > tbody > tr > td:nth-child(2){
+    display: flex;
     flex-direction: column;
     width: 100%;
     justify-content: center;
@@ -105,4 +106,18 @@ table {
 #normyTable > tbody > tr > td {
     padding-right: 15px;
     padding-top: 15px;
+}
+
+#raportTable > tbody > tr > td:nth-child(2),
+#raportTable > tbody > tr > td:nth-child(3),
+#raportTable > tbody > tr > td:nth-child(4) {
+    background: #d4e374;
+}
+
+#raportTable > tbody > tr > td:nth-child(6),
+#raportTable > tbody > tr > td:nth-child(7),
+#raportTable > tbody > tr > td:nth-child(8),
+#raportTable > tbody > tr > td:nth-child(9),
+#raportTable > tbody > tr > td:nth-child(10) {
+    background: #e8ba6b;
 }

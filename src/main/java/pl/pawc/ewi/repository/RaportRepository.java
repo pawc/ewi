@@ -11,10 +11,12 @@ import java.util.List;
 public interface RaportRepository extends CrudRepository<Raport, String> {
 
     @Query(value = "select concat(m.nazwa, ' (', m.id, ')') as maszyna, " +
+            "IF(k.wartosc IS NULL, 0, k.wartosc) as stankilometry, " +
             "sum(round(d.kilometry, 1)) as kilometry, "+
             "n.jednostka, " +
             "sum(round(z.wartosc*n.wartosc, 1)) as suma, " +
             "sum(round(z.zatankowano, 1)) as zatankowano, " +
+            "sum(round(z.ogrzewanie, 1)) as ogrzewanie, " +
             "concat(m.nazwa, n.jednostka) as id, " +
             "z.norma_id , " +
             "IF(s.wartosc IS NULL, 0, s.wartosc) AS 'stan_poprz' " +
@@ -24,6 +26,7 @@ public interface RaportRepository extends CrudRepository<Raport, String> {
             "join zuzycie z on d.numer = z.dokument_numer   " +
             "join norma n on z.norma_id = n.id " +
             "LEFT JOIN stan s ON n.id = s.norma_id AND s.rok = ?1 AND s.miesiac = ?2 " +
+            "LEFT JOIN kilometry k ON m.id = k.maszyna_id and k.rok = s.rok and k.miesiac = s.miesiac " +
             "group by m.nazwa, n.jednostka",
         nativeQuery = true
     )

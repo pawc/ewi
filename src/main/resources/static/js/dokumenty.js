@@ -186,8 +186,8 @@ function updateTable(){
                 dokument.numer,
                 dokument.data,
                 dokument.maszyna.nazwa + ' (' + dokument.maszyna.id + ')',
-                '<button class="btn btn-info" onclick="edytujBtn(\''+dokument.numer+'\')">edytuj <i class="fas fa-edit"></i></button>'
-                 +'<button class="btn btn-warning" onclick="usunBtn(\''+dokument.numer+'\')">usuń <i class="fas fa-trash-alt"></i></button>'
+                `<button class="btn btn-info" onclick="edytujBtn('${dokument.numer}')">edytuj <i class="fas fa-edit"></i></button>`,
+                `<button class="btn btn-warning" onclick="usunBtn('${dokument.numer}')">usuń <i class="fas fa-trash-alt"></i></button>`
             ]).draw(false);
         })
     })

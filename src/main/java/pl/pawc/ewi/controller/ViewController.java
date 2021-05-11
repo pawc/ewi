@@ -65,6 +65,16 @@ public class ViewController {
 
     }
 
+    @RequestMapping("/kilometry")
+    public String kilometry(
+            Model model,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+        return "kilometry";
+
+    }
+
     @RequestMapping("/login")
     public String login(
             HttpServletRequest request,

@@ -49,14 +49,18 @@ function updateTable(){
     .done(pozycje => {
         var nextMonthVal = nextMonth()
         $.each(pozycje, (i, pozycja) => {
-            var endState = Math.round(((pozycja.stanPoprz - pozycja.suma + pozycja.zatankowano) + Number.EPSILON) * 10)/10
+            var endStateKilometry = Math.round(((pozycja.stankilometry - pozycja.kilometry) + Number.EPSILON) * 10)/10
+            var endState = Math.round(((pozycja.stanPoprz - pozycja.suma + pozycja.zatankowano - pozycja.ogrzewanie) + Number.EPSILON) * 10)/10
             t.row.add( [
                 pozycja.maszyna,
+                pozycja.stankilometry,
                 pozycja.kilometry,
+                endStateKilometry,
                 pozycja.jednostka,
                 pozycja.stanPoprz,
                 pozycja.suma,
                 pozycja.zatankowano,
+                pozycja.ogrzewanie,
                 endState,
                 pozycja.normaId,
                 nextMonthVal[0],
@@ -100,12 +104,12 @@ function saveAll(){
     var rows = $('#raportTable').DataTable().rows().data()
     $.each(rows, (i, row) => {
         var stan = {
-            rok : row[8],
-            miesiac : row[9],
+            rok : row[11],
+            miesiac : row[12],
             norma : {
-                id : row[7]
+                id : row[10]
             },
-            wartosc : row[6]
+            wartosc : row[9]
         }
         stany.push(stan)
     })
