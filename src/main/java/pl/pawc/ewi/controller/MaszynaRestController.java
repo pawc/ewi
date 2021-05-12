@@ -38,25 +38,34 @@ public class MaszynaRestController {
         Optional<Maszyna> result = maszynaRepository.findById(id);
         Maszyna maszyna = null;
         if(result.isPresent()){
+
             maszyna = result.get();
             List<Norma> normy = normaRepository.findByMaszynaId(id);
-            for(Norma norma : normy){
-                norma.setMaszyna(null);
-                int year;
-                int month;
 
-                if(miesiac != null){
-                    try{
-                        year = Integer.parseInt(miesiac.split("-")[0]);
-                        month = Integer.parseInt(miesiac.split("-")[1]);
+            if(miesiac != null){
+                try{
+                    int year = Integer.parseInt(miesiac.split("-")[0]);
+                    int month = Integer.parseInt(miesiac.split("-")[1]);
+
+                    Double sumaKilometry = dokumentRepository.getSumaKilometry(maszyna.getId(), year, month);
+                    sumaKilometry = (sumaKilometry == null) ? 0 : sumaKilometry;
+                    maszyna.setSumaKilometry(sumaKilometry);
+
+                    for(Norma norma : normy){
                         Double suma = dokumentRepository.getSuma(norma.getId(), year, month);
                         norma.setSuma(suma);
+                        norma.setMaszyna(null);
                     }
-                    catch(NumberFormatException e){
-                        // skip
-                    }
-                }
 
+                }
+                catch(NumberFormatException e){
+                    // skip
+                }
+            }
+            else{
+                for(Norma norma : normy){
+                    norma.setMaszyna(null);
+                }
             }
             maszyna.setNormy(normy);
             logger.info("["+request.getRemoteAddr()+"] - /maszyna GET id="+id );

@@ -20,6 +20,10 @@ public class Maszyna {
     private String opis;
 
     @Transient
+    @Column(name = "suma_kilometry")
+    private double sumaKilometry;
+
+    @Transient
     private List<Norma> normy;
 
     public String getId() {
@@ -54,12 +58,21 @@ public class Maszyna {
         this.normy = normy;
     }
 
+    public double getSumaKilometry() {
+        return sumaKilometry;
+    }
+
+    public void setSumaKilometry(double sumaKilometry) {
+        this.sumaKilometry = sumaKilometry;
+    }
+
     @Override
     public String toString() {
         return "Maszyna{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", nazwa='" + nazwa + '\'' +
                 ", opis='" + opis + '\'' +
+                ", sumaKilometry=" + sumaKilometry +
                 ", normy=" + normy +
                 '}';
     }

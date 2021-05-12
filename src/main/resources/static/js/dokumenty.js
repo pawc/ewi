@@ -83,6 +83,8 @@ $(document).ready(() => {
                 $('#zuzycieTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
             }
 
+            $('#kmPrzed').html(maszyna.sumaKilometry)
+
             $.each(maszyna.normy, (i, norma) => {
                 var normaSuma = (norma.suma == null) ? 0 : norma.suma
 
@@ -316,6 +318,12 @@ function dodajBtn(){
     var todayS = (today > 9) ? today : '0' + today
     $('#data').val($('#miesiac').val()+'-'+todayS)
     $('#kilometry').val(0)
+    .keyup(() => {
+        var przed = parseFloat($('#kmPrzed').html())
+        var km = parseFloat($('#kilometry').val())
+        var po = przed + km
+        $('#kmPo').html(po)
+    })
 
     $("#zuzycieTable > tbody > tr").remove();
     $('#maszyna').val(-1);

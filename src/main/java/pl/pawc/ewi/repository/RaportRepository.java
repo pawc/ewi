@@ -26,7 +26,7 @@ public interface RaportRepository extends CrudRepository<Raport, String> {
             "join zuzycie z on d.numer = z.dokument_numer   " +
             "join norma n on z.norma_id = n.id " +
             "LEFT JOIN stan s ON n.id = s.norma_id AND s.rok = ?1 AND s.miesiac = ?2 " +
-            "LEFT JOIN kilometry k ON m.id = k.maszyna_id and k.rok = s.rok and k.miesiac = s.miesiac " +
+            "LEFT JOIN kilometry k ON m.id = k.maszyna_id and k.rok = ?1 and k.miesiac = ?2 " +
             "group by m.nazwa, n.jednostka",
         nativeQuery = true
     )
