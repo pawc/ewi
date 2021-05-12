@@ -51,4 +51,27 @@ public class KilometryRestController {
 
     }
 
+    @PostMapping("kilometryList")
+    public void kilometryList(
+            @RequestBody List<Kilometry> kilometry,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+        List<Kilometry> byParams = null;
+        Kilometry kmDB = null;
+        for(Kilometry km : kilometry){
+            byParams = kilometryRepository.findBy(km.getMaszyna().getId(), km.getRok(), km.getMiesiac());
+            if(byParams.isEmpty()){
+                kilometryRepository.save(km);
+                logger.info("["+request.getRemoteAddr()+"] - /kilometryList POST - dodano - " + km.toString());
+            }
+            else{
+                kmDB = byParams.get(0);
+                kmDB.setWartosc(km.getWartosc());
+                kilometryRepository.save(kmDB);
+                logger.info("["+request.getRemoteAddr()+"] - /kilometryList POST - zaktualizowano - " + km.toString());
+            }
+        }
+    }
+
 }

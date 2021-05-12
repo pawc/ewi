@@ -64,7 +64,8 @@ function updateTable(){
                 endState,
                 pozycja.normaId,
                 nextMonthVal[0],
-                nextMonthVal[1]
+                nextMonthVal[1],
+                pozycja.maszynaid
             ]).draw(false);
         })
     })
@@ -100,6 +101,12 @@ function prepareAjax(properties) {
 
 function saveAll(){
 
+    var headers = {};
+    headers["Content-Type"] = "application/json; charset=utf-8";
+    var header = $("meta[name='_csrf_header']").attr("content");
+    var token = $("meta[name='_csrf']").attr("content");
+    headers[header] = token
+
     var stany = []
     var rows = $('#raportTable').DataTable().rows().data()
     $.each(rows, (i, row) => {
@@ -114,24 +121,44 @@ function saveAll(){
         stany.push(stan)
     })
 
-    var headers = {};
-    headers["Content-Type"] = "application/json; charset=utf-8";
-    var header = $("meta[name='_csrf_header']").attr("content");
-    var token = $("meta[name='_csrf']").attr("content");
-    headers[header] = token
-    var properties = {
+    var propertiesStany = {
         url: contextRoot + 'stany',
         data: JSON.stringify(stany),
         type: 'POST',
         headers: headers
     }
 
-    $.ajax(properties)
+    var kilometry = []
+    var rows = $('#raportTable').DataTable().rows().data()
+
+    $.each(rows, (i, row) => {
+        var km = {
+            rok : row[11],
+            miesiac : row[12],
+            maszyna : {
+                id : row[13]
+            },
+            wartosc : row[3]
+        }
+        kilometry.push(km)
+    })
+
+    var propertiesKm = {
+        url: contextRoot + 'kilometryList',
+        data: JSON.stringify(kilometry),
+        type: 'POST',
+        headers: headers
+    }
+
+    $.when(
+        $.ajax(propertiesKm),
+        $.ajax(propertiesStany)
+    )
     .done(() => {
-        window.location.href = contextRoot + "?stanySuccess=true"
+        window.location.href = contextRoot + "?zapisSuccess=true"
     })
     .fail(() => {
-        window.location.href = contextRoot + "?stanySuccess=false"
+        window.location.href = contextRoot + "?zapisSuccess=false"
     })
 
 }

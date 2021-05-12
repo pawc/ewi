@@ -43,14 +43,14 @@
 
     <div class="container">
 
-        <div class="alert alert-success text-center" role="alert" th:if="${(param.stanySuccess != null AND param.stanySuccess[0] == 'true')}">
+        <div class="alert alert-success text-center" role="alert" th:if="${(param.zapisSuccess != null AND param.zapisSuccess[0] == 'true')}">
             Zapisano
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
 
-        <div class="alert alert-danger text-center" role="alert" th:if="${(param.stanySuccess != null AND param.stanySuccess[0] == 'false')}">
+        <div class="alert alert-danger text-center" role="alert" th:if="${(param.zapisSuccess != null AND param.zapisSuccess[0] == 'false')}">
             Problem z zapisem
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>

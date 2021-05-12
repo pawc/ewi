@@ -7,6 +7,7 @@ import javax.persistence.Id;
 public class Raport {
 
     private String maszyna;
+    private String maszynaid;
     private double stankilometry;
     private double kilometry;
     private String jednostka;
@@ -25,6 +26,14 @@ public class Raport {
 
     public void setMaszyna(String maszyna) {
         this.maszyna = maszyna;
+    }
+
+    public String getMaszynaid() {
+        return maszynaid;
+    }
+
+    public void setMaszynaid(String maszynaid) {
+        this.maszynaid = maszynaid;
     }
 
     public String getJednostka() {
@@ -103,6 +112,7 @@ public class Raport {
     public String toString() {
         return "Raport{" +
                 "maszyna='" + maszyna + '\'' +
+                ", maszynaid='" + maszynaid + '\'' +
                 ", stankilometry=" + stankilometry +
                 ", kilometry=" + kilometry +
                 ", jednostka='" + jednostka + '\'' +
