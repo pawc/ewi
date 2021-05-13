@@ -15,22 +15,24 @@ public interface DokumentRepository extends CrudRepository<Dokument, String> {
     )
     List<Dokument> getDokumenty(int year, int month);
 
-    @Query(value = "select ifnull(s.wartosc, 0) - sum(round(z.wartosc * n.wartosc, 1)) " +
-            "+ sum(z.zatankowano) - sum(z.ogrzewanie) " +
-            "as suma from norma n " +
-            "join zuzycie z on n.id = z.norma_id " +
-            "join dokument d on z.dokument_numer = d.numer " +
-            "left join stan s on s.norma_id = z.norma_id and year(d.data) = s.rok and month(d.data) = s.miesiac " +
-            "where n.id = ?1 and year(d.data) = ?2 and month(d.data) = ?3 ;",
+    @Query(value = "select " +
+            "ifnull(s.wartosc, 0) - ifnull(sum(round(z.wartosc * n.wartosc, 1)), 0)  " +
+            "+ ifnull(sum(z.zatankowano), 0) - ifnull(sum(z.ogrzewanie), 0)  as suma " +
+            "from maszyna m " +
+            "join norma n on m.id = n.maszyna_id " +
+            "left join stan s on n.id = s.norma_id and n.id = ?1 and s.rok = ?2 and s.miesiac = ?3 " +
+            " left join dokument d on m.id = d.maszyna_id and year(d.data) = ?2 and month(d.data) = ?3 " +
+            " left join zuzycie z on d.numer = z.dokument_numer and n.id = z.norma_id " +
+            "    where n.id = ?1 ;",
         nativeQuery = true
     )
     Double getSuma(long normaId, int year, int month);
 
 
-    @Query(value = "select k.wartosc + sum(d.kilometry) as sumaKilometry "+
-            "from dokument d "+
-            "join kilometry k on d.maszyna_id = k.maszyna_id "+
-            "and year(d.data) = k.rok and month(d.data) = k.miesiac "+
+    @Query(value = "select ifnull(k.wartosc, 0)  + sum(d.kilometry) as sumaKilometry " +
+            "from dokument d " +
+            "left join kilometry k on d.maszyna_id = k.maszyna_id " +
+            "and year(d.data) = k.rok and month(d.data) = k.miesiac " +
             "where d.maszyna_id = ?1 and year(d.data) = ?2 and month(d.data) = ?3 ;",
           nativeQuery = true)
     Double getSumaKilometry(String maszynaId, int year, int month);
