@@ -6,6 +6,7 @@ import javax.persistence.Id;
 @Entity
 public class Raport {
 
+    @Id
     private String maszyna;
     private String maszynaid;
     private double stankilometry;
@@ -17,8 +18,7 @@ public class Raport {
     private long normaId;
     private double stanPoprz;
 
-    @Id
-    private String Id;
+
 
     public String getMaszyna() {
         return maszyna;
@@ -76,13 +76,7 @@ public class Raport {
         this.normaId = normaId;
     }
 
-    public String getId() {
-        return Id;
-    }
 
-    public void setId(String id) {
-        Id = id;
-    }
 
     public double getKilometry() {
         return kilometry;
@@ -121,7 +115,6 @@ public class Raport {
                 ", ogrzewanie=" + ogrzewanie +
                 ", normaId=" + normaId +
                 ", stanPoprz=" + stanPoprz +
-                ", Id='" + Id + '\'' +
                 '}';
     }
 

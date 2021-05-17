@@ -28,7 +28,7 @@ public interface RaportRepository extends CrudRepository<Raport, String> {
             "join norma n on z.norma_id = n.id " +
             "LEFT JOIN stan s ON n.id = s.norma_id AND s.rok = ?1 AND s.miesiac = ?2 " +
             "LEFT JOIN kilometry k ON m.id = k.maszyna_id and k.rok = ?1 and k.miesiac = ?2 " +
-            "group by m.id, n.jednostka",
+            "group by concat(m.nazwa, ' (', m.id, ')'), n.jednostka",
         nativeQuery = true
     )
     List<Raport> getRaport(int year, int month);
