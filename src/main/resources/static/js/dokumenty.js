@@ -1,10 +1,15 @@
 var type = ''
 var dialog, dialogUsun, t
-var currentNumer
+var currentNumer, formatter
 
 $(document).ready(() => {
     $('#dokumentyLink').css("font-weight", "bold");
     $('#dokumentyLink').css("text-decoration", "underline");
+
+    formatter = new Intl.NumberFormat('pl-PL', {
+       minimumFractionDigits: 2,
+       maximumFractionDigits: 2,
+    });
 
     var queryString = window.location.search;
     var urlParams = new URLSearchParams(queryString);
@@ -322,7 +327,7 @@ function dodajBtn(){
         var przed = parseFloat($('#kmPrzed').html())
         var km = parseFloat($('#kilometry').val())
         var po = przed + km
-        $('#kmPo').html(po)
+        $('#kmPo').html(formatter.format(po))
     })
 
     $("#zuzycieTable > tbody > tr").remove();

@@ -13,7 +13,7 @@ public interface RaportRepository extends CrudRepository<Raport, String> {
     @Query(value = "select concat(m.nazwa, ' (', m.id, ')') as maszyna, " +
             "m.id as maszynaid, " +
             "IF(k.wartosc IS NULL, 0, k.wartosc) as stankilometry, " +
-            "sum(round(d.kilometry, 1)) as kilometry, "+
+            "round(sum(d.kilometry), 2) as kilometry, "+
             "n.jednostka, " +
             "sum(round(z.wartosc*n.wartosc, 1)) as suma, " +
             "sum(round(z.zatankowano, 1)) as zatankowano, " +

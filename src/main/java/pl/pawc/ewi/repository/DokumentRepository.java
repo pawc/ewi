@@ -29,7 +29,7 @@ public interface DokumentRepository extends CrudRepository<Dokument, String> {
     Double getSuma(long normaId, int year, int month);
 
 
-    @Query(value = "select ifnull(k.wartosc, 0)  + sum(ifnull(d.kilometry, 0)) as sumaKilometry " +
+    @Query(value = "select round(ifnull(k.wartosc, 0)  + sum(ifnull(d.kilometry, 0)), 2) as sumaKilometry " +
             "from kilometry k " +
             "left join dokument d on d.maszyna_id = k.maszyna_id " +
             "and year(d.data) = k.rok and month(d.data) = k.miesiac " +
