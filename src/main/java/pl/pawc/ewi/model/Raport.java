@@ -17,8 +17,7 @@ public class Raport {
     private double ogrzewanie;
     private long normaId;
     private double stanPoprz;
-
-
+    private double sumagodzin;
 
     public String getMaszyna() {
         return maszyna;
@@ -76,8 +75,6 @@ public class Raport {
         this.normaId = normaId;
     }
 
-
-
     public double getKilometry() {
         return kilometry;
     }
@@ -100,6 +97,14 @@ public class Raport {
 
     public void setOgrzewanie(double ogrzewanie) {
         this.ogrzewanie = ogrzewanie;
+    }
+
+    public double getSumagodzin() {
+        return sumagodzin;
+    }
+
+    public void setSumagodzin(double sumagodzin) {
+        this.sumagodzin = sumagodzin;
     }
 
     @Override

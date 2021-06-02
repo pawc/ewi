@@ -11,6 +11,14 @@ $(document).ready(function() {
     $('#miesiac').val(year + '-' + month)
 
     t = $('#raportTable').DataTable({
+        dom: 'Blfrtip',
+        buttons: [
+            'print',
+        ],
+        lengthMenu: [
+            [ 5, 10, 25, 50, -1 ],
+            [ '5', '10', '25', '50', 'Wszystko' ]
+        ],
         "language": {
             "search": "Szukaj",
             "emptyTable": "Brak pozycji",
@@ -27,6 +35,13 @@ $(document).ready(function() {
             "infoFiltered":   "",
         }
     });
+
+    $('#raportTable_wrapper > div.dt-buttons > button > span').text('Drukuj raport')
+    $('#raportTable_wrapper > div.dt-buttons > button').addClass('btn btn-info')
+    $('#raportTable_wrapper > div.dt-buttons').css('text-align', 'right')
+    $('#raportTable_wrapper > div.dt-buttons').css('margin-right', '50px')
+    $('#raportTable_filter').css('margin-right', '50px')
+    $('#raportTable_length').css('margin-left', '5%')
 
     updateTable();
 
@@ -62,6 +77,7 @@ function updateTable(){
                 pozycja.zatankowano,
                 pozycja.ogrzewanie,
                 endState,
+                pozycja.sumagodzin,
                 pozycja.normaId,
                 nextMonthVal[0],
                 nextMonthVal[1],
@@ -111,10 +127,10 @@ function saveAll(){
     var rows = $('#raportTable').DataTable().rows().data()
     $.each(rows, (i, row) => {
         var stan = {
-            rok : row[11],
-            miesiac : row[12],
+            rok : row[12],
+            miesiac : row[13],
             norma : {
-                id : row[10]
+                id : row[11]
             },
             wartosc : row[9]
         }
@@ -133,10 +149,10 @@ function saveAll(){
 
     $.each(rows, (i, row) => {
         var km = {
-            rok : row[11],
-            miesiac : row[12],
+            rok : row[12],
+            miesiac : row[13],
             maszyna : {
-                id : row[13]
+                id : row[14]
             },
             wartosc : row[3]
         }

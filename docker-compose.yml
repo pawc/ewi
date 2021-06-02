@@ -4,7 +4,7 @@ services:
   mysql:
     image: mariadb:latest
     restart: unless-stopped
-    container_name: mysql
+    container_name: mysql-ewi
     environment:
       - MYSQL_DATABASE=ewidb
       - MYSQL_USER=ewiuser
@@ -13,12 +13,12 @@ services:
       - MYSQL_ROOT_HOST=%
   ewi:
     image: pawc/ewi:latest
-    container_name: ewi-prod
+    container_name: ewi
     restart: unless-stopped
     ports:
       - "80:8080"
     environment:
-      - spring.datasource.url=jdbc:mysql://mysql:3306/ewidb
+      - spring.datasource.url=jdbc:mysql://mysql-ewi:3306/ewidb
       - spring.jpa.hibernate.ddl-auto=create
       - spring.datasource.username=ewiuser
       - spring.datasource.password=ewiuser_password

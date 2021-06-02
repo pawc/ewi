@@ -118,6 +118,7 @@ table {
 #raportTable > tbody > tr > td:nth-child(7),
 #raportTable > tbody > tr > td:nth-child(8),
 #raportTable > tbody > tr > td:nth-child(9),
-#raportTable > tbody > tr > td:nth-child(10) {
+#raportTable > tbody > tr > td:nth-child(10),
+#raportTable > tbody > tr > td:nth-child(11){
     background: #e8ba6b;
 }
