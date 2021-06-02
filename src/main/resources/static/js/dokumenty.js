@@ -76,6 +76,12 @@ $(document).ready(() => {
         })
         .done(maszyna => {
 
+            if(maszyna.opis){
+                $('#opisMaszyny').text(maszyna.opis)
+            }
+            else{
+                $('#opisMaszyny').text('')
+            }
             var czyOgrzewanie = false;
             $.each(maszyna.normy, (i, norma) => {
                 czyOgrzewanie = czyOgrzewanie || norma.czyOgrzewanie
