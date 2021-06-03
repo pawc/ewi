@@ -122,3 +122,12 @@ table {
 #raportTable > tbody > tr > td:nth-child(11){
     background: #e8ba6b;
 }
+
+body > div:nth-child(2) > div > div:nth-child(1) > label,
+#miesiac {
+    margin-left: 10%;
+}
+
+#saveButtonDiv > button {
+    margin-right: 50px;
+}
