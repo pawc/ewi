@@ -90,11 +90,9 @@ function updateTable(){
 }
 
 function saveKilometry(btn){
-    console.log('ok')
     var maszynaid = $(btn).attr('maszynaid');
     var rok = $(btn).attr('rok');
     var miesiac = $(btn).attr('miesiac');
-    console.log($(`#${maszynaid}`))
     var wartosc = $(btn).parent().parent().find('input').val()
 
     var kilometry = {

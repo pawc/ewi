@@ -53,6 +53,7 @@ public class ViewController {
             HttpServletResponse response) {
 
         model.addAttribute("maszyny", maszynaRepository.findAll());
+        model.addAttribute("kategorie", kategoriaRepository.findAll());
         logger.info("["+request.getRemoteAddr()+"] - /maszyny" );
 
         return "maszyny";

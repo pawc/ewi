@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 import java.util.List;
@@ -27,6 +28,7 @@ public class Maszyna {
     private double sumaKilometry;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn(referencedColumnName="nazwa")
     private Set<Kategoria> kategorie;
 
     @Transient

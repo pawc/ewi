@@ -114,6 +114,17 @@ function edytujBtn(id){
         $('#numer').val(maszyna.id)
         $('#nazwa').val(maszyna.nazwa)
         $('#opis').val(maszyna.opis)
+
+        $.each($('input[name=kategorie]'), (i, k) => {
+            $(k).prop('checked', false)
+        })
+
+        $.each(maszyna.kategorie, (i, kategoria) => {
+             $.each($('input[name=kategorie]'), (j, k) => {
+                 if(kategoria.nazwa == $(k).val()) $(k).prop('checked', true)
+             })
+        })
+
         $.each(maszyna.normy, (i, norma) => {
 
             var row = $('<tr>').attr({
@@ -221,11 +232,21 @@ $(function() {
                     }
                 })
 
+                var kategorie = []
+                $('input[name=kategorie]').each((i, kategoria) => {
+                    if($(kategoria).is(':checked')){
+                        kategorie.push({
+                            nazwa: $(kategoria).val()
+                        })
+                    }
+                })
+
                 var maszyna = {
                     id: $("#numer").val(),
                     nazwa: $('#nazwa').val(),
                     opis: $('#opis').val(),
-                    normy: normy
+                    normy: normy,
+                    kategorie: kategorie
                 }
 
                 var headers = {};

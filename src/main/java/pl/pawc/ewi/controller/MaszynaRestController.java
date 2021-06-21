@@ -3,9 +3,11 @@ package pl.pawc.ewi.controller;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.pawc.ewi.entity.Kategoria;
 import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.entity.Norma;
 import pl.pawc.ewi.repository.DokumentRepository;
+import pl.pawc.ewi.repository.KategoriaRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
 import pl.pawc.ewi.repository.NormaRepository;
 
@@ -25,6 +27,9 @@ public class MaszynaRestController {
 
     @Autowired
     DokumentRepository dokumentRepository;
+
+    @Autowired
+    KategoriaRepository kategoriaRepository;
 
     private static final Logger logger = Logger.getLogger(MaszynaRestController.class);
 
@@ -103,6 +108,13 @@ public class MaszynaRestController {
                 normaNew.setCzyOgrzewanie(norma.isCzyOgrzewanie());
                 normaRepository.save(normaNew);
             }
+
+            for(Kategoria kategoria : maszyna.getKategorie()){
+                Kategoria kat = kategoriaRepository.findById(kategoria.getNazwa()).get();
+                kat.getMaszyny().add(maszynaNew);
+                kategoriaRepository.save(kat);
+            }
+
             logger.info("["+request.getRemoteAddr()+"] - /maszyna POST id="+maszyna.getId());
         }
         else{
@@ -136,6 +148,13 @@ public class MaszynaRestController {
                     normaRepository.save(normaNew);
                 }
             }
+
+            maszynaDB.getKategorie().clear();
+            for(Kategoria kategoria : maszyna.getKategorie()){
+                Kategoria kat = kategoriaRepository.findById(kategoria.getNazwa()).get();
+                maszynaDB.getKategorie().add(kat);
+            }
+
             maszynaRepository.save(maszynaDB);
             logger.info("["+request.getRemoteAddr()+"] - /maszyna PUT id="+maszyna.getId());
         }

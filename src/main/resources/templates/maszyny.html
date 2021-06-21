@@ -73,8 +73,22 @@
                 <div id="normy" class="container">
                     <table id="normyTable"></table>
                 </div>
-                <label for="opis">Opis</label>
-                <textarea name="opis" id="opis" rows="4" style="width: 95%;" class=""></textarea>
+                <br>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="opis">Opis</label>
+                            <textarea name="opis" id="opis" rows="6" style="width: 100%;" class=""></textarea>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="checkbox">
+                                <ul th:each="kategoria : ${kategorie}">
+                                    <input type="checkbox" name="kategorie" th:value="${kategoria.nazwa}"><span th:text="${kategoria.nazwa}"></span></input>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
             </form>
 
