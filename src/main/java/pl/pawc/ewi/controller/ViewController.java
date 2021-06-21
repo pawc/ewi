@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import pl.pawc.ewi.repository.KategoriaRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,9 @@ public class ViewController {
 
     @Autowired
     MaszynaRepository maszynaRepository;
+
+    @Autowired
+    KategoriaRepository kategoriaRepository;
 
     @RequestMapping("/")
     public String index(
@@ -72,6 +76,17 @@ public class ViewController {
             HttpServletResponse response) {
 
         return "kilometry";
+
+    }
+
+    @RequestMapping("/kategorie")
+    public String kategorie(
+            Model model,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+        model.addAttribute("kategorie", kategoriaRepository.findAll());
+        return "kategorie";
 
     }
 

@@ -2,9 +2,12 @@ package pl.pawc.ewi.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Maszyna {
@@ -22,6 +25,9 @@ public class Maszyna {
     @Transient
     @Column(name = "suma_kilometry")
     private double sumaKilometry;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Kategoria> kategorie;
 
     @Transient
     private List<Norma> normy;
@@ -64,6 +70,14 @@ public class Maszyna {
 
     public void setSumaKilometry(double sumaKilometry) {
         this.sumaKilometry = sumaKilometry;
+    }
+
+    public Set<Kategoria> getKategorie() {
+        return kategorie;
+    }
+
+    public void setKategorie(Set<Kategoria> kategorie) {
+        this.kategorie = kategorie;
     }
 
     @Override
