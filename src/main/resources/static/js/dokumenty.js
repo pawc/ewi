@@ -103,7 +103,7 @@ $(document).ready(() => {
                     class: 'zuzycie'
                 }).appendTo($('#zuzycieTable'))
 
-                var td1 = $('<td>').html(normaSuma)
+                var td1 = $('<td>').html(Math.round((normaSuma + Number.EPSILON) * 10)/10)
                 td1.appendTo(tr)
 
                 var td2 = $('<td>')
@@ -130,7 +130,8 @@ $(document).ready(() => {
                     wynik.html(Math.round(((inputZuzycie.val() * norma.wartosc) + Number.EPSILON) * 10)/10)
                     var inputTankowanieVal = (inputTankowanie.val() == '') ? 0 : parseFloat(inputTankowanie.val())
                     inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : parseFloat(inputOgrzewanie.val())
-                    td5.html(normaSuma - parseFloat(wynik.html()) + inputTankowanieVal - inputOgrzewanieVal)
+                    var sumaPo = normaSuma - parseFloat(wynik.html()) + inputTankowanieVal - inputOgrzewanieVal
+                    td5.html(Math.round((sumaPo + Number.EPSILON) * 10)/10)
                 })
 
                 if(czyOgrzewanie){
@@ -146,7 +147,8 @@ $(document).ready(() => {
                         }).appendTo(tdOgrzewanie)
                         .keyup(() => {
                             wynik.html(Math.round(((inputZuzycie.val() * norma.wartosc) + Number.EPSILON) * 10)/10)
-                            td5.html(normaSuma - parseFloat(wynik.html()) + parseFloat(inputTankowanie.val()) - parseFloat(inputOgrzewanie.val()))
+                            var sumaPo = normaSuma - parseFloat(wynik.html()) + parseFloat(inputTankowanie.val()) - parseFloat(inputOgrzewanie.val())
+                            td5.html(Math.round((sumaPo + Number.EPSILON) * 10)/10)
                         })
                     }
                     tdOgrzewanie.appendTo(tr)
@@ -169,7 +171,8 @@ $(document).ready(() => {
                 inputTankowanie.keyup(() => {
                     wynik.html(Math.round(((inputZuzycie.val() * norma.wartosc) + Number.EPSILON) * 10)/10)
                     inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : parseFloat(inputOgrzewanie.val())
-                    td5.html(normaSuma - parseFloat(wynik.html()) + parseFloat(inputTankowanie.val()) - inputOgrzewanieVal)
+                    var sumaPo = normaSuma - parseFloat(wynik.html()) + parseFloat(inputTankowanie.val()) - inputOgrzewanieVal
+                    td5.html(Math.round((sumaPo + Number.EPSILON) * 10)/10)
                 })
 
             })
