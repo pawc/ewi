@@ -49,7 +49,11 @@
                 <tbody>
                 <tr th:each="kategoria : ${kategorie}">
                     <td><span th:text="${kategoria.nazwa}"></span></td>
-                    <td><span th:text="${kategoria.maszyny.size}"></span></td>
+                    <td>
+                        <span th:each="maszyna : ${kategoria.maszyny}">
+                            <span th:text="${maszyna.nazwa} + ' (' + ${maszyna.id} + ')'"></span><br>
+                        </span>
+                    </td>
                     <td class="text-right">
                         <button class="btn btn-danger" th:onclick="usunBtn([[${kategoria.nazwa}]])">Usuń <i class="fas fa-trash-alt"></i></button>
                     </td>

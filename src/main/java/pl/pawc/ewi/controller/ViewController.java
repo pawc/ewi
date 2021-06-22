@@ -33,6 +33,17 @@ public class ViewController {
 
     }
 
+    @RequestMapping("/raport2")
+    public String raport2(
+            Model model,
+            HttpServletRequest request,
+            HttpServletResponse response){
+
+        logger.info("["+request.getRemoteAddr()+"] - /raport2 " );
+        return "raportRoczny";
+
+    }
+
     @RequestMapping("/dokumenty")
     public String dokumenty(
             Model model,
