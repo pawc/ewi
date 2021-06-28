@@ -11,7 +11,7 @@ import java.util.List;
 public interface RaportRocznyRepository extends CrudRepository<RaportRoczny, String> {
 
     @Query(value = "select concat(k.nazwa, '-', n.jednostka) as 'kategoria_jednostka', " +
-            "k.nazwa as 'kategoria', n.jednostka, sum(round(z.wartosc * n.wartosc, 2)) as 'suma' from kategoria k " +
+            "k.nazwa as 'kategoria', n.jednostka, sum(round(CAST((z.wartosc * n.wartosc) AS DECIMAL(14,4)), 2)) as 'suma' from kategoria k " +
             "join maszyna_kategorie mk on k.nazwa = mk.kategorie_nazwa " +
             "join maszyna m on mk.maszyna_id = m.id " +
             "join norma n on m.id = n.maszyna_id " +

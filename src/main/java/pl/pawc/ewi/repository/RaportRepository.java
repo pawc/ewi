@@ -15,7 +15,7 @@ public interface RaportRepository extends CrudRepository<Raport, String> {
             "IF(k.wartosc IS NULL, 0, k.wartosc) as stankilometry, " +
             "round(sum(d.kilometry), 2) as kilometry, "+
             "n.jednostka, " +
-            "sum(round(z.wartosc*n.wartosc, 1)) as suma, " +
+            "sum(round(cast((z.wartosc*n.wartosc) as decimal(14,4)), 1)) as suma, " +
             "sum(round(z.wartosc, 1)) as sumagodzin, " +
             "sum(round(z.zatankowano, 1)) as zatankowano, " +
             "sum(round(z.ogrzewanie, 1)) as ogrzewanie, " +

@@ -16,7 +16,7 @@ public interface DokumentRepository extends CrudRepository<Dokument, String> {
     List<Dokument> getDokumenty(int year, int month);
 
     @Query(value = "select " +
-            "ifnull(s.wartosc, 0) - ifnull(sum(round(z.wartosc * n.wartosc, 1)), 0)  " +
+            "ifnull(s.wartosc, 0) - ifnull(sum(round(CAST((z.wartosc * n.wartosc) AS DECIMAL(14, 4)), 1)), 0)  " +
             "+ ifnull(sum(z.zatankowano), 0) - ifnull(sum(z.ogrzewanie), 0)  as suma " +
             "from maszyna m " +
             "join norma n on m.id = n.maszyna_id " +

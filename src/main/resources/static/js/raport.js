@@ -65,8 +65,8 @@ function updateTable(){
     .done(pozycje => {
         var nextMonthVal = nextMonth()
         $.each(pozycje, (i, pozycja) => {
-            var endStateKilometry = Math.round(((pozycja.stankilometry + pozycja.kilometry) + Number.EPSILON) * 100)/100
-            var endState = Math.round(((pozycja.stanPoprz - pozycja.suma + pozycja.zatankowano - pozycja.ogrzewanie) + Number.EPSILON) * 10)/10
+            var endStateKilometry = Math.round(((pozycja.stankilometry + pozycja.kilometry) + 0.00001) * 100)/100
+            var endState = Math.round(((pozycja.stanPoprz - pozycja.suma + pozycja.zatankowano - pozycja.ogrzewanie) + 0.00001) * 10)/10
             t.row.add( [
                 pozycja.maszyna,
                 pozycja.stankilometry,
