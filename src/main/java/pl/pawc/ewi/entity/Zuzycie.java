@@ -1,5 +1,9 @@
 package pl.pawc.ewi.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,6 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
+@Getter
+@Setter
+@ToString
 public class Zuzycie {
 
     @Id
@@ -30,65 +37,5 @@ public class Zuzycie {
 
     @Column(columnDefinition = "double default 0")
     private double ogrzewanie;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public double getWartosc() {
-        return wartosc;
-    }
-
-    public void setWartosc(double wartosc) {
-        this.wartosc = wartosc;
-    }
-
-    public Norma getNorma() {
-        return norma;
-    }
-
-    public void setNorma(Norma norma) {
-        this.norma = norma;
-    }
-
-    public double getZatankowano() {
-        return zatankowano;
-    }
-
-    public void setZatankowano(double zatankowano) {
-        this.zatankowano = zatankowano;
-    }
-
-    public Dokument getDokument() {
-        return dokument;
-    }
-
-    public void setDokument(Dokument dokument) {
-        this.dokument = dokument;
-    }
-
-    public double getOgrzewanie() {
-        return ogrzewanie;
-    }
-
-    public void setOgrzewanie(double ogrzewanie) {
-        this.ogrzewanie = ogrzewanie;
-    }
-
-    @Override
-    public String toString() {
-        return "Zuzycie{" +
-                "id=" + id +
-                ", wartosc=" + wartosc +
-                ", norma=" + norma +
-                ", dokument=" + dokument +
-                ", zatankowano=" + zatankowano +
-                ", ogrzewanie=" + ogrzewanie +
-                '}';
-    }
 
 }

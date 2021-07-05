@@ -1,5 +1,6 @@
 package pl.pawc.ewi.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,13 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 public class StanRestController {
 
     private static final Logger logger = Logger.getLogger(StanRestController.class);
-
-    @Autowired
-    StanRepository stanRepository;
+    private final StanRepository stanRepository;
 
     @PostMapping("stan")
     public void stanPost(

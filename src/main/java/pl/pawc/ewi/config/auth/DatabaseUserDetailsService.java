@@ -1,6 +1,6 @@
 package pl.pawc.ewi.config.auth;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,19 +11,12 @@ import pl.pawc.ewi.repository.UserRepository;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class DatabaseUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    UserDetailsMapper userDetailsMapper;
-
-    public DatabaseUserDetailsService(UserRepository userRepository, UserDetailsMapper userDetailsMapper) {
-        this.userRepository = userRepository;
-        this.userDetailsMapper = userDetailsMapper;
-    }
+    private final UserRepository userRepository;
+    private final UserDetailsMapper userDetailsMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

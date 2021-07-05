@@ -1,9 +1,14 @@
 package pl.pawc.ewi.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
+@Getter
+@Setter
 public class RaportRoczny {
 
     @Id
@@ -11,37 +16,5 @@ public class RaportRoczny {
     private String kategoria;
     private String jednostka;
     private double suma;
-
-    public String getKategoria_jednostka() {
-        return kategoria_jednostka;
-    }
-
-    public void setKategoria_jednostka(String kategoria_jednostka) {
-        this.kategoria_jednostka = kategoria_jednostka;
-    }
-
-    public String getKategoria() {
-        return kategoria;
-    }
-
-    public void setKategoria(String kategoria) {
-        this.kategoria = kategoria;
-    }
-
-    public String getJednostka() {
-        return jednostka;
-    }
-
-    public void setJednostka(String jednostka) {
-        this.jednostka = jednostka;
-    }
-
-    public double getSuma() {
-        return suma;
-    }
-
-    public void setSuma(double suma) {
-        this.suma = suma;
-    }
 
 }

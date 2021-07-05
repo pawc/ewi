@@ -1,5 +1,8 @@
 package pl.pawc.ewi.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
+@Getter
+@Setter
 public class Kilometry {
 
     @Id
@@ -28,46 +33,6 @@ public class Kilometry {
 
     @Column(columnDefinition = "double default 0")
     private double wartosc;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public int getMiesiac() {
-        return miesiac;
-    }
-
-    public void setMiesiac(int miesiac) {
-        this.miesiac = miesiac;
-    }
-
-    public int getRok() {
-        return rok;
-    }
-
-    public void setRok(int rok) {
-        this.rok = rok;
-    }
-
-    public Maszyna getMaszyna() {
-        return maszyna;
-    }
-
-    public void setMaszyna(Maszyna maszyna) {
-        this.maszyna = maszyna;
-    }
-
-    public double getWartosc() {
-        return wartosc;
-    }
-
-    public void setWartosc(double wartosc) {
-        this.wartosc = wartosc;
-    }
 
     @Override
     public String toString() {

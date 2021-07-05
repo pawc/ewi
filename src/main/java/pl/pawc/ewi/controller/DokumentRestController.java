@@ -1,8 +1,12 @@
 package pl.pawc.ewi.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import pl.pawc.ewi.entity.Dokument;
 import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.entity.Norma;
@@ -17,22 +21,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @RestController
 public class DokumentRestController {
 
     private static final Logger logger = Logger.getLogger(DokumentRestController.class);
-
-    @Autowired
-    DokumentRepository dokumentRepository;
-
-    @Autowired
-    ZuzycieRepository zuzycieRepository;
-
-    @Autowired
-    MaszynaRepository maszynaRepository;
-
-    @Autowired
-    NormaRepository normaRepository;
+    private final DokumentRepository dokumentRepository;
+    private final ZuzycieRepository zuzycieRepository;
+    private final MaszynaRepository maszynaRepository;
+    private final NormaRepository normaRepository;
 
     @RequestMapping("/dokument")
     public Dokument dokumentGet(

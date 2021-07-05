@@ -1,6 +1,8 @@
 package pl.pawc.ewi.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +15,8 @@ import java.util.Set;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer","maszyny"})
+@Getter
+@Setter
 public class Kategoria {
 
     @Id
@@ -24,21 +28,5 @@ public class Kategoria {
             joinColumns = { @JoinColumn(name = "kategorie_nazwa") },
             inverseJoinColumns = { @JoinColumn(name = "maszyna_id") })
     private Set<Maszyna> maszyny;
-
-    public String getNazwa() {
-        return nazwa;
-    }
-
-    public void setNazwa(String nazwa) {
-        this.nazwa = nazwa;
-    }
-
-    public Set<Maszyna> getMaszyny() {
-        return maszyny;
-    }
-
-    public void setMaszyny(Set<Maszyna> maszyny) {
-        this.maszyny = maszyny;
-    }
 
 }

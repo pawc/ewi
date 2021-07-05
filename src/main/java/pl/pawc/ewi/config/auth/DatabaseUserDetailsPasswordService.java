@@ -1,5 +1,6 @@
 package pl.pawc.ewi.config.auth;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsPasswordService;
@@ -10,14 +11,12 @@ import pl.pawc.ewi.repository.UserRepository;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class DatabaseUserDetailsPasswordService implements UserDetailsPasswordService {
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    UserDetailsMapper userDetailsMapper;
+    private final UserRepository userRepository;
+    private final UserDetailsMapper userDetailsMapper;
 
     @Override
     public UserDetails updatePassword(UserDetails user, String newPassword) {

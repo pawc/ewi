@@ -1,5 +1,9 @@
 package pl.pawc.ewi.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +15,9 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
+@ToString
 public class Maszyna {
 
     @Id
@@ -33,64 +40,5 @@ public class Maszyna {
 
     @Transient
     private List<Norma> normy;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getNazwa() {
-        return nazwa;
-    }
-
-    public void setNazwa(String nazwa) {
-        this.nazwa = nazwa;
-    }
-
-    public String getOpis() {
-        return opis;
-    }
-
-    public void setOpis(String opis) {
-        this.opis = opis;
-    }
-
-    public List<Norma> getNormy() {
-        return normy;
-    }
-
-    public void setNormy(List<Norma> normy) {
-        this.normy = normy;
-    }
-
-    public double getSumaKilometry() {
-        return sumaKilometry;
-    }
-
-    public void setSumaKilometry(double sumaKilometry) {
-        this.sumaKilometry = sumaKilometry;
-    }
-
-    public Set<Kategoria> getKategorie() {
-        return kategorie;
-    }
-
-    public void setKategorie(Set<Kategoria> kategorie) {
-        this.kategorie = kategorie;
-    }
-
-    @Override
-    public String toString() {
-        return "Maszyna{" +
-                "id='" + id + '\'' +
-                ", nazwa='" + nazwa + '\'' +
-                ", opis='" + opis + '\'' +
-                ", sumaKilometry=" + sumaKilometry +
-                ", normy=" + normy +
-                '}';
-    }
 
 }

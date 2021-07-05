@@ -1,5 +1,8 @@
 package pl.pawc.ewi.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 public class Dokument {
 
     @Id
@@ -27,46 +32,6 @@ public class Dokument {
 
     @Transient
     private List<Zuzycie> zuzycie = new ArrayList<>();
-
-    public String getNumer() {
-        return numer;
-    }
-
-    public void setNumer(String numer) {
-        this.numer = numer;
-    }
-
-    public Date getData() {
-        return data;
-    }
-
-    public void setData(Date data) {
-        this.data = data;
-    }
-
-    public Maszyna getMaszyna() {
-        return maszyna;
-    }
-
-    public void setMaszyna(Maszyna maszyna) {
-        this.maszyna = maszyna;
-    }
-
-    public List<Zuzycie> getZuzycie() {
-        return zuzycie;
-    }
-
-    public void setZuzycie(List<Zuzycie> zuzycie) {
-        this.zuzycie = zuzycie;
-    }
-
-    public double getKilometry() {
-        return kilometry;
-    }
-
-    public void setKilometry(double kilometry) {
-        this.kilometry = kilometry;
-    }
 
     @Override
     public String toString() {

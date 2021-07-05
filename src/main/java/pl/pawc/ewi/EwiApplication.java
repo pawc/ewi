@@ -1,5 +1,6 @@
 package pl.pawc.ewi;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -18,21 +19,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.pawc.ewi.config.auth.DatabaseUserDetailsPasswordService;
 import pl.pawc.ewi.config.auth.DatabaseUserDetailsService;
 
+@RequiredArgsConstructor
 @SpringBootApplication
 @EnableWebSecurity
 public class EwiApplication extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	Environment env;
+	private final Environment env;
 
 	@Value("${bcryptWorkFactor}")
 	String bcryptWorkFactor;
 
-	@Autowired
-	DatabaseUserDetailsService databaseUserDetailsService;
-
-	@Autowired
-	DatabaseUserDetailsPasswordService databaseUserDetailsPasswordService;
+	private final DatabaseUserDetailsService databaseUserDetailsService;
+	private final DatabaseUserDetailsPasswordService databaseUserDetailsPasswordService;
 
 	public static void main(String[] args) {
 		System.setProperty("server.servlet.context-path", "/ewi");

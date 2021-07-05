@@ -1,7 +1,7 @@
 package pl.pawc.ewi.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,16 +15,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 public class RaportRestController {
 
     private static final Logger logger = Logger.getLogger(RaportRestController.class);
 
-    @Autowired
-    RaportRepository raportRepository;
-
-    @Autowired
-    RaportRocznyRepository raportRocznyRepository;
+    private final RaportRepository raportRepository;
+    private final RaportRocznyRepository raportRocznyRepository;
 
     @RequestMapping(value = "/raport", method = RequestMethod.GET)
     public List<Raport> raport(

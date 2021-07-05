@@ -1,5 +1,6 @@
 package pl.pawc.ewi.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -22,29 +23,17 @@ import pl.pawc.ewi.repository.ZuzycieRepository;
 import java.sql.Date;
 import java.util.Calendar;
 
+@RequiredArgsConstructor
 @Component
 public class InitialDataLoader implements ApplicationRunner {
 
-    @Autowired
-    MaszynaRepository maszynaRepository;
-
-    @Autowired
-    DokumentRepository dokumentRepository;
-
-    @Autowired
-    NormaRepository normaRepository;
-
-    @Autowired
-    ZuzycieRepository zuzycieRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    StanRepository stanRepository;
+    private final MaszynaRepository maszynaRepository;
+    private final DokumentRepository dokumentRepository;
+    private final NormaRepository normaRepository;
+    private final ZuzycieRepository zuzycieRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final StanRepository stanRepository;
 
     @Value("${testDataLoad}")
     private String testDataLoadString;
