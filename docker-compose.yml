@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   mysql:
-    image: mariadb:latest
+    image: mariadb:10.6.1
     restart: unless-stopped
     container_name: mysql-ewi
     environment:
@@ -10,7 +10,9 @@ services:
       - MYSQL_USER=ewiuser
       - MYSQL_PASSWORD=ewiuser_password
       - MYSQL_ROOT_PASSWORD=root_password
-      - MYSQL_ROOT_HOST=%
+      - MYSQL_ROOT_HOST=ewi
+    networks:
+      - db_net
   ewi:
     image: pawc/ewi:latest
     container_name: ewi
@@ -28,3 +30,14 @@ services:
       - myPassword=admin
     depends_on:
       - mysql
+    networks:
+      - app_net
+      - db_net
+networks:
+  app_net:
+    ipam:
+      driver: default
+  db_net:
+    ipam:
+      driver: default
+    external: false
