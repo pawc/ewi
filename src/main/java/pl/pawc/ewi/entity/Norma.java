@@ -29,6 +29,12 @@ public class Norma {
     @Transient
     private Double suma;
 
+    @Transient
+    private Double sumaBefore;
+
+    @Transient
+    private Double stan;
+
     @Column(name = "czy_ogrzewanie")
     private boolean czyOgrzewanie;
 

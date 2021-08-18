@@ -232,6 +232,11 @@ function edytujBtn(numer){
         $('#maszyna').prop("disabled", true);
         $('#numer').val(dokument.numer)
         $('#kilometry').val(dokument.kilometry)
+        .keyup(() => {
+            $('#kmPo').html(parseFloat(dokument.kilometryBefore) + parseFloat($('#kilometry').val()))
+        })
+        $('#kmPrzed').html(dokument.kilometryBefore)
+        $('#kmPo').html(dokument.kilometryBefore + dokument.kilometry)
         $('#data').val(dokument.data)
         $("#maszyna option[value='"+dokument.maszyna.id.toString()+"']").attr("selected", "selected");
         $("#zuzycieTable > tbody > tr").remove();
@@ -253,7 +258,9 @@ function edytujBtn(numer){
                class: 'zuzycie'
             }).appendTo($('#zuzycieTable'))
 
-            var td1 = $('<td>').html('X')
+            var sumaBefore = zuzycie.norma.sumaBefore == null ? 0 : zuzycie.norma.sumaBefore
+            sumaBefore = (sumaBefore == 0 ? zuzycie.norma.stan : sumaBefore)
+            var td1 = $('<td>').html(sumaBefore)
             td1.appendTo(tr)
 
             var td2 = $('<td>')
@@ -272,10 +279,11 @@ function edytujBtn(numer){
             var td3 = $('<td>')
             td3.appendTo(tr)
 
-            var inputZuzycieEcho = $('<span>').html(0).appendTo(td3)
+            var inputZuzycieEcho = $('<span>').html(zuzycie.wartosc).appendTo(td3)
             td3.append(` * ${zuzycie.norma.wartosc} [${zuzycie.norma.jednostka}] = `)
 
-            var wynik = $('<span>').html(0).appendTo(td3)
+            var wynikVal = zuzycie.wartosc * zuzycie.norma.wartosc
+            var wynik = $('<span>').html(wynikVal).appendTo(td3)
 
             if(czyOgrzewanie){
                var tdOgrzewanie = $('<td>')
@@ -305,8 +313,26 @@ function edytujBtn(numer){
             }).appendTo(td4)
             .val(zuzycie.zatankowano)
 
-            var td5 = $('<td>').html('X')
-            td5.appendTo(tr)
+            var td5 = $('<td>')
+                .html(formatter.format(sumaBefore - wynikVal - zuzycie.ogrzewanie + zuzycie.zatankowano))
+                .appendTo(tr)
+
+            inputZuzycie.keyup(() => {
+                inputZuzycieEcho.html(inputZuzycie.val())
+                wynikVal = inputZuzycie.val() * zuzycie.norma.wartosc
+                wynik.html(formatter.format(wynikVal))
+                td5.html(formatter.format(sumaBefore - wynikVal - parseFloat(inputOgrzewanie.val()) + parseFloat(inputTankowanie.val())))
+            })
+
+            inputOgrzewanie.keyup(() => {
+                wynikVal = inputZuzycie.val() * zuzycie.norma.wartosc
+                td5.html(formatter.format(sumaBefore - wynikVal - parseFloat(inputOgrzewanie.val()) + parseFloat(inputTankowanie.val())))
+            })
+
+            inputTankowanie.keyup(() => {
+               wynikVal = inputZuzycie.val() * zuzycie.norma.wartosc
+               td5.html(formatter.format(sumaBefore - wynikVal - parseFloat(inputOgrzewanie.val()) + parseFloat(inputTankowanie.val())))
+           })
         })
         dialog.dialog( "open" );
     })

@@ -33,6 +33,9 @@ public class Dokument {
     @Transient
     private List<Zuzycie> zuzycie = new ArrayList<>();
 
+    @Transient
+    private Double kilometryBefore;
+
     @Override
     public String toString() {
         return "Dokument{" +

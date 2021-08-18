@@ -8,16 +8,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.pawc.ewi.entity.Dokument;
+import pl.pawc.ewi.entity.Kilometry;
 import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.entity.Norma;
+import pl.pawc.ewi.entity.Stan;
 import pl.pawc.ewi.entity.Zuzycie;
 import pl.pawc.ewi.repository.DokumentRepository;
+import pl.pawc.ewi.repository.KilometryRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
 import pl.pawc.ewi.repository.NormaRepository;
+import pl.pawc.ewi.repository.StanRepository;
 import pl.pawc.ewi.repository.ZuzycieRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +35,8 @@ public class DokumentRestController {
     private final ZuzycieRepository zuzycieRepository;
     private final MaszynaRepository maszynaRepository;
     private final NormaRepository normaRepository;
+    private final StanRepository stanRepository;
+    private final KilometryRepository kilometryRepository;
 
     @RequestMapping("/dokument")
     public Dokument dokumentGet(
@@ -52,7 +59,16 @@ public class DokumentRestController {
                         year = Integer.parseInt(miesiac.split("-")[0]);
                         month = Integer.parseInt(miesiac.split("-")[1]);
                         Double suma = dokumentRepository.getSuma(zuzycie.getNorma().getId(), year, month);
+                        Double sumaBefore = dokumentRepository.getSumBeforeDate(
+                                zuzycie.getNorma().getId(), year, month, dokument.getData(), dokument.getNumer());
+
+                        Double stan = 0D;
+                        List<Stan> by = stanRepository.findBy(zuzycie.getNorma().getId(), year, month);
+                        if(!by.isEmpty()) stan = by.get(0).getWartosc();
+
                         zuzycie.getNorma().setSuma(suma);
+                        zuzycie.getNorma().setSumaBefore(sumaBefore);
+                        zuzycie.getNorma().setStan(stan);
                     }
                     catch(NumberFormatException e){
                         // skip
@@ -63,6 +79,21 @@ public class DokumentRestController {
                 zuzycie.getNorma().setMaszyna(null);
             }
             dokument.setZuzycie(zuzycieList);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dokument.getData());
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH) + 1;
+
+            Double kilometryBefore = dokumentRepository.getSumaKilometryBeforeDate(dokument.getMaszyna().getId(),
+                    year, month, dokument.getData(), dokument.getNumer());
+            if(kilometryBefore == null || kilometryBefore == 0D){
+                kilometryBefore = 0D;
+                List<Kilometry> by1 = kilometryRepository.findBy(dokument.getMaszyna().getId(),
+                        year, month);
+                if(!by1.isEmpty()) kilometryBefore = by1.get(0).getWartosc();
+            }
+            dokument.setKilometryBefore(kilometryBefore);
 
             logger.info("["+request.getRemoteAddr()+"] - /dokument GET numer="+numer);
         }
