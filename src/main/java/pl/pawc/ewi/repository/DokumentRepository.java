@@ -29,9 +29,9 @@ public interface DokumentRepository extends CrudRepository<Dokument, String> {
     )
     Double getSuma(long normaId, int year, int month);
 
-    @Query(value = "select " +
+    @Query(value = "select round(" +
             "ifnull(s.wartosc, 0) - ifnull(sum(round(CAST((z.wartosc * n.wartosc) AS DECIMAL(14, 4)), 1)), 0)  " +
-            "+ ifnull(sum(z.zatankowano), 0) - ifnull(sum(z.ogrzewanie), 0)  as suma " +
+            "+ ifnull(sum(z.zatankowano), 0) - ifnull(sum(z.ogrzewanie), 0), 1)  as suma " +
             "from maszyna m " +
             "join norma n on m.id = n.maszyna_id " +
             "left join stan s on n.id = s.norma_id and n.id = ?1 and s.rok = ?2 and s.miesiac = ?3 " +

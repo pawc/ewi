@@ -88,7 +88,7 @@ $(document).ready(() => {
             })
 
             if(czyOgrzewanie){
-                $('#zuzycieTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">ogrzewanie [L]</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
+                $('#zuzycieTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">ogrzewanie<br>/przepał [L]</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
             }
             else{
                 $('#zuzycieTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
@@ -247,7 +247,7 @@ function edytujBtn(numer){
        })
 
        if(czyOgrzewanie){
-           $('#zuzycieTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">ogrzewanie [L]</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
+           $('#zuzycieTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">ogrzewanie<br>/przepał [L]</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
        }
        else{
            $('#zuzycieTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
