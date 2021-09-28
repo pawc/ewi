@@ -111,7 +111,7 @@ table {
 #raportTable > tbody > tr > td:nth-child(2),
 #raportTable > tbody > tr > td:nth-child(3),
 #raportTable > tbody > tr > td:nth-child(4) {
-    background: #d4e374;
+    background: #faffe0;
 }
 
 #raportTable > tbody > tr > td:nth-child(6),
@@ -120,7 +120,7 @@ table {
 #raportTable > tbody > tr > td:nth-child(9),
 #raportTable > tbody > tr > td:nth-child(10),
 #raportTable > tbody > tr > td:nth-child(11){
-    background: #e8ba6b;
+    background: #fff7e9;
 }
 
 #saveButtonDiv > button {
