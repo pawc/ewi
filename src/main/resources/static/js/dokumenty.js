@@ -283,7 +283,7 @@ function edytujBtn(numer){
             td3.append(` * ${zuzycie.norma.wartosc} [${zuzycie.norma.jednostka}] = `)
 
             var wynikVal = zuzycie.wartosc * zuzycie.norma.wartosc
-            var wynik = $('<span>').html(wynikVal).appendTo(td3)
+            var wynik = $('<span>').html(Math.round((wynikVal + 0.00001) * 10)/10).appendTo(td3)
 
             if(czyOgrzewanie){
                var tdOgrzewanie = $('<td>')
@@ -297,6 +297,10 @@ function edytujBtn(numer){
                        value : '0'
                    }).appendTo(tdOgrzewanie)
                    .val(zuzycie.ogrzewanie)
+                   .keyup(() => {
+                       wynikVal = inputZuzycie.val() * zuzycie.norma.wartosc
+                       td5.html(formatter.format(sumaBefore - wynikVal - parseFloat(inputOgrzewanie.val()) + parseFloat(inputTankowanie.val())))
+                    })
                }
                tdOgrzewanie.appendTo(tr)
             }
@@ -321,11 +325,6 @@ function edytujBtn(numer){
                 inputZuzycieEcho.html(inputZuzycie.val())
                 wynikVal = inputZuzycie.val() * zuzycie.norma.wartosc
                 wynik.html(formatter.format(wynikVal))
-                td5.html(formatter.format(sumaBefore - wynikVal - parseFloat(inputOgrzewanie.val()) + parseFloat(inputTankowanie.val())))
-            })
-
-            inputOgrzewanie.keyup(() => {
-                wynikVal = inputZuzycie.val() * zuzycie.norma.wartosc
                 td5.html(formatter.format(sumaBefore - wynikVal - parseFloat(inputOgrzewanie.val()) + parseFloat(inputTankowanie.val())))
             })
 
