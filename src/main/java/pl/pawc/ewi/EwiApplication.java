@@ -33,7 +33,7 @@ public class EwiApplication extends WebSecurityConfigurerAdapter {
 	private final DatabaseUserDetailsPasswordService databaseUserDetailsPasswordService;
 
 	public static void main(String[] args) {
-		System.setProperty("server.servlet.context-path", "/ewi");
+		System.setProperty("server.servlet.context-path", "/paliwo");
 		SpringApplication.run(EwiApplication.class, args);
 	}
 
