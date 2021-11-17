@@ -30,7 +30,7 @@ public class Maszyna {
     @Column(name = "opis")
     private String opis;
 
-    @Column(name = "aktywna")
+    @Column(columnDefinition = "boolean default true")
     private boolean aktywna;
 
     @Transient

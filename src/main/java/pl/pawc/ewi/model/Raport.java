@@ -18,6 +18,7 @@ public class Raport {
     private String maszynaid;
     private double stankilometry;
     private double kilometry;
+    private double kilometryprzyczepa;
     private String jednostka;
     private double suma;
     private double zatankowano;

@@ -155,6 +155,7 @@ public class DokumentRestController {
 
             dokumentDB.setData(dokument.getData());
             dokumentDB.setKilometry(dokument.getKilometry());
+            dokumentDB.setKilometryPrzyczepa(dokument.getKilometryPrzyczepa());
             dokumentRepository.save(dokumentDB);
 
             for(Zuzycie zuzycie : dokument.getZuzycie()) {

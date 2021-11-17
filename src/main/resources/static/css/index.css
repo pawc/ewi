@@ -110,16 +110,17 @@ table {
 
 #raportTable > tbody > tr > td:nth-child(2),
 #raportTable > tbody > tr > td:nth-child(3),
-#raportTable > tbody > tr > td:nth-child(4) {
+#raportTable > tbody > tr > td:nth-child(4),
+ #raportTable > tbody > tr > td:nth-child(5) {
     background: #faffe0;
 }
 
-#raportTable > tbody > tr > td:nth-child(6),
 #raportTable > tbody > tr > td:nth-child(7),
 #raportTable > tbody > tr > td:nth-child(8),
 #raportTable > tbody > tr > td:nth-child(9),
 #raportTable > tbody > tr > td:nth-child(10),
-#raportTable > tbody > tr > td:nth-child(11){
+#raportTable > tbody > tr > td:nth-child(11),
+#raportTable > tbody > tr > td:nth-child(12){
     background: #fff7e9;
 }
 

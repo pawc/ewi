@@ -231,6 +231,7 @@ function edytujBtn(numer){
         $("#numer").prop("disabled", true);
         $('#maszyna').prop("disabled", true);
         $('#numer').val(dokument.numer)
+        $('#kilometryPrzyczepa').val(dokument.kilometryPrzyczepa)
         $('#kilometry').val(dokument.kilometry)
         .keyup(() => {
             $('#kmPo').html(parseFloat(dokument.kilometryBefore) + parseFloat($('#kilometry').val()))
@@ -452,6 +453,7 @@ $(function() {
                     numer: $('#numer').val(),
                     data: $('#data').val(),
                     kilometry: $('#kilometry').val(),
+                    kilometryPrzyczepa: $('#kilometryPrzyczepa').val(),
                     maszyna: {
                         id: $('#maszyna option:selected').val()
                     },

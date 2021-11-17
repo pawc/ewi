@@ -72,6 +72,7 @@ function updateTable(){
                 pozycja.stankilometry,
                 pozycja.kilometry,
                 endStateKilometry,
+                pozycja.kilometryprzyczepa,
                 pozycja.jednostka,
                 pozycja.stanPoprz,
                 pozycja.suma,

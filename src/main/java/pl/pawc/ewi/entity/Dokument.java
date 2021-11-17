@@ -27,6 +27,9 @@ public class Dokument {
     @Column(columnDefinition = "double default 0")
     private double kilometry;
 
+    @Column(columnDefinition = "double default 0")
+    private double kilometryPrzyczepa;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Maszyna maszyna;
 
@@ -42,6 +45,7 @@ public class Dokument {
                 "numer='" + numer + '\'' +
                 ", data=" + data +
                 ", kilometry=" + kilometry +
+                ", kilometryPrzyczepa=" + kilometryPrzyczepa +
                 ", maszyna=" + maszyna.getId() +
                 ", zuzycie=" + zuzycie +
                 '}';
