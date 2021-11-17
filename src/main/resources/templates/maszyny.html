@@ -68,8 +68,16 @@
                 <label class="text-danger" id="error">Maszyna o podanym numerze już istnieje.</label>
                 <label for="nazwa">Nazwa</label>
                 <input type="text" name="nazwa" id="nazwa" autocomplete="off" value="" class="text ui-widget-content ui-corner-all">
-                <label for="normy">Normy</label><button class="btn btn-success" id="dodajNormaBtn">dodaj</button>
-                <br><br>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label for="normy">Normy</label>
+                        <button class="btn btn-success" id="dodajNormaBtn">dodaj</button>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="czyAktywna">Czy normy aktualne</label>
+                        <input type="checkbox" id="czyAktywna" checked/>
+                    </div>
+                </div>
                 <div id="normy" class="container">
                     <table id="normyTable"></table>
                 </div>

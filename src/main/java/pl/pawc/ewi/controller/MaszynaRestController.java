@@ -94,6 +94,7 @@ public class MaszynaRestController {
             maszynaNew.setId(maszyna.getId());
             maszynaNew.setNazwa(maszyna.getNazwa());
             maszynaNew.setOpis(maszyna.getOpis());
+            maszynaNew.setAktywna(maszyna.isAktywna());
             maszynaRepository.save(maszynaNew);
 
             Norma normaNew;
@@ -133,6 +134,7 @@ public class MaszynaRestController {
             Maszyna maszynaDB = byId.get();
             maszynaDB.setNazwa(maszyna.getNazwa());
             maszynaDB.setOpis(maszyna.getOpis());
+            maszynaDB.setAktywna(maszyna.isAktywna());
 
             List<Norma> normy = normaRepository.findByMaszynaId(maszyna.getId());
             for(Norma normaNew : maszyna.getNormy()){

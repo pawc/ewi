@@ -114,6 +114,7 @@ function edytujBtn(id){
         $('#numer').val(maszyna.id)
         $('#nazwa').val(maszyna.nazwa)
         $('#opis').val(maszyna.opis)
+        $('#czyAktywna').prop('checked', maszyna.aktywna)
 
         $.each($('input[name=kategorie]'), (i, k) => {
             $(k).prop('checked', false)
@@ -195,6 +196,7 @@ function dodajBtn(){
     $("#numer").val('')
     $('#nazwa').val('')
     $('#opis').val('')
+    $('#czyAktywna').prop('checked', true)
     $("span.ui-dialog-title").text('Dodaj maszynę');
     dialog.dialog("open");
 }
@@ -246,7 +248,8 @@ $(function() {
                     nazwa: $('#nazwa').val(),
                     opis: $('#opis').val(),
                     normy: normy,
-                    kategorie: kategorie
+                    kategorie: kategorie,
+                    aktywna: $('#czyAktywna').prop('checked')
                 }
 
                 var headers = {};

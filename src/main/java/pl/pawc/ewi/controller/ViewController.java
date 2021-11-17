@@ -47,7 +47,7 @@ public class ViewController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        model.addAttribute("maszyny", maszynaRepository.findAll());
+        model.addAttribute("maszyny", maszynaRepository.findAllActive());
         logger.info("["+request.getRemoteAddr()+"] - /dokumenty" );
 
         return "dokumenty";

@@ -30,6 +30,9 @@ public class Maszyna {
     @Column(name = "opis")
     private String opis;
 
+    @Column(name = "aktywna")
+    private boolean aktywna;
+
     @Transient
     @Column(name = "suma_kilometry")
     private double sumaKilometry;
