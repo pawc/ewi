@@ -25,6 +25,25 @@ $(document).ready(() => {
 
 var dialog, form
 
+function togglePrzenoszonaNaKolejnyOkres(nazwa){
+    var headers = {};
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    headers["Content-Type"] = "application/json; charset=utf-8";
+    headers[header] = token;
+
+    var kategoria = {
+        nazwa: nazwa
+    }
+
+   $.ajax({
+        url: contextRoot + 'togglePrzenoszonaNaKolejnyOkres',
+        type: 'PUT',
+        data: JSON.stringify(kategoria),
+        headers: headers
+    })
+}
+
 function dodajBtn(){
     $('#nazwa').val('')
     $("span.ui-dialog-title").text('Dodaj kategorię');

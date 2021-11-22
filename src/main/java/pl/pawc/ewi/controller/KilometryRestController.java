@@ -5,12 +5,15 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.pawc.ewi.entity.Kilometry;
+import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.model.KilometryRaport;
 import pl.pawc.ewi.repository.KilometryRepository;
+import pl.pawc.ewi.repository.MaszynaRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -18,6 +21,7 @@ public class KilometryRestController {
 
     private static final Logger logger = Logger.getLogger(KilometryRestController.class);
     private final KilometryRepository kilometryRepository;
+    private final MaszynaRepository maszynaRepository;
 
     @PostMapping("kilometry")
     public void kilometry(
@@ -60,6 +64,11 @@ public class KilometryRestController {
         List<Kilometry> byParams = null;
         Kilometry kmDB = null;
         for(Kilometry km : kilometry){
+            Optional<Maszyna> byId = maszynaRepository.findById(km.getMaszyna().getId());
+            if(byId.isPresent()){
+                if(!byId.get().isPrzenoszonaNaKolejnyOkres()) continue;
+            }
+
             byParams = kilometryRepository.findBy(km.getMaszyna().getId(), km.getRok(), km.getMiesiac());
             if(byParams.isEmpty()){
                 kilometryRepository.save(km);

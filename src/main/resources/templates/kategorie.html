@@ -43,6 +43,7 @@
                 <tr>
                     <th> Nazwa kategorii </th>
                     <th> Przypisane maszyny </th>
+                    <th class="text-center"> Czy stan końcowy norm <br>maszyn z kategorii przenoszony <br>na kolejny okres </th>
                     <th class="text-right"> <button class="btn btn-success" onclick="dodajBtn()">dodaj <i class="fas fa-plus-circle"></i></button> </th>
                 </tr>
                 </thead>
@@ -53,6 +54,10 @@
                         <span th:each="maszyna : ${kategoria.maszyny}">
                             <span th:text="${maszyna.nazwa} + ' (' + ${maszyna.id} + ')'"></span><br>
                         </span>
+                    </td>
+                    <td>
+                        <input type="checkbox" th:attr="onclick=|togglePrzenoszonaNaKolejnyOkres('${kategoria.nazwa}')|"
+                               th:checked="${kategoria.przenoszonaNaKolejnyOkres}"/>
                     </td>
                     <td class="text-right">
                         <button class="btn btn-danger" th:onclick="usunBtn([[${kategoria.nazwa}]])">Usuń <i class="fas fa-trash-alt"></i></button>

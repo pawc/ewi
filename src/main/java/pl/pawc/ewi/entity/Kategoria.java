@@ -23,6 +23,9 @@ public class Kategoria {
     @Column(name = "nazwa")
     private String nazwa;
 
+    @Column(columnDefinition = "boolean default true")
+    private boolean przenoszonaNaKolejnyOkres;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "maszyna_kategorie",
             joinColumns = { @JoinColumn(name = "kategorie_nazwa") },

@@ -2,10 +2,7 @@ package pl.pawc.ewi.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.pawc.ewi.entity.Kategoria;
 import pl.pawc.ewi.repository.KategoriaRepository;
 
@@ -30,7 +27,6 @@ public class KategoriaRestController {
         if(!byId.isPresent()){
             kategoriaRepository.save(kategoria);
         }
-
     }
 
     @DeleteMapping("/kategoria")
@@ -42,6 +38,20 @@ public class KategoriaRestController {
         Optional<Kategoria> byId = kategoriaRepository.findById(kategoria.getNazwa());
         if(byId.isPresent()){
             kategoriaRepository.delete(kategoria);
+        }
+    }
+
+    @PutMapping("/togglePrzenoszonaNaKolejnyOkres")
+    public void togglePrzenoszonaNaKolejnyOkres(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @RequestBody Kategoria kategoria) {
+
+        Optional<Kategoria> byId = kategoriaRepository.findById(kategoria.getNazwa());
+        if(byId.isPresent()){
+            Kategoria kat = byId.get();
+            kat.setPrzenoszonaNaKolejnyOkres(!kat.isPrzenoszonaNaKolejnyOkres());
+            kategoriaRepository.save(kat);
         }
 
     }

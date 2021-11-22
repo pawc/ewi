@@ -10,7 +10,9 @@ import java.util.List;
 @Repository
 public interface RaportRepository extends CrudRepository<Raport, String> {
 
-    @Query(value = "select concat(m.nazwa, ' (', m.id, ')') as maszyna, " +
+    @Query(value = "select " +
+            "concat(m.id, '-', n.id) as maszynaidnormaid, " +
+            "concat(m.nazwa, ' (', m.id, ')') as maszyna, " +
             "m.id as maszynaid, " +
             "IF(k.wartosc IS NULL, 0, k.wartosc) as stankilometry, " +
             "round(sum(d.kilometry), 2) as kilometry, "+

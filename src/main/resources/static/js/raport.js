@@ -129,12 +129,12 @@ function saveAll(){
     var rows = $('#raportTable').DataTable().rows().data()
     $.each(rows, (i, row) => {
         var stan = {
-            rok : row[12],
-            miesiac : row[13],
+            rok : row[13],
+            miesiac : row[14],
             norma : {
-                id : row[11]
+                id : row[12]
             },
-            wartosc : row[9]
+            wartosc : row[10]
         }
         stany.push(stan)
     })
@@ -151,10 +151,10 @@ function saveAll(){
 
     $.each(rows, (i, row) => {
         var km = {
-            rok : row[12],
-            miesiac : row[13],
+            rok : row[13],
+            miesiac : row[14],
             maszyna : {
-                id : row[14]
+                id : row[15]
             },
             wartosc : row[3]
         }

@@ -44,4 +44,13 @@ public class Maszyna {
     @Transient
     private List<Norma> normy;
 
+    public boolean isPrzenoszonaNaKolejnyOkres(){
+        boolean result = false;
+        if(kategorie == null || kategorie.isEmpty()) return result;
+        for(Kategoria kategoria : kategorie){
+            result |= kategoria.isPrzenoszonaNaKolejnyOkres();
+        }
+        return result;
+    }
+
 }

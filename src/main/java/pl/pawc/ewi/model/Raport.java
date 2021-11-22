@@ -14,6 +14,7 @@ import javax.persistence.Id;
 public class Raport {
 
     @Id
+    private String maszynaidnormaid;
     private String maszyna;
     private String maszynaid;
     private double stankilometry;
