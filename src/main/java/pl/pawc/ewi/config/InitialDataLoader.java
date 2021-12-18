@@ -1,7 +1,6 @@
 package pl.pawc.ewi.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -45,7 +44,7 @@ public class InitialDataLoader implements ApplicationRunner {
     private String myPassword;
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args){
 
         testData();
         myUser();
@@ -69,7 +68,7 @@ public class InitialDataLoader implements ApplicationRunner {
     }
 
     private void testData() {
-        Boolean testDataLoad = Boolean.valueOf(testDataLoadString);
+        boolean testDataLoad = Boolean.parseBoolean(testDataLoadString);
         if(testDataLoad){
 
             Calendar cal = Calendar.getInstance();
@@ -77,7 +76,7 @@ public class InitialDataLoader implements ApplicationRunner {
             cal.setTime(today);
             int month = cal.get(Calendar.MONTH)+1;
             int year = cal.get(Calendar.YEAR);
-            String docNumberSuffix = "/" + String.valueOf(month) + "/" + String.valueOf(year);
+            String docNumberSuffix = "/" + month + "/" + year;
 
             Maszyna maszyna = new Maszyna();
             maszyna.setId("W123");

@@ -1,7 +1,6 @@
 package pl.pawc.ewi;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -38,7 +37,7 @@ public class EwiApplication extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
-	public void configure(WebSecurity web) throws Exception {
+	public void configure(WebSecurity web){
 		web
 			.ignoring()
 			.antMatchers("/css/**");
@@ -90,7 +89,7 @@ public class EwiApplication extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+	protected void configure(AuthenticationManagerBuilder auth){
 		auth.authenticationProvider(daoAuthenticationProvider());
 	}
 
