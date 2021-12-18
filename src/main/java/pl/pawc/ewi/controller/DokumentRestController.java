@@ -1,7 +1,8 @@
 package pl.pawc.ewi.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,7 +31,7 @@ import java.util.Optional;
 @RestController
 public class DokumentRestController {
 
-    private static final Logger logger = Logger.getLogger(DokumentRestController.class);
+    private static final Logger logger = LogManager.getLogger(DokumentRestController.class);
     private final DokumentRepository dokumentRepository;
     private final ZuzycieRepository zuzycieRepository;
     private final MaszynaRepository maszynaRepository;
@@ -46,7 +47,7 @@ public class DokumentRestController {
             @RequestParam(name = "miesiac", required = false) String miesiac){
 
         Optional<Dokument> result = dokumentRepository.findById(numer);
-        Dokument dokument = null;
+        Dokument dokument;
         if(result.isPresent()){
             dokument = result.get();
             List<Zuzycie> zuzycieList = zuzycieRepository.findByDokumentId(dokument.getNumer());
@@ -62,7 +63,7 @@ public class DokumentRestController {
                         Double sumaBefore = dokumentRepository.getSumBeforeDate(
                                 zuzycie.getNorma().getId(), year, month, dokument.getData(), dokument.getNumer());
 
-                        Double stan = 0D;
+                        double stan = 0D;
                         List<Stan> by = stanRepository.findBy(zuzycie.getNorma().getId(), year, month);
                         if(!by.isEmpty()) stan = by.get(0).getWartosc();
 

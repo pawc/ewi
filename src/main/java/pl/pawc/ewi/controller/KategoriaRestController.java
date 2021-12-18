@@ -1,7 +1,8 @@
 package pl.pawc.ewi.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 import pl.pawc.ewi.entity.Kategoria;
 import pl.pawc.ewi.repository.KategoriaRepository;
@@ -14,7 +15,7 @@ import java.util.Optional;
 @RestController
 public class KategoriaRestController {
 
-    private static final Logger logger = Logger.getLogger(KategoriaRestController.class);
+    private static final Logger logger = LogManager.getLogger(KategoriaRestController.class);
     private final KategoriaRepository kategoriaRepository;
 
     @PostMapping("/kategoria")

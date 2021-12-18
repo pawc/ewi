@@ -1,7 +1,8 @@
 package pl.pawc.ewi.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 public class ViewController {
 
-    private static final Logger logger = Logger.getLogger(ViewController.class);
+    private static final Logger logger = LogManager.getLogger(ViewController.class);
     private final MaszynaRepository maszynaRepository;
     private final KategoriaRepository kategoriaRepository;
 

@@ -1,7 +1,8 @@
 package pl.pawc.ewi.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +20,7 @@ import java.util.List;
 @RestController
 public class RaportRestController {
 
-    private static final Logger logger = Logger.getLogger(RaportRestController.class);
+    private static final Logger logger = LogManager.getLogger(RaportRestController.class);
 
     private final RaportRepository raportRepository;
     private final RaportRocznyRepository raportRocznyRepository;

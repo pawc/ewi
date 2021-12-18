@@ -1,7 +1,8 @@
 package pl.pawc.ewi.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,7 +29,7 @@ public class MaszynaRestController {
     private final NormaRepository normaRepository;
     private final DokumentRepository dokumentRepository;
     private final KategoriaRepository kategoriaRepository;
-    private static final Logger logger = Logger.getLogger(MaszynaRestController.class);
+    private static final Logger logger = LogManager.getLogger(MaszynaRestController.class);
 
     @RequestMapping("/maszyna")
     public Maszyna maszynaGet(
@@ -38,7 +39,7 @@ public class MaszynaRestController {
             @RequestParam(name = "miesiac", required = false) String miesiac){
 
         Optional<Maszyna> result = maszynaRepository.findById(id);
-        Maszyna maszyna = null;
+        Maszyna maszyna;
         if(result.isPresent()){
 
             maszyna = result.get();
@@ -140,7 +141,10 @@ public class MaszynaRestController {
             for(Norma normaNew : maszyna.getNormy()){
                 boolean test = false;
                 for(Norma normaOld : normy){
-                    if(normaOld.getJednostka().equals(normaNew.getJednostka())) test = true;
+                    if(normaOld.getJednostka().equals(normaNew.getJednostka())){
+                        test = true;
+                        break;
+                    }
                 }
                 if(!test){
                     normaNew.setMaszyna(maszynaDB);

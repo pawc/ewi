@@ -1,7 +1,8 @@
 package pl.pawc.ewi.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,7 +24,7 @@ import java.util.Optional;
 @RestController
 public class StanRestController {
 
-    private static final Logger logger = Logger.getLogger(StanRestController.class);
+    private static final Logger logger = LogManager.getLogger(StanRestController.class);
     private final StanRepository stanRepository;
     private final NormaRepository normaRepository;
 
@@ -36,13 +37,13 @@ public class StanRestController {
         List<Stan> byParams = stanRepository.findBy(stan.getNorma().getId(), stan.getRok(), stan.getMiesiac());
         if(byParams.isEmpty()){
             stanRepository.save(stan);
-            logger.info("["+request.getRemoteAddr()+"] - /stan POST - dodano - " + stan.toString() + " - normaID=" + stan.getNorma().getId());
+            logger.info("["+request.getRemoteAddr()+"] - /stan POST - dodano - " + stan + " - normaID=" + stan.getNorma().getId());
         }
         else{
             Stan stanDB = byParams.get(0);
             stanDB.setWartosc(stan.getWartosc());
             stanRepository.save(stanDB);
-            logger.info("["+request.getRemoteAddr()+"] - /stan POST - zaktualizowano - " + stan.toString() + " - normaID=" + stan.getNorma().getId());
+            logger.info("["+request.getRemoteAddr()+"] - /stan POST - zaktualizowano - " + stan + " - normaID=" + stan.getNorma().getId());
         }
     }
 
@@ -52,8 +53,8 @@ public class StanRestController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        List<Stan> byParams = null;
-        Stan stanDB = null;
+        List<Stan> byParams;
+        Stan stanDB;
         for(Stan stan : stany){
 
             Optional<Norma> byId = normaRepository.findById(stan.getNorma().getId());
@@ -64,13 +65,13 @@ public class StanRestController {
             byParams = stanRepository.findBy(stan.getNorma().getId(), stan.getRok(), stan.getMiesiac());
             if(byParams.isEmpty()){
                 stanRepository.save(stan);
-                logger.info("["+request.getRemoteAddr()+"] - /stany POST - dodano - " + stan.toString() + " - normaID=" + stan.getNorma().getId());
+                logger.info("["+request.getRemoteAddr()+"] - /stany POST - dodano - " + stan + " - normaID=" + stan.getNorma().getId());
             }
             else{
                 stanDB = byParams.get(0);
                 stanDB.setWartosc(stan.getWartosc());
                 stanRepository.save(stanDB);
-                logger.info("["+request.getRemoteAddr()+"] - /stany POST - zaktualizowano - " + stan.toString() + " - normaID=" + stan.getNorma().getId());
+                logger.info("["+request.getRemoteAddr()+"] - /stany POST - zaktualizowano - " + stan + " - normaID=" + stan.getNorma().getId());
             }
         }
     }
@@ -82,8 +83,7 @@ public class StanRestController {
             @RequestParam("rok") int rok,
             @RequestParam("miesiac") int miesiac){
 
-        Iterable<StanRaport> all = stanRepository.findBy(rok, miesiac);
-        return (List<StanRaport>) all;
+        return stanRepository.findBy(rok, miesiac);
 
     }
 
@@ -93,18 +93,18 @@ public class StanRestController {
             HttpServletRequest request,
             HttpServletResponse response){
 
-        List<Stan> byParams = null;
-        Stan stanDB = null;
+        List<Stan> byParams;
+        Stan stanDB;
         byParams = stanRepository.findBy(stan.getNorma().getId(), stan.getRok(), stan.getMiesiac());
         if(byParams.isEmpty()){
             stanRepository.save(stan);
-            logger.info("["+request.getRemoteAddr()+"] - /stan PUT - dodano - " + stan.toString() + " - normaID=" + stan.getNorma().getId());
+            logger.info("["+request.getRemoteAddr()+"] - /stan PUT - dodano - " + stan + " - normaID=" + stan.getNorma().getId());
         }
         else{
             stanDB = byParams.get(0);
             stanDB.setWartosc(stan.getWartosc());
             stanRepository.save(stanDB);
-            logger.info("["+request.getRemoteAddr()+"] - /stan PUT - zaktualizowano - " + stan.toString() + " - normaID=" + stan.getNorma().getId());
+            logger.info("["+request.getRemoteAddr()+"] - /stan PUT - zaktualizowano - " + stan + " - normaID=" + stan.getNorma().getId());
         }
 
     }
