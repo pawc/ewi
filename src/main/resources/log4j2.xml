@@ -7,8 +7,8 @@
         </Console>
 
         <RollingFile name="RollingFile"
-                     fileName="/home/spring/Ewi.log"
-                     filePattern="/home/spring/Ewi-%d{-dd-MMMM-yyyy}-%i.log">
+                     fileName="/home/spring/logs/Ewi.log"
+                     filePattern="/home/spring/logs/Ewi-%d{-dd-MMMM-yyyy}-%i.log">
             <PatternLayout>
                 <pattern>%d{HH:mm:ss} [%p] – %m%n</pattern>
             </PatternLayout>
