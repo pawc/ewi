@@ -56,7 +56,7 @@ $(document).ready(() => {
         var maxRelDoc = 0;
         var rows = $('#dokumentyTable').DataTable().rows().data()
         $.each(rows, (i, row) => {
-            if(row[0].includes(maszynaId)){
+            if(row[0].split('/')[3] === maszynaId){
                 maxRelDoc = Math.max(parseInt(row[0].split('/')[0]), maxRelDoc)
             }
         })
