@@ -4,7 +4,7 @@ COPY pom.xml /home/app
 RUN mvn -f /home/app/pom.xml clean package -DskipTests
 
 FROM openjdk:8-jdk-alpine
-COPY --from=build /home/app/target/ewi-0.0.1-SNAPSHOT.jar /home/spring/app.jar
+COPY --from=build /home/app/target/ewi-1.0.jar /home/spring/app.jar
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 ENTRYPOINT ["java","-jar","/home/spring/app.jar"]
