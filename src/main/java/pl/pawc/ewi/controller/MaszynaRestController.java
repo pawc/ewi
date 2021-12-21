@@ -109,7 +109,8 @@ public class MaszynaRestController {
             }
 
             for(Kategoria kategoria : maszyna.getKategorie()){
-                Kategoria kat = kategoriaRepository.findById(kategoria.getNazwa()).get();
+                Kategoria kat = kategoriaRepository.findById(kategoria.getNazwa()).orElse(null);
+                if(kat == null) continue;
                 kat.getMaszyny().add(maszynaNew);
                 kategoriaRepository.save(kat);
             }

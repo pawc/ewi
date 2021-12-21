@@ -125,8 +125,7 @@ public class DokumentRestController {
 
         List<Zuzycie> zuzycia = dokument.getZuzycie();
         for(Zuzycie zuzycie : zuzycia){
-            Norma norma = normaRepository.findById(zuzycie.getNorma().getId()).get();
-            zuzycie.setNorma(norma);
+            normaRepository.findById(zuzycie.getNorma().getId()).ifPresent(zuzycie::setNorma);
         }
 
         Maszyna maszyna = maszynaRepository.findById(dokument.getMaszyna().getId()).get();
@@ -160,7 +159,8 @@ public class DokumentRestController {
             dokumentRepository.save(dokumentDB);
 
             for(Zuzycie zuzycie : dokument.getZuzycie()) {
-                Zuzycie zuzycieDB = zuzycieRepository.findById(zuzycie.getId()).get();
+                Zuzycie zuzycieDB = zuzycieRepository.findById(zuzycie.getId()).orElse(null);
+                if(zuzycieDB == null) continue;
                 if (zuzycieDB.getWartosc() != zuzycie.getWartosc() ||
                     zuzycieDB.getZatankowano() != zuzycie.getZatankowano() ||
                     zuzycieDB.getOgrzewanie() != zuzycie.getOgrzewanie()) {
