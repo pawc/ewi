@@ -34,7 +34,7 @@ public class StanRestController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        List<Stan> byParams = stanRepository.findBy(stan.getNorma().getId(), stan.getRok(), stan.getMiesiac());
+        List<Stan> byParams = stanRepository.findBy(stan.getNorma(), stan.getRok(), stan.getMiesiac());
         if(byParams.isEmpty()){
             stanRepository.save(stan);
             logger.info("["+request.getRemoteAddr()+"] - /stan POST - dodano - " + stan + " - normaID=" + stan.getNorma().getId());
@@ -62,7 +62,7 @@ public class StanRestController {
                 if(!byId.get().getMaszyna().isPrzenoszonaNaKolejnyOkres()) continue;
             }
 
-            byParams = stanRepository.findBy(stan.getNorma().getId(), stan.getRok(), stan.getMiesiac());
+            byParams = stanRepository.findBy(stan.getNorma(), stan.getRok(), stan.getMiesiac());
             if(byParams.isEmpty()){
                 stanRepository.save(stan);
                 logger.info("["+request.getRemoteAddr()+"] - /stany POST - dodano - " + stan + " - normaID=" + stan.getNorma().getId());
@@ -95,7 +95,7 @@ public class StanRestController {
 
         List<Stan> byParams;
         Stan stanDB;
-        byParams = stanRepository.findBy(stan.getNorma().getId(), stan.getRok(), stan.getMiesiac());
+        byParams = stanRepository.findBy(stan.getNorma(), stan.getRok(), stan.getMiesiac());
         if(byParams.isEmpty()){
             stanRepository.save(stan);
             logger.info("["+request.getRemoteAddr()+"] - /stan PUT - dodano - " + stan + " - normaID=" + stan.getNorma().getId());

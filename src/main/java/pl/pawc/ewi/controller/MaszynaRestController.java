@@ -43,7 +43,7 @@ public class MaszynaRestController {
         if(result.isPresent()){
 
             maszyna = result.get();
-            List<Norma> normy = normaRepository.findByMaszynaId(id);
+            List<Norma> normy = normaRepository.findByMaszyna(maszyna);
 
             if(miesiac != null){
                 try{
@@ -138,7 +138,7 @@ public class MaszynaRestController {
             maszynaDB.setOpis(maszyna.getOpis());
             maszynaDB.setAktywna(maszyna.isAktywna());
 
-            List<Norma> normy = normaRepository.findByMaszynaId(maszyna.getId());
+            List<Norma> normy = normaRepository.findByMaszyna(maszyna);
             for(Norma normaNew : maszyna.getNormy()){
                 boolean test = false;
                 for(Norma normaOld : normy){

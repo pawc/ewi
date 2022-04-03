@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface MaszynaRepository extends CrudRepository<Maszyna, String> {
 
-    @Query("SELECT m FROM Maszyna m WHERE m.aktywna = true")
+    @Query("FROM Maszyna m WHERE m.aktywna = true")
     List<Maszyna> findAllActive();
 
 }

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.pawc.ewi.entity.Dokument;
 import pl.pawc.ewi.entity.Kilometry;
 import pl.pawc.ewi.entity.Maszyna;
-import pl.pawc.ewi.entity.Norma;
 import pl.pawc.ewi.entity.Stan;
 import pl.pawc.ewi.entity.Zuzycie;
 import pl.pawc.ewi.repository.DokumentRepository;
@@ -50,7 +49,7 @@ public class DokumentRestController {
         Dokument dokument;
         if(result.isPresent()){
             dokument = result.get();
-            List<Zuzycie> zuzycieList = zuzycieRepository.findByDokumentId(dokument.getNumer());
+            List<Zuzycie> zuzycieList = zuzycieRepository.findByDokument(dokument);
             for(Zuzycie zuzycie : zuzycieList){
                 if(miesiac != null){
                     int year;
@@ -64,7 +63,7 @@ public class DokumentRestController {
                                 zuzycie.getNorma().getId(), year, month, dokument.getData(), dokument.getNumer());
 
                         double stan = 0D;
-                        List<Stan> by = stanRepository.findBy(zuzycie.getNorma().getId(), year, month);
+                        List<Stan> by = stanRepository.findBy(zuzycie.getNorma(), year, month);
                         if(!by.isEmpty()) stan = by.get(0).getWartosc();
 
                         zuzycie.getNorma().setSuma(suma);
@@ -90,8 +89,7 @@ public class DokumentRestController {
                     year, month, dokument.getData(), dokument.getNumer());
             if(kilometryBefore == null || kilometryBefore == 0D){
                 kilometryBefore = 0D;
-                List<Kilometry> by1 = kilometryRepository.findBy(dokument.getMaszyna().getId(),
-                        year, month);
+                List<Kilometry> by1 = kilometryRepository.findBy(dokument.getMaszyna(), year, month);
                 if(!by1.isEmpty()) kilometryBefore = by1.get(0).getWartosc();
             }
             dokument.setKilometryBefore(kilometryBefore);
@@ -193,7 +191,7 @@ public class DokumentRestController {
         if(byId.isPresent()) {
             Dokument dokumentDB = byId.get();
 
-            List<Zuzycie> zuzycieList = zuzycieRepository.findByDokumentId(dokumentDB.getNumer());
+            List<Zuzycie> zuzycieList = zuzycieRepository.findByDokument(dokumentDB);
             zuzycieRepository.deleteAll(zuzycieList);
             dokumentRepository.delete(dokumentDB);
 

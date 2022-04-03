@@ -34,7 +34,7 @@ public class KilometryRestController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        List<Kilometry> by = kilometryRepository.findBy(kilometry.getMaszyna().getId(), kilometry.getRok(), kilometry.getMiesiac());
+        List<Kilometry> by = kilometryRepository.findBy(kilometry.getMaszyna(), kilometry.getRok(), kilometry.getMiesiac());
 
         if(by.isEmpty()){
             kilometryRepository.save(kilometry);
@@ -73,7 +73,7 @@ public class KilometryRestController {
                 if(!byId.get().isPrzenoszonaNaKolejnyOkres()) continue;
             }
 
-            byParams = kilometryRepository.findBy(km.getMaszyna().getId(), km.getRok(), km.getMiesiac());
+            byParams = kilometryRepository.findBy(km.getMaszyna(), km.getRok(), km.getMiesiac());
             if(byParams.isEmpty()){
                 kilometryRepository.save(km);
                 logger.info("["+request.getRemoteAddr()+"] - /kilometryList POST - dodano - " + km);

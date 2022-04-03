@@ -11,9 +11,7 @@ import java.util.List;
 @Repository
 public interface DokumentRepository extends CrudRepository<Dokument, String> {
 
-    @Query(value = "select * from dokument d where year(d.data) = ?1 and month(d.data) = ?2",
-        nativeQuery = true
-    )
+    @Query(value = "from Dokument d where year(d.data) = ?1 and month(d.data) = ?2")
     List<Dokument> getDokumenty(int year, int month);
 
     @Query(value = "select " +
