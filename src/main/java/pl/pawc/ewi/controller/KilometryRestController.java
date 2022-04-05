@@ -38,13 +38,13 @@ public class KilometryRestController {
 
         if(by.isEmpty()){
             kilometryRepository.save(kilometry);
-            logger.info("["+request.getRemoteAddr()+"] - /kilometry POST - dodano - " + kilometry);
+            logger.info("["+request.getHeader("X-Real-IP")+"] - /kilometry POST - dodano - " + kilometry);
         }
         else{
             Kilometry kilometryDB = by.get(0);
             kilometryDB.setWartosc(kilometry.getWartosc());
             kilometryRepository.save(kilometryDB);
-            logger.info("["+request.getRemoteAddr()+"] - /kilometry POST - zaktualizowano - " + kilometry);
+            logger.info("["+request.getHeader("X-Real-IP")+"] - /kilometry POST - zaktualizowano - " + kilometry);
         }
     }
 
@@ -76,13 +76,13 @@ public class KilometryRestController {
             byParams = kilometryRepository.findBy(km.getMaszyna(), km.getRok(), km.getMiesiac());
             if(byParams.isEmpty()){
                 kilometryRepository.save(km);
-                logger.info("["+request.getRemoteAddr()+"] - /kilometryList POST - dodano - " + km);
+                logger.info("["+request.getHeader("X-Real-IP")+"] - /kilometryList POST - dodano - " + km);
             }
             else{
                 kmDB = byParams.get(0);
                 kmDB.setWartosc(km.getWartosc());
                 kilometryRepository.save(kmDB);
-                logger.info("["+request.getRemoteAddr()+"] - /kilometryList POST - zaktualizowano - " + km);
+                logger.info("["+request.getHeader("X-Real-IP")+"] - /kilometryList POST - zaktualizowano - " + km);
             }
         }
     }

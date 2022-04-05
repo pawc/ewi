@@ -94,11 +94,11 @@ public class DokumentRestController {
             }
             dokument.setKilometryBefore(kilometryBefore);
 
-            logger.info("["+request.getRemoteAddr()+"] - /dokument GET numer="+numer);
+            logger.info("["+request.getHeader("X-Real-IP")+"] - /dokument GET numer="+numer);
         }
         else{
             dokument = new Dokument();
-            logger.warn("["+request.getRemoteAddr()+"] - /dokument GET numer="+numer + ". Nie odnaleziono");
+            logger.warn("["+request.getHeader("X-Real-IP")+"] - /dokument GET numer="+numer + ". Nie odnaleziono");
         }
         return dokument;
 
@@ -136,7 +136,7 @@ public class DokumentRestController {
             zuzycieRepository.save(zuzycie);
         }
 
-        logger.info("["+request.getRemoteAddr()+"] - /dokument POST numer="+dokument.getNumer());
+        logger.info("["+request.getHeader("X-Real-IP")+"] - /dokument POST numer="+dokument.getNumer());
 
     }
 
@@ -170,12 +170,12 @@ public class DokumentRestController {
                 }
             }
 
-            logger.info("["+request.getRemoteAddr()+"] - /dokument PUT numer="+dokument.getNumer());
+            logger.info("["+request.getHeader("X-Real-IP")+"] - /dokument PUT numer="+dokument.getNumer());
 
         }
         else{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            logger.info("["+request.getRemoteAddr()+"] - /dokument PUT - BAD REQUEST");
+            logger.info("["+request.getHeader("X-Real-IP")+"] - /dokument PUT - BAD REQUEST");
         }
 
     }
@@ -197,7 +197,7 @@ public class DokumentRestController {
 
         }
 
-        logger.info("["+request.getRemoteAddr()+"] - /dokument DELETE numer="+numer);
+        logger.info("["+request.getHeader("X-Real-IP")+"] - /dokument DELETE numer="+numer);
 
     }
 

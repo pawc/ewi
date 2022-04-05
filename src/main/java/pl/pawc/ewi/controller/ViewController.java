@@ -33,7 +33,7 @@ public class ViewController {
             HttpServletRequest request,
             HttpServletResponse response){
 
-        logger.info("["+request.getRemoteAddr()+"] - / " );
+        logger.info("["+request.getHeader("X-Real-IP")+"] - / " );
         return "index";
 
     }
@@ -44,7 +44,7 @@ public class ViewController {
             HttpServletRequest request,
             HttpServletResponse response){
 
-        logger.info("["+request.getRemoteAddr()+"] - /raport2 " );
+        logger.info("["+request.getHeader("X-Real-IP")+"] - /raport2 " );
         return "raportRoczny";
 
     }
@@ -56,7 +56,7 @@ public class ViewController {
             HttpServletResponse response) {
 
         model.addAttribute("maszyny", maszynaRepository.findAllActive());
-        logger.info("["+request.getRemoteAddr()+"] - /dokumenty" );
+        logger.info("["+request.getHeader("X-Real-IP")+"] - /dokumenty" );
 
         return "dokumenty";
 
@@ -70,7 +70,7 @@ public class ViewController {
 
         model.addAttribute("maszyny", maszynaRepository.findAll());
         model.addAttribute("kategorie", kategoriaRepository.findAll());
-        logger.info("["+request.getRemoteAddr()+"] - /maszyny" );
+        logger.info("["+request.getHeader("X-Real-IP")+"] - /maszyny" );
 
         return "maszyny";
 
@@ -107,12 +107,15 @@ public class ViewController {
         Iterable<Maszyna> allUncategorized = maszynaRepository.findAllUncategorized();
         Set<Maszyna> maszyny = Sets.newHashSet(allUncategorized);
 
-        Kategoria kategoria = new Kategoria();
-        kategoria.setNazwa("Nieprzydzielone");
-        kategoria.setMaszyny(maszyny);
-        kategoria.setPrzenoszonaNaKolejnyOkres(false);
+        if(!maszyny.isEmpty()){
+            Kategoria kategoria = new Kategoria();
 
-        kategorie.add(kategoria);
+            kategoria.setNazwa("Nieprzydzielone");
+            kategoria.setMaszyny(maszyny);
+            kategoria.setPrzenoszonaNaKolejnyOkres(false);
+
+            kategorie.add(kategoria);
+        }
 
         model.addAttribute("kategorie", kategorie);
 
@@ -125,7 +128,7 @@ public class ViewController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        logger.info("["+request.getRemoteAddr()+"] - strona logowania" );
+        logger.info("["+request.getHeader("X-Real-IP")+"] - strona logowania" );
         return "login";
 
     }

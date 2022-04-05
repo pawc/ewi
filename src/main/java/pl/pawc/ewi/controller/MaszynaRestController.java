@@ -71,11 +71,11 @@ public class MaszynaRestController {
                 }
             }
             maszyna.setNormy(normy);
-            logger.info("["+request.getRemoteAddr()+"] - /maszyna GET id="+id );
+            logger.info("["+request.getHeader("X-Real-IP")+"] - /maszyna GET id="+id );
             return maszyna;
         }
         else{
-            logger.info("["+request.getRemoteAddr()+"] - /maszyna GET id="+id + ". Nie odnaleziono");
+            logger.info("["+request.getHeader("X-Real-IP")+"] - /maszyna GET id="+id + ". Nie odnaleziono");
             maszyna = new Maszyna();
         }
         return maszyna;
@@ -115,11 +115,11 @@ public class MaszynaRestController {
                 kategoriaRepository.save(kat);
             }
 
-            logger.info("["+request.getRemoteAddr()+"] - /maszyna POST id="+maszyna.getId());
+            logger.info("["+request.getHeader("X-Real-IP")+"] - /maszyna POST id="+maszyna.getId());
         }
         else{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            logger.info("["+request.getRemoteAddr()+"] - /maszyna POST - BAD REQUEST");
+            logger.info("["+request.getHeader("X-Real-IP")+"] - /maszyna POST - BAD REQUEST");
         }
 
     }
@@ -160,11 +160,11 @@ public class MaszynaRestController {
             }
 
             maszynaRepository.save(maszynaDB);
-            logger.info("["+request.getRemoteAddr()+"] - /maszyna PUT id="+maszyna.getId());
+            logger.info("["+request.getHeader("X-Real-IP")+"] - /maszyna PUT id="+maszyna.getId());
         }
         else{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            logger.warn("["+request.getRemoteAddr()+"] - /maszyna PUT - BAD REQUEST");
+            logger.warn("["+request.getHeader("X-Real-IP")+"] - /maszyna PUT - BAD REQUEST");
         }
 
     }

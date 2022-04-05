@@ -33,7 +33,7 @@ public class RaportRestController {
             @RequestParam("miesiac") int miesiac){
 
         List<Raport> raport = raportRepository.getRaport(rok, miesiac);
-        logger.info("["+request.getRemoteAddr()+"] - /raport GET " + rok + "-" + miesiac);
+        logger.info("["+request.getHeader("X-Real-IP")+"] - /raport GET " + rok + "-" + miesiac);
 
         return raport;
 
@@ -46,7 +46,7 @@ public class RaportRestController {
             @RequestParam("rok") int rok){
 
         List<RaportRoczny> raport = raportRocznyRepository.getRaport(rok);
-        logger.info("["+request.getRemoteAddr()+"] - /raportRoczny GET " + rok);
+        logger.info("["+request.getHeader("X-Real-IP")+"] - /raportRoczny GET " + rok);
 
         return raport;
 
