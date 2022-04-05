@@ -155,7 +155,7 @@ public class MaszynaRestController {
 
             maszynaDB.getKategorie().clear();
             for(Kategoria kategoria : maszyna.getKategorie()){
-                Kategoria kat = kategoriaRepository.findById(kategoria.getNazwa()).get();
+                Kategoria kat = kategoriaRepository.findById(kategoria.getNazwa()).orElse(null);
                 maszynaDB.getKategorie().add(kat);
             }
 

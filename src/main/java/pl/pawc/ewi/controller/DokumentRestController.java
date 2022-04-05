@@ -126,7 +126,7 @@ public class DokumentRestController {
             normaRepository.findById(zuzycie.getNorma().getId()).ifPresent(zuzycie::setNorma);
         }
 
-        Maszyna maszyna = maszynaRepository.findById(dokument.getMaszyna().getId()).get();
+        Maszyna maszyna = maszynaRepository.findById(dokument.getMaszyna().getId()).orElse(null);
         dokument.setMaszyna(maszyna);
 
         dokumentRepository.save(dokument);

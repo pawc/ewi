@@ -1,17 +1,24 @@
 package pl.pawc.ewi.controller;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import pl.pawc.ewi.entity.Kategoria;
+import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.repository.KategoriaRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Set;
 
+@SuppressWarnings("ALL")
 @RequiredArgsConstructor
 @Controller
 public class ViewController {
@@ -95,7 +102,20 @@ public class ViewController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        model.addAttribute("kategorie", kategoriaRepository.findAll());
+        List<Kategoria> kategorie = Lists.newArrayList(kategoriaRepository.findAll());
+
+        Iterable<Maszyna> allUncategorized = maszynaRepository.findAllUncategorized();
+        Set<Maszyna> maszyny = Sets.newHashSet(allUncategorized);
+
+        Kategoria kategoria = new Kategoria();
+        kategoria.setNazwa("Nieprzydzielone");
+        kategoria.setMaszyny(maszyny);
+        kategoria.setPrzenoszonaNaKolejnyOkres(false);
+
+        kategorie.add(kategoria);
+
+        model.addAttribute("kategorie", kategorie);
+
         return "kategorie";
 
     }

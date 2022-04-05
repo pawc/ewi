@@ -13,4 +13,8 @@ public interface MaszynaRepository extends CrudRepository<Maszyna, String> {
     @Query("FROM Maszyna m WHERE m.aktywna = true")
     List<Maszyna> findAllActive();
 
+    @Query(value = "SELECT m.* FROM maszyna m LEFT JOIN maszyna_kategorie mk ON m.id = mk.maszyna_id WHERE mk.maszyna_id IS NULL",
+    nativeQuery = true)
+    Iterable<Maszyna> findAllUncategorized();
+
 }

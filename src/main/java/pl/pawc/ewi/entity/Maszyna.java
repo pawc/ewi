@@ -45,8 +45,9 @@ public class Maszyna {
     private List<Norma> normy;
 
     public boolean isPrzenoszonaNaKolejnyOkres(){
+
+        if(kategorie == null || kategorie.isEmpty()) return false;
         boolean result = false;
-        if(kategorie == null || kategorie.isEmpty()) return result;
         for(Kategoria kategoria : kategorie){
             result |= kategoria.isPrzenoszonaNaKolejnyOkres();
         }
