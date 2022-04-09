@@ -34,16 +34,17 @@ public class StanRestController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         List<Stan> byParams = stanRepository.findBy(stan.getNorma(), stan.getRok(), stan.getMiesiac());
         if(byParams.isEmpty()){
+            logger.info("[{}] /stan POST dodano {} - normaID={}", ip, stan, stan.getNorma().getId());
             stanRepository.save(stan);
-            logger.info("["+request.getHeader("X-Real-IP")+"] - /stan POST - dodano - " + stan + " - normaID=" + stan.getNorma().getId());
         }
         else{
+            logger.info("[{}] /stan POST zaktualizowano {} - normaID={}", ip, stan, stan.getNorma().getId());
             Stan stanDB = byParams.get(0);
             stanDB.setWartosc(stan.getWartosc());
             stanRepository.save(stanDB);
-            logger.info("["+request.getHeader("X-Real-IP")+"] - /stan POST - zaktualizowano - " + stan + " - normaID=" + stan.getNorma().getId());
         }
     }
 
@@ -55,6 +56,7 @@ public class StanRestController {
 
         List<Stan> byParams;
         Stan stanDB;
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         for(Stan stan : stany){
 
             Optional<Norma> byId = normaRepository.findById(stan.getNorma().getId());
@@ -64,14 +66,14 @@ public class StanRestController {
 
             byParams = stanRepository.findBy(stan.getNorma(), stan.getRok(), stan.getMiesiac());
             if(byParams.isEmpty()){
+                logger.info("[{}] /stany POST dodano {} - normaID={}", ip, stan, stan.getNorma().getId());
                 stanRepository.save(stan);
-                logger.info("["+request.getHeader("X-Real-IP")+"] - /stany POST - dodano - " + stan + " - normaID=" + stan.getNorma().getId());
             }
             else{
+                logger.info("[{}] /stany POST zaktualizowano {} - normaID={}", ip, stan, stan.getNorma().getId());
                 stanDB = byParams.get(0);
                 stanDB.setWartosc(stan.getWartosc());
                 stanRepository.save(stanDB);
-                logger.info("["+request.getHeader("X-Real-IP")+"] - /stany POST - zaktualizowano - " + stan + " - normaID=" + stan.getNorma().getId());
             }
         }
     }
@@ -83,6 +85,8 @@ public class StanRestController {
             @RequestParam("rok") int rok,
             @RequestParam("miesiac") int miesiac){
 
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
+        logger.info("[{}] /stanyGet {}-{}", ip, rok, miesiac);
         return stanRepository.findBy(rok, miesiac);
 
     }
@@ -96,15 +100,16 @@ public class StanRestController {
         List<Stan> byParams;
         Stan stanDB;
         byParams = stanRepository.findBy(stan.getNorma(), stan.getRok(), stan.getMiesiac());
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         if(byParams.isEmpty()){
+            logger.info("[{}] /stan PUT dodano {} - normaID={}", ip, stan, stan.getNorma().getId());
             stanRepository.save(stan);
-            logger.info("["+request.getHeader("X-Real-IP")+"] - /stan PUT - dodano - " + stan + " - normaID=" + stan.getNorma().getId());
         }
         else{
+            logger.info("[{}] /stan PUT zaktualizowano {} - normaID={}", ip, stan, stan.getNorma().getId());
             stanDB = byParams.get(0);
             stanDB.setWartosc(stan.getWartosc());
             stanRepository.save(stanDB);
-            logger.info("["+request.getHeader("X-Real-IP")+"] - /stan PUT - zaktualizowano - " + stan + " - normaID=" + stan.getNorma().getId());
         }
 
     }

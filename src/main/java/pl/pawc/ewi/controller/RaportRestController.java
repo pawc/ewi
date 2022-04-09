@@ -32,10 +32,9 @@ public class RaportRestController {
             @RequestParam("rok") int rok,
             @RequestParam("miesiac") int miesiac){
 
-        List<Raport> raport = raportRepository.getRaport(rok, miesiac);
-        logger.info("["+request.getHeader("X-Real-IP")+"] - /raport GET " + rok + "-" + miesiac);
-
-        return raport;
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
+        logger.info("[{}] /raport GET {}-{}", ip, rok, miesiac);
+        return raportRepository.getRaport(rok, miesiac);
 
     }
 
@@ -45,10 +44,9 @@ public class RaportRestController {
             HttpServletResponse response,
             @RequestParam("rok") int rok){
 
-        List<RaportRoczny> raport = raportRocznyRepository.getRaport(rok);
-        logger.info("["+request.getHeader("X-Real-IP")+"] - /raportRoczny GET " + rok);
-
-        return raport;
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
+        logger.info("[{}] /raportRoczny GET {}", ip, rok);
+        return raportRocznyRepository.getRaport(rok);
 
     }
 

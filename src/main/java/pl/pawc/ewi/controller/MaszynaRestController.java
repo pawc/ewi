@@ -38,6 +38,7 @@ public class MaszynaRestController {
             @RequestParam("id") String id,
             @RequestParam(name = "miesiac", required = false) String miesiac){
 
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         Optional<Maszyna> result = maszynaRepository.findById(id);
         Maszyna maszyna;
         if(result.isPresent()){
@@ -71,11 +72,11 @@ public class MaszynaRestController {
                 }
             }
             maszyna.setNormy(normy);
-            logger.info("["+request.getHeader("X-Real-IP")+"] - /maszyna GET id="+id );
+            logger.info("[{}] /maszyna GET id={}", ip, id);
             return maszyna;
         }
         else{
-            logger.info("["+request.getHeader("X-Real-IP")+"] - /maszyna GET id="+id + ". Nie odnaleziono");
+            logger.warn("[{}] /maszyna GET id={} - nie odnaleziono", ip, id);
             maszyna = new Maszyna();
         }
         return maszyna;
@@ -88,6 +89,7 @@ public class MaszynaRestController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         Optional<Maszyna> byId = maszynaRepository.findById(maszyna.getId());
 
         if(!byId.isPresent()){
@@ -115,11 +117,11 @@ public class MaszynaRestController {
                 kategoriaRepository.save(kat);
             }
 
-            logger.info("["+request.getHeader("X-Real-IP")+"] - /maszyna POST id="+maszyna.getId());
+            logger.info("[{}] /maszyna POST id={}", ip, maszyna.getId());
         }
         else{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            logger.info("["+request.getHeader("X-Real-IP")+"] - /maszyna POST - BAD REQUEST");
+            logger.warn("[{}] /maszyna POST id={} BAD REQUEST", ip, maszyna.getId());
         }
 
     }
@@ -130,6 +132,7 @@ public class MaszynaRestController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         Optional<Maszyna> byId = maszynaRepository.findById(maszyna.getId());
 
         if(byId.isPresent()){
@@ -160,11 +163,12 @@ public class MaszynaRestController {
             }
 
             maszynaRepository.save(maszynaDB);
+            logger.info("[{}] /maszyna PUT id={}", ip, maszyna.getId());
             logger.info("["+request.getHeader("X-Real-IP")+"] - /maszyna PUT id="+maszyna.getId());
         }
         else{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            logger.warn("["+request.getHeader("X-Real-IP")+"] - /maszyna PUT - BAD REQUEST");
+            logger.warn("[{}] /maszyna PUT - BAD REQUEST", ip);
         }
 
     }

@@ -33,7 +33,8 @@ public class ViewController {
             HttpServletRequest request,
             HttpServletResponse response){
 
-        logger.info("["+request.getHeader("X-Real-IP")+"] - / " );
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
+        logger.info("[{}] /", ip);
         return "index";
 
     }
@@ -44,7 +45,8 @@ public class ViewController {
             HttpServletRequest request,
             HttpServletResponse response){
 
-        logger.info("["+request.getHeader("X-Real-IP")+"] - /raport2 " );
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
+        logger.info("[{}] /raport2", ip);
         return "raportRoczny";
 
     }
@@ -55,8 +57,9 @@ public class ViewController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
+        logger.info("[{}] /dokumenty", ip);
         model.addAttribute("maszyny", maszynaRepository.findAllActive());
-        logger.info("["+request.getHeader("X-Real-IP")+"] - /dokumenty" );
 
         return "dokumenty";
 
@@ -68,9 +71,10 @@ public class ViewController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
+        logger.info("[{}] /maszyny", ip);
         model.addAttribute("maszyny", maszynaRepository.findAll());
         model.addAttribute("kategorie", kategoriaRepository.findAll());
-        logger.info("["+request.getHeader("X-Real-IP")+"] - /maszyny" );
 
         return "maszyny";
 
@@ -82,6 +86,8 @@ public class ViewController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
+        logger.info("[{}] /stany", ip);
         return "stany";
 
     }
@@ -92,6 +98,8 @@ public class ViewController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
+        logger.info("[{}] /kilometry", ip);
         return "kilometry";
 
     }
@@ -101,6 +109,9 @@ public class ViewController {
             Model model,
             HttpServletRequest request,
             HttpServletResponse response) {
+
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
+        logger.info("[{}] /kategorie", ip);
 
         List<Kategoria> kategorie = Lists.newArrayList(kategoriaRepository.findAll());
 
@@ -128,7 +139,8 @@ public class ViewController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        logger.info("["+request.getHeader("X-Real-IP")+"] - strona logowania" );
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
+        logger.info("[{}] /login", ip);
         return "login";
 
     }

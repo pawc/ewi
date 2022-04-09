@@ -47,6 +47,7 @@ public class DokumentRestController {
 
         Optional<Dokument> result = dokumentRepository.findById(numer);
         Dokument dokument;
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         if(result.isPresent()){
             dokument = result.get();
             List<Zuzycie> zuzycieList = zuzycieRepository.findByDokument(dokument);
@@ -94,11 +95,11 @@ public class DokumentRestController {
             }
             dokument.setKilometryBefore(kilometryBefore);
 
-            logger.info("["+request.getHeader("X-Real-IP")+"] - /dokument GET numer="+numer);
+            logger.info("[{}] /dokument GET numer = {} ", ip, numer);
         }
         else{
             dokument = new Dokument();
-            logger.warn("["+request.getHeader("X-Real-IP")+"] - /dokument GET numer="+numer + ". Nie odnaleziono");
+            logger.warn("[{}] /dokument GET numer = {} - nie odnaleziono ", ip, numer);
         }
         return dokument;
 
@@ -111,6 +112,8 @@ public class DokumentRestController {
             @RequestParam("rok") int rok,
             @RequestParam("miesiac") int miesiac){
 
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
+        logger.info("[{}] /dokumentyGet {}-{} ", ip, rok, miesiac);
         return dokumentRepository.getDokumenty(rok, miesiac);
 
     }
@@ -136,7 +139,8 @@ public class DokumentRestController {
             zuzycieRepository.save(zuzycie);
         }
 
-        logger.info("["+request.getHeader("X-Real-IP")+"] - /dokument POST numer="+dokument.getNumer());
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
+        logger.info("[{}] /dokument POST numer={}", ip, dokument.getNumer());
 
     }
 
@@ -146,6 +150,7 @@ public class DokumentRestController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         Optional<Dokument> byId = dokumentRepository.findById(dokument.getNumer());
 
         if(byId.isPresent()){
@@ -170,12 +175,12 @@ public class DokumentRestController {
                 }
             }
 
-            logger.info("["+request.getHeader("X-Real-IP")+"] - /dokument PUT numer="+dokument.getNumer());
+            logger.info("[{}] /dokument PUT numer={}", ip, dokument.getNumer());
 
         }
         else{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            logger.info("["+request.getHeader("X-Real-IP")+"] - /dokument PUT - BAD REQUEST");
+            logger.warn("[{}] /dokument PUT - BAD REQUEST", ip);
         }
 
     }
@@ -197,7 +202,8 @@ public class DokumentRestController {
 
         }
 
-        logger.info("["+request.getHeader("X-Real-IP")+"] - /dokument DELETE numer="+numer);
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
+        logger.info("[{}] /dokument DELETE numer={}", ip, numer);
 
     }
 

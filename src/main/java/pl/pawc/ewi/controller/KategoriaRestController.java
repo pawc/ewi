@@ -24,8 +24,10 @@ public class KategoriaRestController {
             HttpServletResponse response,
             @RequestBody Kategoria kategoria){
 
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         Optional<Kategoria> byId = kategoriaRepository.findById(kategoria.getNazwa());
         if(!byId.isPresent()){
+            logger.info("[{}] /kategoria POST {}", ip, kategoria.getNazwa());
             kategoriaRepository.save(kategoria);
         }
     }
@@ -36,8 +38,10 @@ public class KategoriaRestController {
             HttpServletResponse response,
             @RequestBody Kategoria kategoria){
 
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         Optional<Kategoria> byId = kategoriaRepository.findById(kategoria.getNazwa());
         if(byId.isPresent()){
+            logger.info("[{}] /kategoria DELETE {}", ip, kategoria.getNazwa());
             kategoriaRepository.delete(kategoria);
         }
     }
@@ -48,11 +52,17 @@ public class KategoriaRestController {
             HttpServletResponse response,
             @RequestBody Kategoria kategoria) {
 
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         Optional<Kategoria> byId = kategoriaRepository.findById(kategoria.getNazwa());
         if(byId.isPresent()){
+            logger.info("[{}] /togglePrzenoszonaNaKolejnyOkres PUT {}", ip, kategoria.getNazwa());
             Kategoria kat = byId.get();
             kat.setPrzenoszonaNaKolejnyOkres(!kat.isPrzenoszonaNaKolejnyOkres());
             kategoriaRepository.save(kat);
+        }
+        else{
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.warn("[{}] /togglePrzenoszonaNaKolejnyOkres PUT {} BAD REQUEST", ip, kategoria.getNazwa());
         }
 
     }

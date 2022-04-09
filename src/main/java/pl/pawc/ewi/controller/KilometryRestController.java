@@ -35,16 +35,17 @@ public class KilometryRestController {
             HttpServletResponse response) {
 
         List<Kilometry> by = kilometryRepository.findBy(kilometry.getMaszyna(), kilometry.getRok(), kilometry.getMiesiac());
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
 
         if(by.isEmpty()){
+            logger.info("[{}] /kilometry POST dodano {}", ip, kilometry);
             kilometryRepository.save(kilometry);
-            logger.info("["+request.getHeader("X-Real-IP")+"] - /kilometry POST - dodano - " + kilometry);
         }
         else{
+            logger.info("[{}] /kilometry POST zaktualizowano {}", ip, kilometry);
             Kilometry kilometryDB = by.get(0);
             kilometryDB.setWartosc(kilometry.getWartosc());
             kilometryRepository.save(kilometryDB);
-            logger.info("["+request.getHeader("X-Real-IP")+"] - /kilometry POST - zaktualizowano - " + kilometry);
         }
     }
 
@@ -55,6 +56,8 @@ public class KilometryRestController {
             @RequestParam("rok") int rok,
             @RequestParam("miesiac") int miesiac){
 
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
+        logger.info("[{}] /kilometryGet {}-{}", ip, rok, miesiac);
         return kilometryRepository.findBy(rok, miesiac);
 
     }
@@ -67,6 +70,7 @@ public class KilometryRestController {
 
         List<Kilometry> byParams;
         Kilometry kmDB;
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         for(Kilometry km : kilometry){
             Optional<Maszyna> byId = maszynaRepository.findById(km.getMaszyna().getId());
             if(byId.isPresent()){
@@ -75,14 +79,14 @@ public class KilometryRestController {
 
             byParams = kilometryRepository.findBy(km.getMaszyna(), km.getRok(), km.getMiesiac());
             if(byParams.isEmpty()){
+                logger.info("[{}] /kilometryList POST dodano {}", ip, km);
                 kilometryRepository.save(km);
-                logger.info("["+request.getHeader("X-Real-IP")+"] - /kilometryList POST - dodano - " + km);
             }
             else{
+                logger.info("[{}] /kilometryList POST zaktualizowano {}", ip, km);
                 kmDB = byParams.get(0);
                 kmDB.setWartosc(km.getWartosc());
                 kilometryRepository.save(kmDB);
-                logger.info("["+request.getHeader("X-Real-IP")+"] - /kilometryList POST - zaktualizowano - " + km);
             }
         }
     }
