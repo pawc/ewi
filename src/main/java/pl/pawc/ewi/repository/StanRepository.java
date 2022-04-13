@@ -28,4 +28,6 @@ public interface StanRepository extends CrudRepository<Stan, String> {
         "AND s.rok = ?1 AND s.miesiac = ?2", nativeQuery = true)
     List<StanRaport> findBy(int rok, int miesiac);
 
+    List<Stan> findByNormaAndRokAndMiesiac(Norma norma, int year, int month);
+
 }

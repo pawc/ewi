@@ -26,10 +26,10 @@ public class Zuzycie {
     @Column(name = "wartosc")
     private double wartosc;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Norma norma;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Dokument dokument;
 
     @Column(columnDefinition = "double default 0")

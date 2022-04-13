@@ -42,4 +42,7 @@ public class Norma {
     @Column(name = "suma_ogrzewania")
     private double sumaOgrzewania;
 
+/*  @Column(name = "czy_zaokraglane", columnDefinition="bit default 1")
+    private boolean czyZaokraglane = true;*/
+
 }
