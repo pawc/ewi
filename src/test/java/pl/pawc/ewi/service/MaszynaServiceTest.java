@@ -12,24 +12,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 		"spring.datasource.driverClassName=org.h2.Driver",
 		"spring.datasource.url=jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1",
 })
-class ZuzycieServiceTest {
+class MaszynaServiceTest {
 
 	@Autowired
-	ZuzycieService zuzycieService;
+	MaszynaService maszynaService;
 
 	@Test
 	@Transactional
-	void testGetSuma() {
+	void testFindAllActive() {
 
-		assertEquals(1, zuzycieService.getSuma(1, 2022, 4));
-		assertEquals(21, zuzycieService.getSuma(2, 2022, 4));
-		assertEquals(0.2, zuzycieService.getSuma(26, 2022, 4));
+		assertEquals(2, maszynaService.findAllActive().size());
 
 	}
 
-    /*private double myRound(double d){
-		double r = (double) Math.round(d*100)/100;
-		return (double) Math.round(r*10)/10;
-	}*/
+	@Test
+	@Transactional
+	void testFindAllUncategorized() {
+
+		assertEquals(0, maszynaService.findAllUncategorized().size());
+
+	}
 
 }

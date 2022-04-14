@@ -33,7 +33,7 @@ public class Dokument {
     @Column(columnDefinition = "double default 0")
     private double kilometryPrzyczepa;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Maszyna maszyna;
 
     @Transient
