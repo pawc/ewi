@@ -31,6 +31,7 @@ public class ZuzycieService {
         if(excludedDocNumber != null){
             dokument = dokumentRepository.findById(excludedDocNumber).orElseThrow(() -> new DocumentNotFoundException(excludedDocNumber));
             Calendar calD = Calendar.getInstance();
+            calD.setTime(dokument.getData());
         }
         else {
             dokument = null;
@@ -45,7 +46,8 @@ public class ZuzycieService {
                         cal.setTime(z.getDokument().getData());
                         return cal.get(Calendar.MONTH) + 1 == month
                             && cal.get(Calendar.YEAR) == year
-                            && (dokument == null || !dokument.getNumer().equals(excludedDocNumber));
+                            && (dokument == null || !z.getDokument().getNumer().equals(excludedDocNumber))
+                            && (dokument == null || dokument.getData().compareTo(z.getDokument().getData()) > 0);
                     }
                 ).collect(Collectors.toList());
 

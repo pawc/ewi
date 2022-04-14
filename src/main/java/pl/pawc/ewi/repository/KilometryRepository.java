@@ -13,6 +13,7 @@ import java.util.List;
 public interface KilometryRepository extends CrudRepository<Kilometry, String> {
 
     @Query("FROM Kilometry k WHERE k.maszyna = ?1 and k.rok = ?2 and k.miesiac = ?3")
+    @Deprecated
     List<Kilometry> findBy(Maszyna maszyna, int rok, int miesiac);
 
     Kilometry findOneByMaszynaAndRokAndMiesiac(Maszyna maszyna, int rok, int miesiac);
@@ -21,6 +22,7 @@ public interface KilometryRepository extends CrudRepository<Kilometry, String> {
             "from maszyna m " +
             "left join kilometry k on m.id = k.maszyna_id " +
             "and k.rok = ?1 and k.miesiac = ?2 ;", nativeQuery = true)
+    @Deprecated
     List<KilometryRaport> findBy(int rok, int miesiac);
 
 }
