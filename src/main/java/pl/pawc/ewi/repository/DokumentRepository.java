@@ -28,6 +28,7 @@ public interface DokumentRepository extends CrudRepository<Dokument, String> {
             "    where n.id = ?1 ;",
         nativeQuery = true
     )
+    @Deprecated
     Double getSuma(long normaId, int year, int month);
 
     @Query(value = "select round(" +
@@ -41,6 +42,7 @@ public interface DokumentRepository extends CrudRepository<Dokument, String> {
             "    where n.id = ?1 and d.data <= ?4 and d.numer <> ?5 ;",
             nativeQuery = true
     )
+    @Deprecated
     Double getSumBeforeDate(long normaId, int year, int month, Date date, String docExcluded);
 
     @Query(value = "select round(ifnull(k.wartosc, 0)  + sum(ifnull(d.kilometry, 0)), 2) as sumaKilometry " +
@@ -49,6 +51,7 @@ public interface DokumentRepository extends CrudRepository<Dokument, String> {
             "left join dokument d on m.id = d.maszyna_id and year(d.data) = k.rok and month(d.data) = k.miesiac " +
             "where m.id = ?1 and k.rok = ?2 and k.miesiac = ?3 ;",
           nativeQuery = true)
+    @Deprecated
     Double getSumaKilometry(String maszynaId, int year, int month);
 
     @Query(value = "select round(ifnull(k.wartosc, 0)  + sum(ifnull(d.kilometry, 0)), 2) as sumaKilometry " +
@@ -58,6 +61,7 @@ public interface DokumentRepository extends CrudRepository<Dokument, String> {
             "where d.maszyna_id = ?1 and year(d.data) = ?2 and month(d.data) = ?3 " +
             "and d.data <= ?4 and d.numer <> ?5 ;",
             nativeQuery = true)
+    @Deprecated
     Double getSumaKilometryBeforeDate(String maszynaId, int year, int month, Date date, String docExcluded);
 
 }

@@ -2,9 +2,12 @@ package pl.pawc.ewi.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import pl.pawc.ewi.entity.Dokument;
 import pl.pawc.ewi.entity.Norma;
 import pl.pawc.ewi.entity.Stan;
 import pl.pawc.ewi.entity.Zuzycie;
+import pl.pawc.ewi.model.DocumentNotFoundException;
+import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.StanRepository;
 import pl.pawc.ewi.repository.ZuzycieRepository;
 
@@ -19,8 +22,19 @@ public class ZuzycieService {
 
     private final ZuzycieRepository zuzycieRepository;
     private final StanRepository stanRepository;
+    private final DokumentRepository dokumentRepository;
 
-    public Double getSuma(long normaId, int year, int month){
+    public Double getSuma(long normaId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException {
+
+        Dokument dokument;
+
+        if(excludedDocNumber != null){
+            dokument = dokumentRepository.findById(excludedDocNumber).orElseThrow(() -> new DocumentNotFoundException(excludedDocNumber));
+            Calendar calD = Calendar.getInstance();
+        }
+        else {
+            dokument = null;
+        }
 
         Norma norma = new Norma();
         norma.setId(normaId);
@@ -28,9 +42,11 @@ public class ZuzycieService {
 
         List<Zuzycie> collect = zuzycieRepository.findByNorma(norma).stream()
                 .filter(z -> {
-                            cal.setTime(z.getDokument().getData());
-                            return cal.get(Calendar.MONTH) + 1 == month && cal.get(Calendar.YEAR) == year;
-                        }
+                        cal.setTime(z.getDokument().getData());
+                        return cal.get(Calendar.MONTH) + 1 == month
+                            && cal.get(Calendar.YEAR) == year
+                            && (dokument == null || !dokument.getNumer().equals(excludedDocNumber));
+                    }
                 ).collect(Collectors.toList());
 
         Optional<Stan> stan = stanRepository.findByNormaAndRokAndMiesiac(norma, year, month).stream().findFirst();
@@ -40,6 +56,7 @@ public class ZuzycieService {
             s.setWartosc(0D);
             return s;
         }).getWartosc();
+
         double zatankowano = collect.stream().mapToDouble(Zuzycie::getZatankowano).sum();
         double ogrzewanie = collect.stream().mapToDouble(Zuzycie::getOgrzewanie).sum();
 

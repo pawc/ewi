@@ -11,10 +11,12 @@ import java.util.List;
 public interface MaszynaRepository extends CrudRepository<Maszyna, String> {
 
     @Query("FROM Maszyna m WHERE m.aktywna = true")
+    @Deprecated()
     List<Maszyna> findAllActive();
 
     @Query(value = "SELECT m.* FROM maszyna m LEFT JOIN maszyna_kategorie mk ON m.id = mk.maszyna_id WHERE mk.maszyna_id IS NULL",
     nativeQuery = true)
+    @Deprecated
     Iterable<Maszyna> findAllUncategorized();
 
 }
