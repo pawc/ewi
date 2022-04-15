@@ -1,12 +1,13 @@
 package pl.pawc.ewi.service;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.pawc.ewi.model.DocumentNotFoundException;
 
 import javax.transaction.Transactional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(properties = {
 		"spring.datasource.driverClassName=org.h2.Driver",
@@ -22,11 +23,11 @@ class ZuzycieServiceTest {
 	void testGetSuma() {
 
 		try {
-			Assertions.assertEquals(1, zuzycieService.getSuma(1, 2022, 4, null));
-			Assertions.assertEquals(21, zuzycieService.getSuma(2, 2022, 4, null));
-			Assertions.assertEquals(0.2, zuzycieService.getSuma(26, 2022, 4, null));
+			assertEquals(1, zuzycieService.getSuma(1, 2022, 4, null));
+			assertEquals(21, zuzycieService.getSuma(2, 2022, 4, null));
+			assertEquals(0.2, zuzycieService.getSuma(26, 2022, 4, null));
 		} catch (DocumentNotFoundException e) {
-			Assertions.fail();
+			fail();
 		}
 
 	}
@@ -35,17 +36,32 @@ class ZuzycieServiceTest {
 	@Transactional
 	void testGetSumaDocExcluded(){
 		try {
-			Assertions.assertEquals(10, zuzycieService.getSuma(1, 2022, 4, "1/04/2022/C1"));
-			Assertions.assertEquals(3.3, zuzycieService.getSuma(1, 2022, 4, "2/04/2022/C1"));
-			Assertions.assertEquals(3.5, zuzycieService.getSuma(1, 2022, 4, "3/04/2022/C1"));
-			Assertions.assertEquals(2.5, zuzycieService.getSuma(1, 2022, 4, "4/04/2022/C1"));
-			Assertions.assertEquals(0.9, zuzycieService.getSuma(1, 2022, 4, "5/04/2022/C1"));
+			assertEquals(10, zuzycieService.getSuma(1, 2022, 4, "1/04/2022/C1"));
+			assertEquals(3.3, zuzycieService.getSuma(1, 2022, 4, "2/04/2022/C1"));
+			assertEquals(3.5, zuzycieService.getSuma(1, 2022, 4, "3/04/2022/C1"));
+			assertEquals(2.5, zuzycieService.getSuma(1, 2022, 4, "4/04/2022/C1"));
+			assertEquals(0.9, zuzycieService.getSuma(1, 2022, 4, "5/04/2022/C1"));
 		} catch (DocumentNotFoundException e) {
-			Assertions.fail();
+			fail();
 		}
 
-		Assertions.assertThrows(DocumentNotFoundException.class,
+		assertThrows(DocumentNotFoundException.class,
 				() -> zuzycieService.getSuma(1, 2022, 4,"11/04/2022/C1"));
+
+	}
+
+	@Test
+	@Transactional
+	void testGetSumaYear(){
+
+		assertEquals(385.48, zuzycieService.getSumaYear(1, 2022));
+		assertEquals(0, zuzycieService.getSumaYear(1, 2023));
+
+		assertEquals(56.63, zuzycieService.getSumaYear(2, 2022));
+		assertEquals(0, zuzycieService.getSumaYear(2, 2023));
+
+		assertEquals(18.37, zuzycieService.getSumaYear(26, 2022));
+		assertEquals(0, zuzycieService.getSumaYear(26, 2023));
 
 	}
 

@@ -63,16 +63,40 @@ public class ZuzycieService {
         double ogrzewanie = collect.stream().mapToDouble(Zuzycie::getOgrzewanie).sum();
 
         double sum = collect.stream().mapToDouble(z ->
-            myRound(z.getWartosc() * z.getNorma().getWartosc())
+            myRound(z.getWartosc() * z.getNorma().getWartosc(), false)
         ).sum();
 
-        return myRound(stanD + zatankowano - ogrzewanie - sum);
+        return myRound(stanD + zatankowano - ogrzewanie - sum, false);
 
     }
 
-    private double myRound(double d){
+    public Double getSumaYear(long normaId, int year){
+
+        Norma norma = new Norma();
+        norma.setId(normaId);
+        Calendar cal = Calendar.getInstance();
+
+        List<Zuzycie> collect = zuzycieRepository.findByNorma(norma).stream()
+                .filter(z -> {
+                            cal.setTime(z.getDokument().getData());
+                            return cal.get(Calendar.YEAR) == year;
+                        }
+                ).collect(Collectors.toList());
+
+        return collect.stream().mapToDouble(z ->
+                myRound(z.getWartosc() * z.getNorma().getWartosc(), true)
+        ).sum();
+
+    }
+
+    private double myRound(double d, boolean precisionMode){
         double r = (double) Math.round(d*100)/100;
-        return (double) Math.round(r*10)/10;
+        if(precisionMode){
+            return r;
+        }
+        else{
+            return (double) Math.round(r*10)/10;
+        }
     }
 
 }

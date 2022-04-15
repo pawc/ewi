@@ -36,4 +36,13 @@ class RaportServiceTest {
 
 	}
 
+	@Test
+	@Transactional
+	void testGetRaportRoczny() {
+
+		assertEquals(3, raportService.getRaportRoczny(2022).size());
+		assertEquals(0, raportService.getRaportRoczny(2023).size());
+
+	}
+
 }

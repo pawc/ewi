@@ -21,6 +21,7 @@ public interface RaportRocznyRepository extends CrudRepository<RaportRoczny, Str
             "group by k.nazwa + '-' + n.jednostka, k.nazwa, n.jednostka;",
         nativeQuery = true
     )
+    @Deprecated
     List<RaportRoczny> getRaport(int year);
 
 }

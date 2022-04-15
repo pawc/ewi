@@ -26,6 +26,7 @@ public interface StanRepository extends CrudRepository<Stan, String> {
         "JOIN maszyna m ON n.maszyna_id = m.id " +
         "left join stan s ON n.id = s.norma_id " +
         "AND s.rok = ?1 AND s.miesiac = ?2", nativeQuery = true)
+    @Deprecated
     List<StanRaport> findBy(int rok, int miesiac);
 
     List<Stan> findByNormaAndRokAndMiesiac(Norma norma, int year, int month);
