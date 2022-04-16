@@ -142,8 +142,8 @@ public class RaportService {
                 raport.setZatankowano(myRound(z.getZatankowano(), false));
                 raport.setOgrzewanie(myRound(z.getOgrzewanie(), false));
                 raport.setNormaId(z.getNorma().getId());
-                Optional<Stan> first = stanRepository.findByNormaAndRokAndMiesiac(z.getNorma(), year, month).stream().findFirst();
-                double stanPoprz = first.map(Stan::getWartosc).orElse(0.0);
+                Stan stan = stanRepository.findOneByNormaAndRokAndMiesiac(z.getNorma(), year, month);
+                double stanPoprz = stan == null ? 0 : stan.getWartosc();
                 raport.setStanPoprz(stanPoprz);
                 results.add(raport);
             });

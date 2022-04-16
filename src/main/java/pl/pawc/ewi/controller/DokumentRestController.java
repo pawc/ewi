@@ -45,9 +45,25 @@ public class DokumentRestController {
             @RequestParam("numer") String numer,
             @RequestParam(name = "miesiac", required = false) String miesiac){
 
-        Optional<Dokument> result = dokumentRepository.findById(numer);
-        Dokument dokument;
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
+        Dokument dokument =  getDokument(numer, miesiac);
+
+        if(dokument != null) {
+            logger.info("[{}] /dokument GET numer = {} ", ip, numer);
+        }
+        else {
+            dokument = new Dokument();
+            logger.warn("[{}] /dokument GET numer = {} - nie odnaleziono ", ip, numer);
+        }
+        return dokument;
+
+    }
+
+    @Deprecated
+    public Dokument getDokument(String numer, String miesiac) {
+        Optional<Dokument> result = dokumentRepository.findById(numer);
+        Dokument dokument = null;
+
         if(result.isPresent()){
             dokument = result.get();
             List<Zuzycie> zuzycieList = zuzycieRepository.findByDokument(dokument);
@@ -94,15 +110,9 @@ public class DokumentRestController {
                 if(!by1.isEmpty()) kilometryBefore = by1.get(0).getWartosc();
             }
             dokument.setKilometryBefore(kilometryBefore);
+        }
 
-            logger.info("[{}] /dokument GET numer = {} ", ip, numer);
-        }
-        else{
-            dokument = new Dokument();
-            logger.warn("[{}] /dokument GET numer = {} - nie odnaleziono ", ip, numer);
-        }
         return dokument;
-
     }
 
     @RequestMapping("/dokumentyGet")

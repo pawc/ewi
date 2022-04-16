@@ -27,13 +27,12 @@ public class StanService {
             raportStan.setMaszynaid(n.getMaszyna().getId());
             raportStan.setJednostka(n.getJednostka());
             raportStan.setNormaid(n.getId());
-            Stan stan = stanRepository.findByNormaAndRokAndMiesiac(n, year, month)
-                    .stream().findFirst().orElseGet(() -> {
-                        Stan s = new Stan();
-                        s.setId(-1);
-                        s.setWartosc(0D);
-                        return s;
-                    });
+            Stan stan = stanRepository.findOneByNormaAndRokAndMiesiac(n, year, month);
+            if(stan == null) {
+                stan = new Stan();
+                stan.setId(-1);
+                stan.setWartosc(0D);
+            }
             raportStan.setStanid(stan.getId());
             raportStan.setStanpoczatkowy(stan.getWartosc());
             result.add(raportStan);

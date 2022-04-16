@@ -3,13 +3,12 @@ package pl.pawc.ewi.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import pl.pawc.ewi.controller.DokumentRestController;
 import pl.pawc.ewi.model.DocumentNotFoundException;
 
 import javax.transaction.Transactional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(properties = {
 		"spring.datasource.driverClassName=org.h2.Driver",
@@ -19,6 +18,9 @@ class DokumentServiceTest {
 
 	@Autowired
 	DokumentService dokumentService;
+
+	@Autowired
+	DokumentRestController dokumentRestController;
 
 	@Test
 	@Transactional
@@ -52,4 +54,13 @@ class DokumentServiceTest {
 				() -> dokumentService.getSumaKilometry("C1", 2022, 4,"11/04/2022/C1"));
 
 	}
+
+	@Test
+	@Transactional
+	void testGetDokument() throws DocumentNotFoundException {
+
+		assertNotNull(dokumentService.get("1/04/2022/C1"));
+
+	}
+
 }

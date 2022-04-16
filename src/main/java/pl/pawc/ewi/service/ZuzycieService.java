@@ -13,7 +13,6 @@ import pl.pawc.ewi.repository.ZuzycieRepository;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -51,13 +50,12 @@ public class ZuzycieService {
                     }
                 ).collect(Collectors.toList());
 
-        Optional<Stan> stan = stanRepository.findByNormaAndRokAndMiesiac(norma, year, month).stream().findFirst();
+        Stan stan = stanRepository.findOneByNormaAndRokAndMiesiac(norma, year, month);
 
-        double stanD = stan.orElseGet(() -> {
-            Stan s = new Stan();
-            s.setWartosc(0D);
-            return s;
-        }).getWartosc();
+        if(stan == null){
+            stan = new Stan();
+            stan.setWartosc(0D);
+        }
 
         double zatankowano = collect.stream().mapToDouble(Zuzycie::getZatankowano).sum();
         double ogrzewanie = collect.stream().mapToDouble(Zuzycie::getOgrzewanie).sum();
@@ -66,7 +64,7 @@ public class ZuzycieService {
             myRound(z.getWartosc() * z.getNorma().getWartosc(), false)
         ).sum();
 
-        return myRound(stanD + zatankowano - ogrzewanie - sum, false);
+        return myRound(stan.getWartosc() + zatankowano - ogrzewanie - sum, false);
 
     }
 

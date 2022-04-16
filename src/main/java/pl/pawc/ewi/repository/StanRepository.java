@@ -13,6 +13,7 @@ import java.util.List;
 public interface StanRepository extends CrudRepository<Stan, String> {
 
     @Query("FROM Stan s WHERE s.norma = ?1 and s.rok = ?2 and s.miesiac = ?3")
+    @Deprecated
     List<Stan> findBy(Norma norma, int rok, int miesiac);
 
     @Query(value = "SELECT " +
@@ -29,6 +30,6 @@ public interface StanRepository extends CrudRepository<Stan, String> {
     @Deprecated
     List<StanRaport> findBy(int rok, int miesiac);
 
-    List<Stan> findByNormaAndRokAndMiesiac(Norma norma, int year, int month);
+    Stan findOneByNormaAndRokAndMiesiac(Norma norma, int year, int month);
 
 }
