@@ -45,4 +45,13 @@ class RaportServiceTest {
 
 	}
 
+	@Test
+	@Transactional
+	void testGetRaport() {
+
+		assertEquals(3, raportService.getRaport(2022, 4).size());
+		assertEquals(0, raportService.getRaport(2022, 5).size());
+
+	}
+
 }

@@ -35,6 +35,7 @@ public interface RaportRepository extends CrudRepository<Raport, String> {
             "group by concat(m.nazwa, ' (', m.id, ')'), n.jednostka",
         nativeQuery = true
     )
+    @Deprecated
     List<Raport> getRaport(int year, int month);
 
 }

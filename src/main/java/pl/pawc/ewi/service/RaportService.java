@@ -3,19 +3,27 @@ package pl.pawc.ewi.service;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import pl.pawc.ewi.entity.Dokument;
 import pl.pawc.ewi.entity.Kategoria;
 import pl.pawc.ewi.entity.Kilometry;
 import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.entity.Norma;
+import pl.pawc.ewi.entity.Stan;
+import pl.pawc.ewi.model.Raport;
 import pl.pawc.ewi.model.RaportKilometry;
 import pl.pawc.ewi.model.RaportRoczny;
+import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.KategoriaRepository;
 import pl.pawc.ewi.repository.KilometryRepository;
 import pl.pawc.ewi.repository.NormaRepository;
+import pl.pawc.ewi.repository.StanRepository;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -27,6 +35,8 @@ public class RaportService {
     private final MaszynaService maszynaService;
     private final KategoriaRepository kategoriaRepository;
     private final ZuzycieService zuzycieService;
+    private final StanRepository stanRepository;
+    private final DokumentRepository dokumentRepository;
     private final NormaRepository normaRepository;
 
     List<RaportKilometry> getKilometryRaport(int rok, int miesiac){
@@ -102,6 +112,84 @@ public class RaportService {
         });
 
         return groupBy;
+    }
+
+    public List<Raport> getRaport(int year, int month){
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month-1, 1);
+        Date firstDayOfMonth = cal.getTime();
+        cal.add(Calendar.MONTH, 1);
+        cal.add(Calendar.DAY_OF_MONTH, -1);
+        Date lastDayOfMonth = cal.getTime();
+
+        List<Dokument> dokumentsByDataBetween = dokumentRepository.findByDataBetween(firstDayOfMonth, lastDayOfMonth);
+
+        List<Raport> results = new ArrayList<>();
+
+        dokumentsByDataBetween.forEach(d -> {
+            d.getZuzycie().forEach(z -> {
+                Raport raport = new Raport();
+                raport.setMaszynaidnormaid(d.getMaszyna().getId()+"-"+z.getNorma().getId());
+                raport.setMaszyna(d.getMaszyna().getNazwa() + "(" + d.getMaszyna().getId() + ")");
+                raport.setMaszynaid(d.getMaszyna().getId());
+                Kilometry kilometry = kilometryRepository.findOneByMaszynaAndRokAndMiesiac(d.getMaszyna(), year, month);
+                raport.setStankilometry(kilometry != null ? kilometry.getWartosc() : 0);
+                raport.setKilometry(d.getKilometry());
+                raport.setKilometryprzyczepa(d.getKilometryPrzyczepa());
+                raport.setJednostka(z.getNorma().getJednostka());
+                raport.setSuma(myRound(z.getWartosc() * z.getNorma().getWartosc(), false));
+                raport.setSumagodzin(myRound(z.getWartosc(), false));
+                raport.setZatankowano(myRound(z.getZatankowano(), false));
+                raport.setOgrzewanie(myRound(z.getOgrzewanie(), false));
+                raport.setNormaId(z.getNorma().getId());
+                Optional<Stan> first = stanRepository.findByNormaAndRokAndMiesiac(z.getNorma(), year, month).stream().findFirst();
+                double stanPoprz = first.map(Stan::getWartosc).orElse(0.0);
+                raport.setStanPoprz(stanPoprz);
+                results.add(raport);
+            });
+        });
+
+        Map<String, List<Raport>> collect = results.stream().collect(groupingBy(Raport::getMaszynaidnormaid));
+
+        List<Raport> grouped = new ArrayList<>();
+
+        for(String maszynaIdNormaId : collect.keySet()){
+
+            List<Raport> list = collect.get(maszynaIdNormaId);
+            Raport raportMain = list.get(0);
+
+            Raport raport = new Raport();
+
+            raport.setMaszynaidnormaid(maszynaIdNormaId);
+            raport.setMaszyna(raportMain.getMaszyna());
+            raport.setMaszynaid(raportMain.getMaszynaid());
+            raport.setNormaId(raportMain.getNormaId());
+            raport.setJednostka(raportMain.getJednostka());
+            raport.setStankilometry(raportMain.getStankilometry());
+            raport.setStanPoprz(raportMain.getStanPoprz());
+
+            double zatankowano = list.stream().mapToDouble(r -> myRound(r.getZatankowano(), false)).sum();
+            raport.setZatankowano(zatankowano);
+
+            double ogrzewanie = list.stream().mapToDouble(r -> myRound(r.getOgrzewanie(), false)).sum();
+            raport.setOgrzewanie(ogrzewanie);
+
+            double sumagodzin = list.stream().mapToDouble(r -> myRound(r.getSumagodzin(), false)).sum();
+            raport.setSumagodzin(sumagodzin);
+
+            double suma = list.stream().mapToDouble(r -> myRound(r.getSuma(), false)).sum();
+            raport.setSuma(suma);
+
+            double kilometry = list.stream().mapToDouble(Raport::getKilometry).sum();
+            raport.setKilometry(myRound(kilometry, true));
+
+            double kilometryPrzyczepa = list.stream().mapToDouble(Raport::getKilometryprzyczepa).sum();
+            raport.setKilometryprzyczepa(myRound(kilometryPrzyczepa, true));
+
+            grouped.add(raport);
+        }
+
+        return grouped;
     }
 
     private double myRound(double d, boolean precisionMode){
