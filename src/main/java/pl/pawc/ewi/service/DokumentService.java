@@ -56,10 +56,10 @@ public class DokumentService {
 
     }
 
-    public Dokument get(String numer) throws DocumentNotFoundException {
+    public Dokument get(String numer) {
 
         Optional<Dokument> result = dokumentRepository.findById(numer);
-        Dokument dokument;
+        Dokument dokument = null;
 
         if(result.isPresent()){
             dokument = result.get();
@@ -72,8 +72,15 @@ public class DokumentService {
 
             for(Zuzycie zuzycie : dokument.getZuzycie()){
 
-                Double suma = zuzycieService.getSuma(zuzycie.getNorma().getId(), year, month, null);
-                Double sumaBefore = zuzycieService.getSuma(zuzycie.getNorma().getId(), year, month, dokument.getNumer());
+                Double suma = null;
+                Double sumaBefore = null;
+                try {
+                    suma = zuzycieService.getSuma(zuzycie.getNorma().getId(), year, month, null);
+                    sumaBefore = zuzycieService.getSuma(zuzycie.getNorma().getId(), year, month, dokument.getNumer());
+
+                } catch (DocumentNotFoundException e) {
+                    e.printStackTrace();
+                }
 
                 Stan stan = stanRepository.findOneByNormaAndRokAndMiesiac(zuzycie.getNorma(), year, month);
                 double stanD = stan == null ? 0 : stan.getWartosc();
@@ -87,16 +94,24 @@ public class DokumentService {
 
             }
 
-            Double kilometryBefore = getSumaKilometry(dokument.getMaszyna().getId(), year, month, dokument.getNumer());
+            Double kilometryBefore = null;
+            try {
+                kilometryBefore = getSumaKilometry(dokument.getMaszyna().getId(), year, month, dokument.getNumer());
+            } catch (DocumentNotFoundException e) {
+                e.printStackTrace();
+            }
             dokument.setKilometryBefore(kilometryBefore);
 
         }
-        else{
-            throw new DocumentNotFoundException(numer);
-        }
-
         return dokument;
 
+    }
+
+    public void post(Dokument dokument){
+        for(Zuzycie zuzycie : dokument.getZuzycie()){
+            zuzycie.setDokument(dokument);
+            zuzycieRepository.save(zuzycie);
+        }
     }
 
 }

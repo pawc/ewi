@@ -1,9 +1,11 @@
 package pl.pawc.ewi.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import pl.pawc.ewi.controller.DokumentRestController;
+import pl.pawc.ewi.entity.Dokument;
 import pl.pawc.ewi.model.DocumentNotFoundException;
 
 import javax.transaction.Transactional;
@@ -18,9 +20,6 @@ class DokumentServiceTest {
 
 	@Autowired
 	DokumentService dokumentService;
-
-	@Autowired
-	DokumentRestController dokumentRestController;
 
 	@Test
 	@Transactional
@@ -57,9 +56,12 @@ class DokumentServiceTest {
 
 	@Test
 	@Transactional
-	void testGetDokument() throws DocumentNotFoundException {
-
-		assertNotNull(dokumentService.get("1/04/2022/C1"));
+	void testPostGetDokument() throws JsonProcessingException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		String input = "{\"numer\":\"15/04/2022/C1\",\"data\":\"2022-04-17\",\"kilometry\":\"25\",\"kilometryPrzyczepa\":\"25\",\"maszyna\":{\"id\":\"C1\"},\"zuzycie\":[{\"wartosc\":\"2.5\",\"norma\":{\"id\":\"1\"},\"zatankowano\":\"2.5\",\"ogrzewanie\":\"2.5\"},{\"wartosc\":\"3.5\",\"norma\":{\"id\":\"2\"},\"zatankowano\":\"3.5\",\"ogrzewanie\":\"3.5\"}]}";
+		Dokument dokument = objectMapper.readValue(input, Dokument.class);
+		dokumentService.post(dokument);
+		assertNotNull(dokumentService.get("15/04/2022/C1"));
 
 	}
 

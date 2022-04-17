@@ -10,15 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.pawc.ewi.entity.Dokument;
 import pl.pawc.ewi.entity.Kilometry;
-import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.entity.Stan;
 import pl.pawc.ewi.entity.Zuzycie;
 import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.KilometryRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
-import pl.pawc.ewi.repository.NormaRepository;
 import pl.pawc.ewi.repository.StanRepository;
 import pl.pawc.ewi.repository.ZuzycieRepository;
+import pl.pawc.ewi.service.DokumentService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +33,7 @@ public class DokumentRestController {
     private final DokumentRepository dokumentRepository;
     private final ZuzycieRepository zuzycieRepository;
     private final MaszynaRepository maszynaRepository;
-    private final NormaRepository normaRepository;
+    private final DokumentService dokumentService;
     private final StanRepository stanRepository;
     private final KilometryRepository kilometryRepository;
 
@@ -43,10 +42,10 @@ public class DokumentRestController {
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestParam("numer") String numer,
-            @RequestParam(name = "miesiac", required = false) String miesiac){
+            @RequestParam(name = "miesiac", required = false) String miesiac) {
 
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
-        Dokument dokument =  getDokument(numer, miesiac);
+        Dokument dokument =  dokumentService.get(numer);
 
         if(dokument != null) {
             logger.info("[{}] /dokument GET numer = {} ", ip, numer);
@@ -124,7 +123,9 @@ public class DokumentRestController {
 
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         logger.info("[{}] /dokumentyGet {}-{} ", ip, rok, miesiac);
-        return dokumentRepository.getDokumenty(rok, miesiac);
+        List<Dokument> dokumenty = dokumentRepository.getDokumenty(rok, miesiac);
+        dokumenty.forEach(d -> d.setZuzycie(null));
+        return dokumenty;
 
     }
 
@@ -134,20 +135,7 @@ public class DokumentRestController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        List<Zuzycie> zuzycia = dokument.getZuzycie();
-        for(Zuzycie zuzycie : zuzycia){
-            normaRepository.findById(zuzycie.getNorma().getId()).ifPresent(zuzycie::setNorma);
-        }
-
-        Maszyna maszyna = maszynaRepository.findById(dokument.getMaszyna().getId()).orElse(null);
-        dokument.setMaszyna(maszyna);
-
-        dokumentRepository.save(dokument);
-
-        for(Zuzycie zuzycie : zuzycia){
-            zuzycie.setDokument(dokument);
-            zuzycieRepository.save(zuzycie);
-        }
+        dokumentService.post(dokument);
 
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         logger.info("[{}] /dokument POST numer={}", ip, dokument.getNumer());

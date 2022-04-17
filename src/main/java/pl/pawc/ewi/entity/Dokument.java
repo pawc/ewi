@@ -1,9 +1,9 @@
 package pl.pawc.ewi.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,7 +20,6 @@ import java.util.List;
 @Getter
 @Setter
 @Table(indexes = {@Index(columnList = "data", name = "data_index")})
-@JsonIgnoreProperties({"hibernateLazyInitializer","zuzycie"})
 public class Dokument {
 
     @Id
@@ -38,7 +37,7 @@ public class Dokument {
     @ManyToOne(fetch = FetchType.EAGER)
     private Maszyna maszyna;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="dokument")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="dokument", cascade = CascadeType.ALL)
     private List<Zuzycie> zuzycie;
 
     @Transient
