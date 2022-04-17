@@ -74,6 +74,7 @@ public class DokumentService {
 
                 Double suma = null;
                 Double sumaBefore = null;
+                zuzycie.setDokument(dokument);
                 try {
                     suma = zuzycieService.getSuma(zuzycie.getNorma().getId(), year, month, null);
                     sumaBefore = zuzycieService.getSuma(zuzycie.getNorma().getId(), year, month, dokument.getNumer());
@@ -112,6 +113,46 @@ public class DokumentService {
             zuzycie.setDokument(dokument);
             zuzycieRepository.save(zuzycie);
         }
+    }
+
+    public void put(Dokument dokument) throws DocumentNotFoundException {
+        Optional<Dokument> byId = dokumentRepository.findById(dokument.getNumer());
+
+        if(byId.isPresent()){
+            Dokument dokumentDB = byId.get();
+
+            dokumentDB.setData(dokument.getData());
+            dokumentDB.setKilometry(dokument.getKilometry());
+            dokumentDB.setKilometryPrzyczepa(dokument.getKilometryPrzyczepa());
+            dokumentRepository.save(dokumentDB);
+
+            for(Zuzycie zuzycie : dokument.getZuzycie()) {
+                Zuzycie zuzycieDB = zuzycieRepository.findById(zuzycie.getId()).orElse(null);
+
+                zuzycieDB.setWartosc(zuzycie.getWartosc());
+                zuzycieDB.setZatankowano(zuzycie.getZatankowano());
+                zuzycieDB.setOgrzewanie(zuzycie.getOgrzewanie());
+
+                zuzycieRepository.save(zuzycieDB);
+            }
+        }
+        else{
+            throw new DocumentNotFoundException(dokument.getNumer());
+        }
+    }
+
+    public void delete(String numer) throws DocumentNotFoundException {
+
+        Optional<Dokument> byId = dokumentRepository.findById(numer);
+
+        if(byId.isPresent()) {
+            Dokument dokumentDB = byId.get();
+            dokumentRepository.delete(dokumentDB);
+        }
+        else{
+            throw new DocumentNotFoundException(numer);
+        }
+
     }
 
 }

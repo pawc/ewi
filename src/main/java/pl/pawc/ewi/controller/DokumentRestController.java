@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.pawc.ewi.entity.Dokument;
-import pl.pawc.ewi.entity.Kilometry;
-import pl.pawc.ewi.entity.Stan;
-import pl.pawc.ewi.entity.Zuzycie;
+import pl.pawc.ewi.model.DocumentNotFoundException;
 import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.KilometryRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
@@ -21,9 +19,7 @@ import pl.pawc.ewi.service.DokumentService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -56,62 +52,6 @@ public class DokumentRestController {
         }
         return dokument;
 
-    }
-
-    @Deprecated
-    public Dokument getDokument(String numer, String miesiac) {
-        Optional<Dokument> result = dokumentRepository.findById(numer);
-        Dokument dokument = null;
-
-        if(result.isPresent()){
-            dokument = result.get();
-            List<Zuzycie> zuzycieList = zuzycieRepository.findByDokument(dokument);
-            for(Zuzycie zuzycie : zuzycieList){
-                if(miesiac != null){
-                    int year;
-                    int month;
-
-                    try{
-                        year = Integer.parseInt(miesiac.split("-")[0]);
-                        month = Integer.parseInt(miesiac.split("-")[1]);
-                        Double suma = dokumentRepository.getSuma(zuzycie.getNorma().getId(), year, month);
-                        Double sumaBefore = dokumentRepository.getSumBeforeDate(
-                                zuzycie.getNorma().getId(), year, month, dokument.getData(), dokument.getNumer());
-
-                        double stan = 0D;
-                        List<Stan> by = stanRepository.findBy(zuzycie.getNorma(), year, month);
-                        if(!by.isEmpty()) stan = by.get(0).getWartosc();
-
-                        zuzycie.getNorma().setSuma(suma);
-                        zuzycie.getNorma().setSumaBefore(sumaBefore);
-                        zuzycie.getNorma().setStan(stan);
-                    }
-                    catch(NumberFormatException e){
-                        // skip
-                    }
-                }
-
-                zuzycie.setDokument(null);
-                zuzycie.getNorma().setMaszyna(null);
-            }
-            dokument.setZuzycie(zuzycieList);
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(dokument.getData());
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH) + 1;
-
-            Double kilometryBefore = dokumentRepository.getSumaKilometryBeforeDate(dokument.getMaszyna().getId(),
-                    year, month, dokument.getData(), dokument.getNumer());
-            if(kilometryBefore == null || kilometryBefore == 0D){
-                kilometryBefore = 0D;
-                List<Kilometry> by1 = kilometryRepository.findBy(dokument.getMaszyna(), year, month);
-                if(!by1.isEmpty()) kilometryBefore = by1.get(0).getWartosc();
-            }
-            dokument.setKilometryBefore(kilometryBefore);
-        }
-
-        return dokument;
     }
 
     @RequestMapping("/dokumentyGet")
@@ -149,36 +89,13 @@ public class DokumentRestController {
             HttpServletResponse response) {
 
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
-        Optional<Dokument> byId = dokumentRepository.findById(dokument.getNumer());
 
-        if(byId.isPresent()){
-            Dokument dokumentDB = byId.get();
-
-            dokumentDB.setData(dokument.getData());
-            dokumentDB.setKilometry(dokument.getKilometry());
-            dokumentDB.setKilometryPrzyczepa(dokument.getKilometryPrzyczepa());
-            dokumentRepository.save(dokumentDB);
-
-            for(Zuzycie zuzycie : dokument.getZuzycie()) {
-                Zuzycie zuzycieDB = zuzycieRepository.findById(zuzycie.getId()).orElse(null);
-                if(zuzycieDB == null) continue;
-                if (zuzycieDB.getWartosc() != zuzycie.getWartosc() ||
-                    zuzycieDB.getZatankowano() != zuzycie.getZatankowano() ||
-                    zuzycieDB.getOgrzewanie() != zuzycie.getOgrzewanie()) {
-
-                    zuzycieDB.setWartosc(zuzycie.getWartosc());
-                    zuzycieDB.setZatankowano(zuzycie.getZatankowano());
-                    zuzycieDB.setOgrzewanie(zuzycie.getOgrzewanie());
-                    zuzycieRepository.save(zuzycieDB);
-                }
-            }
-
+        try {
+            dokumentService.put(dokument);
             logger.info("[{}] /dokument PUT numer={}", ip, dokument.getNumer());
-
-        }
-        else{
+        } catch (DocumentNotFoundException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            logger.warn("[{}] /dokument PUT - BAD REQUEST", ip);
+            logger.warn("[{}] /dokument PUT - DocumentNotFoundException", ip);
         }
 
     }
@@ -189,19 +106,15 @@ public class DokumentRestController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        Optional<Dokument> byId = dokumentRepository.findById(numer);
-
-        if(byId.isPresent()) {
-            Dokument dokumentDB = byId.get();
-
-            List<Zuzycie> zuzycieList = zuzycieRepository.findByDokument(dokumentDB);
-            zuzycieRepository.deleteAll(zuzycieList);
-            dokumentRepository.delete(dokumentDB);
-
-        }
-
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
-        logger.info("[{}] /dokument DELETE numer={}", ip, numer);
+
+        try {
+            dokumentService.delete(numer);
+            logger.info("[{}] /dokument DELETE numer={}", ip, numer);
+        } catch (DocumentNotFoundException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.warn("[{}] /dokument DELETE numer={} DocumentNotFoundException", ip, numer);
+        }
 
     }
 

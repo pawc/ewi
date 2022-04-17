@@ -326,12 +326,12 @@ function edytujBtn(numer){
                 inputZuzycieEcho.html(inputZuzycie.val())
                 wynikVal = inputZuzycie.val() * zuzycie.norma.wartosc
                 wynik.html(formatter.format(wynikVal))
-                td5.html(formatter.format(sumaBefore - wynikVal - parseFloat(inputOgrzewanie.val()) + parseFloat(inputTankowanie.val())))
+                td5.html(formatter.format(sumaBefore - wynikVal - parseFloat(inputOgrzewanie != null ? inputOgrzewanie.val() : 0) + parseFloat(inputTankowanie.val())))
             })
 
             inputTankowanie.keyup(() => {
                wynikVal = inputZuzycie.val() * zuzycie.norma.wartosc
-               td5.html(formatter.format(sumaBefore - wynikVal - parseFloat(inputOgrzewanie.val()) + parseFloat(inputTankowanie.val())))
+               td5.html(formatter.format(sumaBefore - wynikVal - parseFloat(inputOgrzewanie != null ? inputOgrzewanie.val() : 0) + parseFloat(inputTankowanie.val())))
            })
         })
         dialog.dialog( "open" );
