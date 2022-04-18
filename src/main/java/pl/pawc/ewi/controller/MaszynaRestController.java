@@ -15,6 +15,7 @@ import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.KategoriaRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
 import pl.pawc.ewi.repository.NormaRepository;
+import pl.pawc.ewi.service.MaszynaService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +30,7 @@ public class MaszynaRestController {
     private final NormaRepository normaRepository;
     private final DokumentRepository dokumentRepository;
     private final KategoriaRepository kategoriaRepository;
+    private final MaszynaService maszynaService;
     private static final Logger logger = LogManager.getLogger(MaszynaRestController.class);
 
     @RequestMapping("/maszyna")
@@ -90,33 +92,8 @@ public class MaszynaRestController {
             HttpServletResponse response) {
 
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
-        Optional<Maszyna> byId = maszynaRepository.findById(maszyna.getId());
 
-        if(!byId.isPresent()){
-            Maszyna maszynaNew = new Maszyna();
-            maszynaNew.setId(maszyna.getId());
-            maszynaNew.setNazwa(maszyna.getNazwa());
-            maszynaNew.setOpis(maszyna.getOpis());
-            maszynaNew.setAktywna(maszyna.isAktywna());
-            maszynaRepository.save(maszynaNew);
-
-            Norma normaNew;
-            for(Norma norma : maszyna.getNormy()){
-                normaNew = new Norma();
-                normaNew.setJednostka(norma.getJednostka());
-                normaNew.setWartosc(norma.getWartosc());
-                normaNew.setMaszyna(maszynaNew);
-                normaNew.setCzyOgrzewanie(norma.isCzyOgrzewanie());
-                normaRepository.save(normaNew);
-            }
-
-            for(Kategoria kategoria : maszyna.getKategorie()){
-                Kategoria kat = kategoriaRepository.findById(kategoria.getNazwa()).orElse(null);
-                if(kat == null) continue;
-                kat.getMaszyny().add(maszynaNew);
-                kategoriaRepository.save(kat);
-            }
-
+        if(maszynaService.post(maszyna) != null){
             logger.info("[{}] /maszyna POST id={}", ip, maszyna.getId());
         }
         else{

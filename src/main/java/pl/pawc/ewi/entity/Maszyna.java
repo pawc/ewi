@@ -4,12 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.util.List;
 import java.util.Set;
@@ -41,7 +43,7 @@ public class Maszyna {
     @JoinColumn(referencedColumnName="nazwa")
     private Set<Kategoria> kategorie;
 
-    @Transient
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Norma> normy;
 
     public boolean isPrzenoszonaNaKolejnyOkres(){

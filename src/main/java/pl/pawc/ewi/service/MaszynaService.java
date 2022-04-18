@@ -6,6 +6,7 @@ import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.repository.MaszynaRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -26,6 +27,13 @@ public class MaszynaService {
         Iterable<Maszyna> all = maszynaRepository.findAll();
         Stream<Maszyna> stream = StreamSupport.stream(all.spliterator(), false);
         return stream.filter(m -> m.getKategorie().isEmpty()).collect(Collectors.toList());
+    }
+
+    public Maszyna post(Maszyna maszyna){
+        Optional<Maszyna> byId = maszynaRepository.findById(maszyna.getId());
+        maszyna.getNormy().forEach(n -> n.setMaszyna(maszyna));
+        if(!byId.isPresent()) return maszynaRepository.save(maszyna);
+        else return null;
     }
     
 }

@@ -30,6 +30,10 @@ public class KategoriaRestController {
             logger.info("[{}] /kategoria POST {}", ip, kategoria.getNazwa());
             kategoriaRepository.save(kategoria);
         }
+        else{
+            logger.warn("[{}] /kategoria POST {} - category already exists", ip, kategoria.getNazwa());
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/kategoria")
@@ -39,10 +43,15 @@ public class KategoriaRestController {
             @RequestBody Kategoria kategoria){
 
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
+
         Optional<Kategoria> byId = kategoriaRepository.findById(kategoria.getNazwa());
         if(byId.isPresent()){
             logger.info("[{}] /kategoria DELETE {}", ip, kategoria.getNazwa());
             kategoriaRepository.delete(kategoria);
+        }
+        else{
+            logger.warn("[{}] /kategoria DELETE {} - category not found", ip, kategoria.getNazwa());
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
@@ -62,7 +71,7 @@ public class KategoriaRestController {
         }
         else{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            logger.warn("[{}] /togglePrzenoszonaNaKolejnyOkres PUT {} BAD REQUEST", ip, kategoria.getNazwa());
+            logger.warn("[{}] /togglePrzenoszonaNaKolejnyOkres PUT {} - category not found", ip, kategoria.getNazwa());
         }
 
     }
