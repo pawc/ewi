@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(properties = {
 		"spring.datasource.driverClassName=org.h2.Driver",
@@ -39,7 +40,8 @@ class MaszynaServiceTest {
 
 	@Test
 	@Transactional
-	void testPost() throws JsonProcessingException {
+	void testGetPostPut() throws JsonProcessingException {
+
 		ObjectMapper objectMapper = new ObjectMapper();
 		String input = "{\"id\":\"ABC123\",\"nazwa\":\"Machine 1\",\"opis\":\"test machine\",\"normy\":[{\"wartosc\":\"1.2\",\"jednostka\":\"L/H\",\"czyOgrzewanie\":false},{\"wartosc\":\"3.27\",\"jednostka\":\"ON/H\",\"czyOgrzewanie\":true}],\"kategorie\":[],\"aktywna\":true}";
 		Maszyna maszyna = objectMapper.readValue(input, Maszyna.class);
@@ -47,10 +49,22 @@ class MaszynaServiceTest {
 		Maszyna m = maszynaService.post(maszyna);
 
 		assertEquals(2, m.getNormy().size());
+		assertTrue(m.isAktywna());
 		m.getNormy().forEach(n -> {
 			assertNotNull(n.getId());
-			assertEquals(maszyna.getId(), n.getMaszyna().getId());
+			assertEquals("ABC123", n.getMaszyna().getId());
 		});
+
+		input = "{\"id\":\"ABC123\",\"nazwa\":\"Machine 2\",\"opis\":\"test machine 2\",\"normy\":[{\"wartosc\":\"1.2\",\"jednostka\":\"L/H\",\"czyOgrzewanie\":false},{\"wartosc\":\"3.27\",\"jednostka\":\"ON/H\",\"czyOgrzewanie\":true},{\"wartosc\":\"4.89\",\"jednostka\":\"K/H\",\"czyOgrzewanie\":true}],\"kategorie\":[],\"aktywna\":false}";
+		maszyna = objectMapper.readValue(input, Maszyna.class);
+		maszynaService.put(maszyna);
+
+/*		m = maszynaService.get("ABC123", null);
+		assertEquals(3, m.getNormy().size());
+		assertEquals("Machine 2", m.getNazwa());
+		assertEquals("test machine 2", m.getOpis());
+		assertFalse(m.isAktywna());*/
+
 	}
 
 }

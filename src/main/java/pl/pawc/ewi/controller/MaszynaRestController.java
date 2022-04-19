@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.pawc.ewi.entity.Kategoria;
 import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.entity.Norma;
 import pl.pawc.ewi.repository.DokumentRepository;
@@ -113,39 +112,12 @@ public class MaszynaRestController {
         Optional<Maszyna> byId = maszynaRepository.findById(maszyna.getId());
 
         if(byId.isPresent()){
-            Maszyna maszynaDB = byId.get();
-            maszynaDB.setNazwa(maszyna.getNazwa());
-            maszynaDB.setOpis(maszyna.getOpis());
-            maszynaDB.setAktywna(maszyna.isAktywna());
-
-            List<Norma> normy = normaRepository.findByMaszyna(maszyna);
-            for(Norma normaNew : maszyna.getNormy()){
-                boolean test = false;
-                for(Norma normaOld : normy){
-                    if(normaOld.getJednostka().equals(normaNew.getJednostka())){
-                        test = true;
-                        break;
-                    }
-                }
-                if(!test){
-                    normaNew.setMaszyna(maszynaDB);
-                    normaRepository.save(normaNew);
-                }
-            }
-
-            maszynaDB.getKategorie().clear();
-            for(Kategoria kategoria : maszyna.getKategorie()){
-                Kategoria kat = kategoriaRepository.findById(kategoria.getNazwa()).orElse(null);
-                maszynaDB.getKategorie().add(kat);
-            }
-
-            maszynaRepository.save(maszynaDB);
             logger.info("[{}] /maszyna PUT id={}", ip, maszyna.getId());
-            logger.info("["+request.getHeader("X-Real-IP")+"] - /maszyna PUT id="+maszyna.getId());
+            maszynaService.put(maszyna);
         }
         else{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            logger.warn("[{}] /maszyna PUT - BAD REQUEST", ip);
+            logger.warn("[{}] /maszyna PUT id={} - BAD REQUEST", ip, maszyna.getId());
         }
 
     }

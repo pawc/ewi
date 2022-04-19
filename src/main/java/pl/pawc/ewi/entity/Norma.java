@@ -4,7 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 @Entity
 @Getter
@@ -42,7 +49,22 @@ public class Norma {
     @Column(name = "suma_ogrzewania")
     private double sumaOgrzewania;
 
-/*  @Column(name = "czy_zaokraglane", columnDefinition="bit default 1")
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Norma norma = (Norma) o;
+
+        return id == norma.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
+    }
+
+    /*  @Column(name = "czy_zaokraglane", columnDefinition="bit default 1")
     private boolean czyZaokraglane = true;*/
 
 }

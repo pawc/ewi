@@ -2,7 +2,6 @@ package pl.pawc.ewi.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,7 +18,6 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@ToString
 public class Maszyna {
 
     @Id
@@ -54,6 +52,17 @@ public class Maszyna {
             result |= kategoria.isPrzenoszonaNaKolejnyOkres();
         }
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Maszyna{" +
+                "id='" + id + '\'' +
+                ", nazwa='" + nazwa + '\'' +
+                ", opis='" + opis + '\'' +
+                ", aktywna=" + aktywna +
+                ", sumaKilometry=" + sumaKilometry +
+                '}';
     }
 
 }

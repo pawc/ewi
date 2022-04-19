@@ -129,7 +129,8 @@ function edytujBtn(id){
         $.each(maszyna.normy, (i, norma) => {
 
             var row = $('<tr>').attr({
-                class: 'norma'
+                class: 'norma',
+                normaId: norma.id
             })
 
             var normaWartosc = $('<input>').attr({
@@ -213,10 +214,12 @@ $(function() {
 
                 var normy = [];
                 $('.norma').each(function(i, tr){
+                    var normaId = $(this).attr('normaId')
                     var wartosc = $(this).find('td:eq(0) > input').val()
                     var jednostka = $(this).find('td:eq(1) > input').val()
                     var czyOgrzewanie = $(this).find('td:eq(2) > input').prop('checked')
                     var norma = {
+                        id: normaId,
                         wartosc: wartosc,
                         jednostka: jednostka,
                         czyOgrzewanie: czyOgrzewanie
