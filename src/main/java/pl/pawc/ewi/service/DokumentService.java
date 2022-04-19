@@ -14,6 +14,7 @@ import pl.pawc.ewi.repository.StanRepository;
 import pl.pawc.ewi.repository.ZuzycieRepository;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -70,7 +71,10 @@ public class DokumentService {
             int year = cal.get(Calendar.YEAR);
             int month = cal.get(Calendar.MONTH) + 1;
 
-            for(Zuzycie zuzycie : dokument.getZuzycie()){
+            List<Zuzycie> zuzycia = zuzycieRepository.findByDokument(dokument);
+            dokument.setZuzycie(zuzycia);
+
+            for(Zuzycie zuzycie : zuzycia){
 
                 Double suma = null;
                 Double sumaBefore = null;

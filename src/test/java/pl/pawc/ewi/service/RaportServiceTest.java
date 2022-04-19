@@ -40,7 +40,7 @@ class RaportServiceTest {
 	@Transactional
 	void testGetRaportRoczny() {
 
-		assertEquals(3, raportService.getRaportRoczny(2022).size());
+		assertEquals(2, raportService.getRaportRoczny(2022).size());
 		assertEquals(0, raportService.getRaportRoczny(2023).size());
 
 	}
@@ -49,8 +49,9 @@ class RaportServiceTest {
 	@Transactional
 	void testGetRaport() {
 
-		assertEquals(3, raportService.getRaport(2022, 4).size());
-		assertEquals(0, raportService.getRaport(2022, 5).size());
+		assertEquals(4, raportService.getRaport(2022, 4).size());
+		assertEquals(4, raportService.getRaport(2022, 5).size());
+		assertEquals(0, raportService.getRaport(2023, 5).size());
 
 	}
 

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.pawc.ewi.entity.Maszyna;
-import pl.pawc.ewi.entity.Norma;
 import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.KategoriaRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
@@ -18,7 +17,6 @@ import pl.pawc.ewi.service.MaszynaService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -40,47 +38,9 @@ public class MaszynaRestController {
             @RequestParam(name = "miesiac", required = false) String miesiac){
 
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
-        Optional<Maszyna> result = maszynaRepository.findById(id);
-        Maszyna maszyna;
-        if(result.isPresent()){
 
-            maszyna = result.get();
-            List<Norma> normy = normaRepository.findByMaszyna(maszyna);
-
-            if(miesiac != null){
-                try{
-                    int year = Integer.parseInt(miesiac.split("-")[0]);
-                    int month = Integer.parseInt(miesiac.split("-")[1]);
-
-                    Double sumaKilometry = dokumentRepository.getSumaKilometry(maszyna.getId(), year, month);
-                    sumaKilometry = (sumaKilometry == null) ? 0 : sumaKilometry;
-                    maszyna.setSumaKilometry(sumaKilometry);
-
-                    for(Norma norma : normy){
-                        Double suma = dokumentRepository.getSuma(norma.getId(), year, month);
-                        norma.setSuma(suma);
-                        norma.setMaszyna(null);
-                    }
-
-                }
-                catch(NumberFormatException e){
-                    // skip
-                }
-            }
-            else{
-                for(Norma norma : normy){
-                    norma.setMaszyna(null);
-                }
-            }
-            maszyna.setNormy(normy);
-            logger.info("[{}] /maszyna GET id={}", ip, id);
-            return maszyna;
-        }
-        else{
-            logger.warn("[{}] /maszyna GET id={} - nie odnaleziono", ip, id);
-            maszyna = new Maszyna();
-        }
-        return maszyna;
+        logger.info("[{}] /maszyna GET id={}", ip, id);
+        return maszynaService.get(id, miesiac);
 
     }
 

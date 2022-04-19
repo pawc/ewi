@@ -17,13 +17,13 @@ import pl.pawc.ewi.repository.KategoriaRepository;
 import pl.pawc.ewi.repository.KilometryRepository;
 import pl.pawc.ewi.repository.NormaRepository;
 import pl.pawc.ewi.repository.StanRepository;
+import pl.pawc.ewi.repository.ZuzycieRepository;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -38,6 +38,8 @@ public class RaportService {
     private final StanRepository stanRepository;
     private final DokumentRepository dokumentRepository;
     private final NormaRepository normaRepository;
+    private final ZuzycieRepository zuzycieRepository;
+    private final UtilsService utilsService;
 
     List<RaportKilometry> getKilometryRaport(int rok, int miesiac){
 
@@ -105,7 +107,7 @@ public class RaportService {
             raportRoczny.setKategoria_jednostka(s);
             raportRoczny.setKategoria(lista.get(0).getKategoria());
             raportRoczny.setJednostka(lista.get(0).getJednostka());
-            raportRoczny.setSuma(myRound(sum, true));
+            raportRoczny.setSuma(utilsService.myRound(sum, true));
 
             groupBy.add(raportRoczny);
 
@@ -127,7 +129,7 @@ public class RaportService {
         List<Raport> results = new ArrayList<>();
 
         dokumentsByDataBetween.forEach(d -> {
-            d.getZuzycie().forEach(z -> {
+            zuzycieRepository.findByDokument(d).forEach(z -> {
                 Raport raport = new Raport();
                 raport.setMaszynaidnormaid(d.getMaszyna().getId()+"-"+z.getNorma().getId());
                 raport.setMaszyna(d.getMaszyna().getNazwa() + "(" + d.getMaszyna().getId() + ")");
@@ -137,10 +139,10 @@ public class RaportService {
                 raport.setKilometry(d.getKilometry());
                 raport.setKilometryprzyczepa(d.getKilometryPrzyczepa());
                 raport.setJednostka(z.getNorma().getJednostka());
-                raport.setSuma(myRound(z.getWartosc() * z.getNorma().getWartosc(), false));
-                raport.setSumagodzin(myRound(z.getWartosc(), false));
-                raport.setZatankowano(myRound(z.getZatankowano(), false));
-                raport.setOgrzewanie(myRound(z.getOgrzewanie(), false));
+                raport.setSuma(utilsService.myRound(z.getWartosc() * z.getNorma().getWartosc(), false));
+                raport.setSumagodzin(utilsService.myRound(z.getWartosc(), false));
+                raport.setZatankowano(utilsService.myRound(z.getZatankowano(), false));
+                raport.setOgrzewanie(utilsService.myRound(z.getOgrzewanie(), false));
                 raport.setNormaId(z.getNorma().getId());
                 Stan stan = stanRepository.findOneByNormaAndRokAndMiesiac(z.getNorma(), year, month);
                 double stanPoprz = stan == null ? 0 : stan.getWartosc();
@@ -168,38 +170,28 @@ public class RaportService {
             raport.setStankilometry(raportMain.getStankilometry());
             raport.setStanPoprz(raportMain.getStanPoprz());
 
-            double zatankowano = list.stream().mapToDouble(r -> myRound(r.getZatankowano(), false)).sum();
+            double zatankowano = list.stream().mapToDouble(r -> utilsService.myRound(r.getZatankowano(), false)).sum();
             raport.setZatankowano(zatankowano);
 
-            double ogrzewanie = list.stream().mapToDouble(r -> myRound(r.getOgrzewanie(), false)).sum();
+            double ogrzewanie = list.stream().mapToDouble(r -> utilsService.myRound(r.getOgrzewanie(), false)).sum();
             raport.setOgrzewanie(ogrzewanie);
 
-            double sumagodzin = list.stream().mapToDouble(r -> myRound(r.getSumagodzin(), false)).sum();
+            double sumagodzin = list.stream().mapToDouble(r -> utilsService.myRound(r.getSumagodzin(), false)).sum();
             raport.setSumagodzin(sumagodzin);
 
-            double suma = list.stream().mapToDouble(r -> myRound(r.getSuma(), false)).sum();
+            double suma = list.stream().mapToDouble(r -> utilsService.myRound(r.getSuma(), false)).sum();
             raport.setSuma(suma);
 
             double kilometry = list.stream().mapToDouble(Raport::getKilometry).sum();
-            raport.setKilometry(myRound(kilometry, true));
+            raport.setKilometry(utilsService.myRound(kilometry, true));
 
             double kilometryPrzyczepa = list.stream().mapToDouble(Raport::getKilometryprzyczepa).sum();
-            raport.setKilometryprzyczepa(myRound(kilometryPrzyczepa, true));
+            raport.setKilometryprzyczepa(utilsService.myRound(kilometryPrzyczepa, true));
 
             grouped.add(raport);
         }
 
         return grouped;
-    }
-
-    private double myRound(double d, boolean precisionMode){
-        double r = (double) Math.round(d*100)/100;
-        if(precisionMode){
-            return r;
-        }
-        else{
-            return (double) Math.round(r*10)/10;
-        }
     }
 
 }

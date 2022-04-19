@@ -9,9 +9,7 @@ import pl.pawc.ewi.entity.Maszyna;
 
 import javax.transaction.Transactional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(properties = {
 		"spring.datasource.driverClassName=org.h2.Driver",
@@ -34,7 +32,7 @@ class MaszynaServiceTest {
 	@Transactional
 	void testFindAllUncategorized() {
 
-		assertEquals(0, maszynaService.findAllUncategorized().size());
+		assertEquals(1, maszynaService.findAllUncategorized().size());
 
 	}
 
@@ -55,11 +53,11 @@ class MaszynaServiceTest {
 			assertEquals("ABC123", n.getMaszyna().getId());
 		});
 
-		input = "{\"id\":\"ABC123\",\"nazwa\":\"Machine 2\",\"opis\":\"test machine 2\",\"normy\":[{\"wartosc\":\"1.2\",\"jednostka\":\"L/H\",\"czyOgrzewanie\":false},{\"wartosc\":\"3.27\",\"jednostka\":\"ON/H\",\"czyOgrzewanie\":true},{\"wartosc\":\"4.89\",\"jednostka\":\"K/H\",\"czyOgrzewanie\":true}],\"kategorie\":[],\"aktywna\":false}";
+/*		input = "{\"id\":\"ABC123\",\"nazwa\":\"Machine 2\",\"opis\":\"test machine 2\",\"normy\":[{\"id\":1,\"wartosc\":\"1.2\",\"jednostka\":\"L/H\",\"czyOgrzewanie\":false},{\"id\":2,\"wartosc\":\"3.27\",\"jednostka\":\"ON/H\",\"czyOgrzewanie\":true},{\"wartosc\":\"4.89\",\"jednostka\":\"K/H\",\"czyOgrzewanie\":true}],\"kategorie\":[],\"aktywna\":false}";
 		maszyna = objectMapper.readValue(input, Maszyna.class);
 		maszynaService.put(maszyna);
 
-/*		m = maszynaService.get("ABC123", null);
+		m = maszynaService.get("ABC123", null);
 		assertEquals(3, m.getNormy().size());
 		assertEquals("Machine 2", m.getNazwa());
 		assertEquals("test machine 2", m.getOpis());

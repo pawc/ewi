@@ -9,7 +9,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -28,7 +27,6 @@ public class Stan {
     private int rok;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="norma_id", nullable=false)
     private Norma norma;
 
     @Column(columnDefinition = "double default 0")

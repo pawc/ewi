@@ -22,6 +22,7 @@ public class ZuzycieService {
     private final ZuzycieRepository zuzycieRepository;
     private final StanRepository stanRepository;
     private final DokumentRepository dokumentRepository;
+    private final UtilsService utilsService;
 
     public Double getSuma(long normaId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException {
 
@@ -60,11 +61,12 @@ public class ZuzycieService {
         double zatankowano = collect.stream().mapToDouble(Zuzycie::getZatankowano).sum();
         double ogrzewanie = collect.stream().mapToDouble(Zuzycie::getOgrzewanie).sum();
 
-        double sum = collect.stream().mapToDouble(z ->
-            myRound(z.getWartosc() * z.getNorma().getWartosc(), false)
+        double sum = collect.stream().mapToDouble(z ->{
+                    return utilsService.myRound(z.getWartosc() * z.getNorma().getWartosc(), false);
+                }
         ).sum();
 
-        return myRound(stan.getWartosc() + zatankowano - ogrzewanie - sum, false);
+        return utilsService.myRound(stan.getWartosc() + zatankowano - ogrzewanie - sum, false);
 
     }
 
@@ -82,19 +84,9 @@ public class ZuzycieService {
                 ).collect(Collectors.toList());
 
         return collect.stream().mapToDouble(z ->
-                myRound(z.getWartosc() * z.getNorma().getWartosc(), true)
+                utilsService.myRound(z.getWartosc() * z.getNorma().getWartosc(), true)
         ).sum();
 
-    }
-
-    private double myRound(double d, boolean precisionMode){
-        double r = (double) Math.round(d*100)/100;
-        if(precisionMode){
-            return r;
-        }
-        else{
-            return (double) Math.round(r*10)/10;
-        }
     }
 
 }

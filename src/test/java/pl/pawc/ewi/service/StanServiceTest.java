@@ -25,14 +25,14 @@ class StanServiceTest {
 	void testFindBy() {
 
 		List<RaportStan> stany = stanService.findBy(2022, 4);
-		assertEquals(3, stany.size());
+		assertEquals(4, stany.size());
 		stany.forEach(s -> {
 			assertTrue(s.getStanid() != -1);
 			assertTrue(s.getStanpoczatkowy() > 0);
 		});
 
 		stany = stanService.findBy(2022, 5);
-		assertEquals(3, stany.size());
+		assertEquals(4, stany.size());
 		stany.forEach(s -> {
 			assertEquals(-1, s.getStanid());
 			assertEquals(0, s.getStanpoczatkowy());
