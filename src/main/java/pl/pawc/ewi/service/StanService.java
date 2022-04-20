@@ -1,7 +1,10 @@
 package pl.pawc.ewi.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
+import pl.pawc.ewi.entity.Norma;
 import pl.pawc.ewi.entity.Stan;
 import pl.pawc.ewi.model.RaportStan;
 import pl.pawc.ewi.repository.NormaRepository;
@@ -9,11 +12,13 @@ import pl.pawc.ewi.repository.StanRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class StanService {
 
+    private static final Logger logger = LogManager.getLogger(StanService.class);
     private final StanRepository stanRepository;
     private final NormaRepository normaRepository;
 
@@ -40,6 +45,40 @@ public class StanService {
 
         return result;
 
+    }
+
+    public boolean post(Stan stan){
+        Stan stanDB = stanRepository.findOneByNormaAndRokAndMiesiac(stan.getNorma(), stan.getRok(), stan.getMiesiac());
+        if(stanDB == null){
+            stanRepository.save(stan);
+            return true;
+        }
+        else{
+            stanDB.setWartosc(stan.getWartosc());
+            stanRepository.save(stanDB);
+            return false;
+        }
+    }
+
+    public void stanyPost(List<Stan> stany){
+        List<Stan> byParams;
+        Stan stanDB;
+        for(Stan stan : stany){
+
+            Optional<Norma> byId = normaRepository.findById(stan.getNorma().getId());
+            if(byId.isPresent()){
+                if(!byId.get().getMaszyna().isPrzenoszonaNaKolejnyOkres()) continue;
+            }
+
+            stanDB = stanRepository.findOneByNormaAndRokAndMiesiac(stan.getNorma(), stan.getRok(), stan.getMiesiac());
+            if(stanDB == null){
+                stanRepository.save(stan);
+            }
+            else{
+                stanDB.setWartosc(stan.getWartosc());
+                stanRepository.save(stanDB);
+            }
+        }
     }
 
 }
