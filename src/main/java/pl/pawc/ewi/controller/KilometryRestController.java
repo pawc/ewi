@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.pawc.ewi.entity.Kilometry;
 import pl.pawc.ewi.entity.Maszyna;
-import pl.pawc.ewi.model.KilometryRaport;
+import pl.pawc.ewi.model.RaportKilometry;
 import pl.pawc.ewi.repository.KilometryRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
+import pl.pawc.ewi.service.RaportService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +28,7 @@ public class KilometryRestController {
 
     private final KilometryRepository kilometryRepository;
     private final MaszynaRepository maszynaRepository;
+    private final RaportService raportService;
 
     @PostMapping("kilometry")
     public void kilometry(
@@ -34,23 +36,22 @@ public class KilometryRestController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        List<Kilometry> by = kilometryRepository.findBy(kilometry.getMaszyna(), kilometry.getRok(), kilometry.getMiesiac());
+        Kilometry kilometryDB = kilometryRepository.findOneByMaszynaAndRokAndMiesiac(kilometry.getMaszyna(), kilometry.getRok(), kilometry.getMiesiac());
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
 
-        if(by.isEmpty()){
+        if(kilometryDB == null){
             logger.info("[{}] /kilometry POST dodano {}", ip, kilometry);
             kilometryRepository.save(kilometry);
         }
         else{
             logger.info("[{}] /kilometry POST zaktualizowano {}", ip, kilometry);
-            Kilometry kilometryDB = by.get(0);
             kilometryDB.setWartosc(kilometry.getWartosc());
             kilometryRepository.save(kilometryDB);
         }
     }
 
     @GetMapping("kilometryGet")
-    public List<KilometryRaport> kilometryGet(
+    public List<RaportKilometry> kilometryGet(
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestParam("rok") int rok,
@@ -58,7 +59,7 @@ public class KilometryRestController {
 
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         logger.info("[{}] /kilometryGet {}-{}", ip, rok, miesiac);
-        return kilometryRepository.findBy(rok, miesiac);
+        return raportService.getKilometryRaport(rok, miesiac);
 
     }
 
@@ -69,7 +70,6 @@ public class KilometryRestController {
             HttpServletResponse response) {
 
         List<Kilometry> byParams;
-        Kilometry kmDB;
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         for(Kilometry km : kilometry){
             Optional<Maszyna> byId = maszynaRepository.findById(km.getMaszyna().getId());
@@ -77,16 +77,15 @@ public class KilometryRestController {
                 if(!byId.get().isPrzenoszonaNaKolejnyOkres()) continue;
             }
 
-            byParams = kilometryRepository.findBy(km.getMaszyna(), km.getRok(), km.getMiesiac());
-            if(byParams.isEmpty()){
+            Kilometry kilometryDB = kilometryRepository.findOneByMaszynaAndRokAndMiesiac(km.getMaszyna(), km.getRok(), km.getMiesiac());
+            if(kilometryDB == null){
                 logger.info("[{}] /kilometryList POST dodano {}", ip, km);
                 kilometryRepository.save(km);
             }
             else{
                 logger.info("[{}] /kilometryList POST zaktualizowano {}", ip, km);
-                kmDB = byParams.get(0);
-                kmDB.setWartosc(km.getWartosc());
-                kilometryRepository.save(kmDB);
+                kilometryDB.setWartosc(km.getWartosc());
+                kilometryRepository.save(kilometryDB);
             }
         }
     }

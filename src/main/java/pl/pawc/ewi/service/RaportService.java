@@ -41,7 +41,7 @@ public class RaportService {
     private final ZuzycieRepository zuzycieRepository;
     private final UtilsService utilsService;
 
-    List<RaportKilometry> getKilometryRaport(int rok, int miesiac){
+    public List<RaportKilometry> getKilometryRaport(int rok, int miesiac){
 
         List<Maszyna> allActive = maszynaService.findAllActive();
         List<RaportKilometry> result = new ArrayList<>();
@@ -64,7 +64,7 @@ public class RaportService {
 
     }
 
-    List<RaportRoczny> getRaportRoczny(int year){
+    public List<RaportRoczny> getRaportRoczny(int year){
         List<RaportRoczny> result = new ArrayList<>();
 
         Iterable<Kategoria> kategorieI = kategoriaRepository.findAll();
@@ -81,7 +81,7 @@ public class RaportService {
 
                     String kategoria_jednostka =
                             new StringBuilder(k.getNazwa()).append("-").append(n.getJednostka()).toString();
-                    raportRoczny.setKategoria_jednostka(kategoria_jednostka);
+                    raportRoczny.setKategoria_jednostka(kategoria_jednostka.toUpperCase());
 
                     raportRoczny.setKategoria(k.getNazwa());
                     raportRoczny.setJednostka(n.getJednostka());
@@ -179,8 +179,8 @@ public class RaportService {
             double sumagodzin = list.stream().mapToDouble(r -> utilsService.myRound(r.getSumagodzin(), false)).sum();
             raport.setSumagodzin(sumagodzin);
 
-            double suma = list.stream().mapToDouble(r -> utilsService.myRound(r.getSuma(), false)).sum();
-            raport.setSuma(suma);
+            double suma = list.stream().mapToDouble(r -> r.getSuma()).sum();
+            raport.setSuma(utilsService.myRound(suma, false));
 
             double kilometry = list.stream().mapToDouble(Raport::getKilometry).sum();
             raport.setKilometry(utilsService.myRound(kilometry, true));

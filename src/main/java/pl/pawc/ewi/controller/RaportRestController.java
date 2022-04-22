@@ -11,6 +11,7 @@ import pl.pawc.ewi.model.Raport;
 import pl.pawc.ewi.model.RaportRoczny;
 import pl.pawc.ewi.repository.RaportRepository;
 import pl.pawc.ewi.repository.RaportRocznyRepository;
+import pl.pawc.ewi.service.RaportService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +25,7 @@ public class RaportRestController {
 
     private final RaportRepository raportRepository;
     private final RaportRocznyRepository raportRocznyRepository;
+    private final RaportService raportService;
 
     @RequestMapping(value = "/raport", method = RequestMethod.GET)
     public List<Raport> raport(
@@ -34,7 +36,7 @@ public class RaportRestController {
 
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         logger.info("[{}] /raport GET {}-{}", ip, rok, miesiac);
-        return raportRepository.getRaport(rok, miesiac);
+        return raportService.getRaport(rok, miesiac);
 
     }
 
@@ -46,7 +48,7 @@ public class RaportRestController {
 
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         logger.info("[{}] /raportRoczny GET {}", ip, rok);
-        return raportRocznyRepository.getRaport(rok);
+        return raportService.getRaportRoczny(rok);
 
     }
 

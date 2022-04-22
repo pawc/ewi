@@ -18,7 +18,6 @@ import pl.pawc.ewi.service.StanService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,7 +28,6 @@ public class StanRestController {
     private final NormaRepository normaRepository;
     private final StanService stanService;
 
-    @PostMapping("stan")
     @PutMapping("stan")
     public void stanPost(
             @RequestBody Stan stan,
