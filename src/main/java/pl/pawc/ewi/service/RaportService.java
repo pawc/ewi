@@ -177,9 +177,9 @@ public class RaportService {
             raport.setOgrzewanie(ogrzewanie);
 
             double sumagodzin = list.stream().mapToDouble(r -> utilsService.myRound(r.getSumagodzin(), false)).sum();
-            raport.setSumagodzin(sumagodzin);
+            raport.setSumagodzin(utilsService.myRound(sumagodzin, false));
 
-            double suma = list.stream().mapToDouble(r -> r.getSuma()).sum();
+            double suma = list.stream().mapToDouble(r -> utilsService.myRound(r.getSuma(), false)).sum();
             raport.setSuma(utilsService.myRound(suma, false));
 
             double kilometry = list.stream().mapToDouble(Raport::getKilometry).sum();

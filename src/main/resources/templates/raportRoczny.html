@@ -34,16 +34,29 @@
 
 <body>
 
-<div class="container-fluid" style="margin-bottom: 10px;">
-    <div class="row">
-        <div class="col-sm-6">
-            <label for="rok" style="margin-left: 10%;">Rok:</label>
-            <input class="datepicker" id="rok" style="margin-left: 10%;">
+    <div class="container-fluid" style="margin-bottom: 10px;">
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="rok" style="margin-left: 10%;">Rok:</label>
+                <input class="datepicker" id="rok" style="margin-left: 10%;">
+            </div>
         </div>
     </div>
-</div>
 
-    <div class="container-fluid">
+    <div class="container" id="loadingDiv">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="loader">
+                    <p><b>Obliczanie</b></p>
+                    <div class="loader-inner"></div>
+                    <div class="loader-inner"></div>
+                    <div class="loader-inner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid" id="tableDiv">
         <table class="table" id="raportRocznyTable" style="width:100%">
             <thead>
             <tr>

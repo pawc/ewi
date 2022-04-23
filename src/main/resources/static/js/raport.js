@@ -52,6 +52,8 @@ $(document).ready(function() {
 });
 
 function updateTable(){
+    $('#loadingDiv').show()
+    $('#tableDiv').hide()
    t.clear().draw();
     var rok = $('#miesiac').val().split('-')[0]
     var miesiac = $('#miesiac').val().split('-')[1]
@@ -85,10 +87,13 @@ function updateTable(){
                 nextMonthVal[1],
                 pozycja.maszynaid
             ]).draw(false);
+            $('#loadingDiv').hide()
+            $('#tableDiv').show()
         })
     })
     .fail(() => {
         alert('Problem z pobraniem raportu za dany miesiąc')
+        $('#loadingDiv').hide()
     })
 }
 

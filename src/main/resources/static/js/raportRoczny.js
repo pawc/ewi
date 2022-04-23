@@ -59,6 +59,8 @@ $(document).ready(function() {
 });
 
 function updateTable(){
+    $('#tableDiv').hide()
+    $('#loadingDiv').show()
     t.clear().draw();
     var rok = $('#rok').val()
     $.ajax({
@@ -75,8 +77,11 @@ function updateTable(){
                 pozycja.suma
             ]).draw(false);
         })
+        $('#loadingDiv').hide()
+        $('#tableDiv').show()
     })
     .fail(() => {
         alert('Problem z pobraniem raportu za dany rok')
+        $('#loadingDiv').hide()
     })
 }

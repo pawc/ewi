@@ -22,6 +22,10 @@ class UtilsServiceTest {
 
 		assertEquals(1.85, utilsService.myRound(1.5 * 1.23, true));
 		assertEquals(1.8, utilsService.myRound(1.5 * 1.23, false));
+
+		assertEquals(37.95, utilsService.myRound(3.3 * 11.5, true));
+		assertEquals(38, utilsService.myRound(3.3 * 11.5, false));
+
 	}
 
 }
