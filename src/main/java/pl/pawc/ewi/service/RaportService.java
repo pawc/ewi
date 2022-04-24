@@ -19,6 +19,7 @@ import pl.pawc.ewi.repository.NormaRepository;
 import pl.pawc.ewi.repository.StanRepository;
 import pl.pawc.ewi.repository.ZuzycieRepository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -130,6 +131,8 @@ public class RaportService {
 
         dokumentsByDataBetween.forEach(d -> {
             zuzycieRepository.findByDokument(d).forEach(z -> {
+                BigDecimal suma = utilsService.multiply(z.getWartosc(), z.getNorma().getWartosc(), false);
+
                 Raport raport = new Raport();
                 raport.setMaszynaidnormaid(d.getMaszyna().getId()+"-"+z.getNorma().getId());
                 raport.setMaszyna(d.getMaszyna().getNazwa() + "(" + d.getMaszyna().getId() + ")");
@@ -139,7 +142,7 @@ public class RaportService {
                 raport.setKilometry(d.getKilometry());
                 raport.setKilometryprzyczepa(d.getKilometryPrzyczepa());
                 raport.setJednostka(z.getNorma().getJednostka());
-                raport.setSuma(utilsService.myRound(z.getWartosc() * z.getNorma().getWartosc(), false));
+                raport.setSuma(suma);
                 raport.setSumagodzin(utilsService.myRound(z.getWartosc(), false));
                 raport.setZatankowano(utilsService.myRound(z.getZatankowano(), false));
                 raport.setOgrzewanie(utilsService.myRound(z.getOgrzewanie(), false));
@@ -179,8 +182,11 @@ public class RaportService {
             double sumagodzin = list.stream().mapToDouble(r -> utilsService.myRound(r.getSumagodzin(), false)).sum();
             raport.setSumagodzin(utilsService.myRound(sumagodzin, false));
 
-            double suma = list.stream().mapToDouble(r -> utilsService.myRound(r.getSuma(), false)).sum();
-            raport.setSuma(utilsService.myRound(suma, false));
+            BigDecimal suma = new BigDecimal("0");
+            for (Raport r : list) {
+                suma = suma.add(r.getSuma());
+            }
+            raport.setSuma(suma);
 
             double kilometry = list.stream().mapToDouble(Raport::getKilometry).sum();
             raport.setKilometry(utilsService.myRound(kilometry, true));

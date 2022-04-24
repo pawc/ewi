@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.math.BigDecimal;
 
 @Entity
 @Getter
@@ -21,7 +22,7 @@ public class Raport {
     private double kilometry;
     private double kilometryprzyczepa;
     private String jednostka;
-    private double suma;
+    private BigDecimal suma;
     private double zatankowano;
     private double ogrzewanie;
     private long normaId;

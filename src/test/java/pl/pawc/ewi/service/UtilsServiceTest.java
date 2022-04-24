@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(properties = {
@@ -17,14 +19,20 @@ class UtilsServiceTest {
 
 	@Test
 	public void testMyRound(){
-		assertEquals(2.09, utilsService.myRound(1.7 * 1.23, true));
-		assertEquals(2.1, utilsService.myRound(1.7 * 1.23, false));
+		double a = 1.7;
+		double b = 1.23;
+		assertEquals(new BigDecimal("2.09"), utilsService.multiply(a, b, true));
+		assertEquals(new BigDecimal("2.1"), utilsService.multiply(a, b, false));
 
-		assertEquals(1.85, utilsService.myRound(1.5 * 1.23, true));
-		assertEquals(1.8, utilsService.myRound(1.5 * 1.23, false));
+		a = 1.5;
+		b = 1.23;
+		assertEquals(new BigDecimal("1.85"), utilsService.multiply(a, b, true));
+		assertEquals(new BigDecimal("1.8"), utilsService.multiply(a, b, false));
 
-		assertEquals(37.95, utilsService.myRound(3.3 * 11.5, true));
-		assertEquals(38, utilsService.myRound(3.3 * 11.5, false));
+		a = 3.3;
+		b = 11.5;
+		assertEquals(new BigDecimal("37.95"), utilsService.multiply(a, b, true));
+		assertEquals(new BigDecimal("38.0"), utilsService.multiply(a, b, false));
 
 	}
 
