@@ -87,9 +87,9 @@ function updateTable(){
                 nextMonthVal[1],
                 pozycja.maszynaid
             ]).draw(false);
-            $('#loadingDiv').hide()
-            $('#tableDiv').show()
         })
+        $('#loadingDiv').hide()
+        $('#tableDiv').show()
     })
     .fail(() => {
         alert('Problem z pobraniem raportu za dany miesiąc')
