@@ -3,14 +3,14 @@
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout
-                    pattern="%d{HH:mm:ss} [%p] – %m%n" />
+                    pattern="%d{yyyy-MM-dd HH:mm:ss} [%p] – %m%n" />
         </Console>
 
         <RollingFile name="RollingFile"
                      fileName="/home/spring/Ewi.log"
                      filePattern="/home/spring/Ewi-%d{-dd-MMMM-yyyy}-%i.log">
             <PatternLayout>
-                <pattern>%d{HH:mm:ss} [%p] – %m%n</pattern>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss} [%p] – %m%n</pattern>
             </PatternLayout>
             <Policies>
                 <OnStartupTriggeringPolicy />
