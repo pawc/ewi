@@ -37,18 +37,12 @@ public class EwiApplication extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
-	public void configure(WebSecurity web){
-		web
-			.ignoring()
-			.antMatchers("/css/**");
-	}
-
-	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http
 			.authorizeRequests()
 			.antMatchers("/login*").permitAll()
+			.antMatchers("/css/**").permitAll()
 			.antMatchers("/*").access("hasRole('ROLE_USER')")
 			.anyRequest().authenticated()
 			.and()
