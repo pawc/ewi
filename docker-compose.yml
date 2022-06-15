@@ -12,18 +12,17 @@ services:
       - MYSQL_ROOT_PASSWORD=root_password
       - MYSQL_ROOT_HOST=ewi
   ewi:
-    image: pawc/ewi:latest
+    build: .
     container_name: ewi
     restart: unless-stopped
     ports:
       - "80:8080"
     environment:
       - spring.datasource.url=jdbc:mysql://mysql-ewi:3306/ewidb
-      - spring.jpa.hibernate.ddl-auto=create
+      - spring.jpa.hibernate.ddl-auto=update
       - spring.datasource.username=ewiuser
       - spring.datasource.password=ewiuser_password
       - spring.jackson.serialization.FAIL_ON_EMPTY_BEANS=false
-      - testDataLoad=true
       - myUser=admin
       - myPassword=admin
     depends_on:
