@@ -389,6 +389,7 @@ function dodajBtn(){
 
     $("#zuzycieTable > tbody > tr").remove();
     $('#maszyna').val(-1);
+    $('#kilometryPrzyczepa').val(0);
     type = 'POST';
     dialog.dialog("open");
 }
