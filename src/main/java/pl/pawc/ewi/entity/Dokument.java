@@ -11,6 +11,7 @@ import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.List;
 
@@ -27,10 +28,10 @@ public class Dokument {
     private Date data;
 
     @Column(columnDefinition = "double default 0")
-    private double kilometry;
+    private BigDecimal kilometry;
 
     @Column(columnDefinition = "double default 0")
-    private double kilometryPrzyczepa;
+    private BigDecimal kilometryPrzyczepa;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Maszyna maszyna;
@@ -39,7 +40,7 @@ public class Dokument {
     private List<Zuzycie> zuzycie;
 
     @Transient
-    private Double kilometryBefore;
+    private BigDecimal kilometryBefore;
 
     @Override
     public String toString() {

@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.math.BigDecimal;
 
 @Entity
 @Getter
@@ -30,7 +31,7 @@ public class Stan {
     private Norma norma;
 
     @Column(columnDefinition = "double default 0")
-    private double wartosc;
+    private BigDecimal wartosc;
 
     @Override
     public String toString() {

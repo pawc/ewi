@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.math.BigDecimal;
 
 @Entity
 @Getter
@@ -17,6 +18,6 @@ public class RaportRoczny {
     private String kategoria_jednostka;
     private String kategoria;
     private String jednostka;
-    private double suma;
+    private BigDecimal suma;
 
 }

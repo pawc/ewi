@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+import java.math.BigDecimal;
 
 @Entity
 @Getter
@@ -30,27 +31,27 @@ public class Norma {
     private String jednostka;
 
     @Column(name = "wartosc")
-    private double wartosc;
+    private BigDecimal wartosc;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private Maszyna maszyna;
 
     @Transient
-    private Double suma;
+    private BigDecimal suma;
 
     @Transient
-    private Double sumaBefore;
+    private BigDecimal sumaBefore;
 
     @Transient
-    private Double stan;
+    private BigDecimal stan;
 
     @Column(name = "czy_ogrzewanie")
     private boolean czyOgrzewanie;
 
     @Transient
     @Column(name = "suma_ogrzewania")
-    private double sumaOgrzewania;
+    private BigDecimal sumaOgrzewania;
 
     @Override
     public boolean equals(Object o) {
@@ -66,8 +67,5 @@ public class Norma {
     public int hashCode() {
         return (int) (id ^ (id >>> 32));
     }
-
-    /*  @Column(name = "czy_zaokraglane", columnDefinition="bit default 1")
-    private boolean czyZaokraglane = true;*/
 
 }

@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.math.BigDecimal;
 
 @Entity
 @Getter
@@ -25,7 +26,7 @@ public class Zuzycie {
     private long id;
 
     @Column(name = "wartosc")
-    private double wartosc;
+    private BigDecimal wartosc;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Norma norma;
@@ -34,9 +35,9 @@ public class Zuzycie {
     private Dokument dokument;
 
     @Column(columnDefinition = "double default 0")
-    private double zatankowano;
+    private BigDecimal zatankowano;
 
     @Column(columnDefinition = "double default 0")
-    private double ogrzewanie;
+    private BigDecimal ogrzewanie;
 
 }

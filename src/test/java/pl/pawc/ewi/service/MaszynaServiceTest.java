@@ -48,20 +48,7 @@ class MaszynaServiceTest {
 
 		assertEquals(2, m.getNormy().size());
 		assertTrue(m.isAktywna());
-		m.getNormy().forEach(n -> {
-			assertNotNull(n.getId());
-			assertEquals("ABC123", n.getMaszyna().getId());
-		});
-
-/*		input = "{\"id\":\"ABC123\",\"nazwa\":\"Machine 2\",\"opis\":\"test machine 2\",\"normy\":[{\"id\":1,\"wartosc\":\"1.2\",\"jednostka\":\"L/H\",\"czyOgrzewanie\":false},{\"id\":2,\"wartosc\":\"3.27\",\"jednostka\":\"ON/H\",\"czyOgrzewanie\":true},{\"wartosc\":\"4.89\",\"jednostka\":\"K/H\",\"czyOgrzewanie\":true}],\"kategorie\":[],\"aktywna\":false}";
-		maszyna = objectMapper.readValue(input, Maszyna.class);
-		maszynaService.put(maszyna);
-
-		m = maszynaService.get("ABC123", null);
-		assertEquals(3, m.getNormy().size());
-		assertEquals("Machine 2", m.getNazwa());
-		assertEquals("test machine 2", m.getOpis());
-		assertFalse(m.isAktywna());*/
+		m.getNormy().forEach(n -> assertEquals("ABC123", n.getMaszyna().getId()));
 
 	}
 

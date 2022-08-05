@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -33,7 +34,7 @@ public class Maszyna {
 
     @Transient
     @Column(name = "suma_kilometry")
-    private double sumaKilometry;
+    private BigDecimal sumaKilometry;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinColumn(referencedColumnName="nazwa")

@@ -18,15 +18,15 @@ public class Raport {
     private String maszynaidnormaid;
     private String maszyna;
     private String maszynaid;
-    private double stankilometry;
-    private double kilometry;
-    private double kilometryprzyczepa;
+    private BigDecimal stankilometry;
+    private BigDecimal kilometry;
+    private BigDecimal kilometryprzyczepa;
     private String jednostka;
     private BigDecimal suma;
-    private double zatankowano;
-    private double ogrzewanie;
+    private BigDecimal zatankowano;
+    private BigDecimal ogrzewanie;
     private long normaId;
-    private double stanPoprz;
-    private double sumagodzin;
+    private BigDecimal stanPoprz;
+    private BigDecimal sumagodzin;
 
 }

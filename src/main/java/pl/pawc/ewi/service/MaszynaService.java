@@ -9,6 +9,7 @@ import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
 import pl.pawc.ewi.repository.NormaRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,11 +53,11 @@ public class MaszynaService {
                     int year = Integer.parseInt(miesiac.split("-")[0]);
                     int month = Integer.parseInt(miesiac.split("-")[1]);
 
-                    Double sumaKilometry = dokumentService.getSumaKilometry(maszyna.getId(), year, month, null);
+                    BigDecimal sumaKilometry = dokumentService.getSumaKilometry(maszyna.getId(), year, month, null);
                     maszyna.setSumaKilometry(sumaKilometry);
 
                     for(Norma norma : normy){
-                        Double suma = zuzycieService.getSuma(norma.getId(), year, month, null);
+                        BigDecimal suma = zuzycieService.getSuma(norma.getId(), year, month, null);
                         norma.setSuma(suma);
                     }
                 }

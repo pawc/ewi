@@ -8,6 +8,7 @@ import pl.pawc.ewi.entity.Stan;
 import pl.pawc.ewi.model.RaportStan;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,21 +33,21 @@ class StanServiceTest {
 		assertEquals(4, stany.size());
 		stany.forEach(s -> {
 			assertTrue(s.getStanid() != -1);
-			assertTrue(s.getStanpoczatkowy() > 0);
+			assertTrue(s.getStanpoczatkowy().compareTo(BigDecimal.ZERO) > 0);
 		});
 
 		stany = stanService.findBy(2022, 5);
 		assertEquals(4, stany.size());
 		stany.forEach(s -> {
 			assertEquals(-1, s.getStanid());
-			assertEquals(0, s.getStanpoczatkowy());
+			assertEquals(BigDecimal.ZERO, s.getStanpoczatkowy());
 		});
 
 		Norma norma = new Norma();
 		norma.setId(1);
 
 		Stan stan = new Stan();
-		stan.setWartosc(12.4);
+		stan.setWartosc(new BigDecimal("12.4"));
 		stan.setMiesiac(5);
 		stan.setNorma(norma);
 		stan.setRok(2022);
@@ -57,7 +58,7 @@ class StanServiceTest {
 		assertTrue(first.isPresent());
 		RaportStan rs = first.get();
 		assertNotNull(rs);
-		assertEquals(12.4, rs.getStanpoczatkowy());
+		assertEquals(new BigDecimal("12.4"), rs.getStanpoczatkowy());
 		assertEquals("C1", rs.getMaszynaid());
 		assertEquals("ON/H", rs.getJednostka());
 

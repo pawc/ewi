@@ -13,6 +13,7 @@ import pl.pawc.ewi.repository.KilometryRepository;
 import pl.pawc.ewi.repository.StanRepository;
 import pl.pawc.ewi.repository.ZuzycieRepository;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +28,7 @@ public class DokumentService {
     private final StanRepository stanRepository;
     private final ZuzycieService zuzycieService;
 
-    public Double getSumaKilometry(String maszynaId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException {
+    public BigDecimal getSumaKilometry(String maszynaId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException {
 
         final Dokument dokument;
         Calendar calD = Calendar.getInstance();
@@ -45,15 +46,17 @@ public class DokumentService {
         Calendar cal = Calendar.getInstance();
 
         Kilometry kilometry = kilometryRepository.findOneByMaszynaAndRokAndMiesiac(maszyna, year, month);
-        double stan = kilometry != null ? kilometry.getWartosc() : 0;
+        BigDecimal stan = kilometry != null ? kilometry.getWartosc() : BigDecimal.ZERO;
 
-        return stan + dokumentRepository.findByMaszyna(maszyna).stream().filter(d -> {
+        BigDecimal reduce = dokumentRepository.findByMaszyna(maszyna).stream().filter(d -> {
             cal.setTime(d.getData());
             return (cal.get(Calendar.MONTH) + 1) == month
                     && cal.get(Calendar.YEAR) == year
-                    &&  !d.getNumer().equals(excludedDocNumber)
+                    && !d.getNumer().equals(excludedDocNumber)
                     && (dokument == null || calD.get(Calendar.DAY_OF_MONTH) >= cal.get(Calendar.DAY_OF_MONTH));
-        }).mapToDouble(Dokument::getKilometry).sum();
+        }).map(Dokument::getKilometry).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return stan.add(reduce);
 
     }
 
@@ -76,8 +79,8 @@ public class DokumentService {
 
             for(Zuzycie zuzycie : zuzycia){
 
-                Double suma = null;
-                Double sumaBefore = null;
+                BigDecimal suma = null;
+                BigDecimal sumaBefore = null;
                 zuzycie.setDokument(dokument);
                 try {
                     suma = zuzycieService.getSuma(zuzycie.getNorma().getId(), year, month, null);
@@ -88,7 +91,7 @@ public class DokumentService {
                 }
 
                 Stan stan = stanRepository.findOneByNormaAndRokAndMiesiac(zuzycie.getNorma(), year, month);
-                double stanD = stan == null ? 0 : stan.getWartosc();
+                BigDecimal stanD = stan == null ? BigDecimal.ZERO : stan.getWartosc();
 
                 zuzycie.getNorma().setSuma(suma);
                 zuzycie.getNorma().setSumaBefore(sumaBefore);
@@ -99,7 +102,7 @@ public class DokumentService {
 
             }
 
-            Double kilometryBefore = null;
+            BigDecimal kilometryBefore = null;
             try {
                 kilometryBefore = getSumaKilometry(dokument.getMaszyna().getId(), year, month, dokument.getNumer());
             } catch (DocumentNotFoundException e) {

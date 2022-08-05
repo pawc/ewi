@@ -11,6 +11,8 @@ import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.StanRepository;
 import pl.pawc.ewi.repository.ZuzycieRepository;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,9 +24,8 @@ public class ZuzycieService {
     private final ZuzycieRepository zuzycieRepository;
     private final StanRepository stanRepository;
     private final DokumentRepository dokumentRepository;
-    private final UtilsService utilsService;
 
-    public Double getSuma(long normaId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException {
+    public BigDecimal getSuma(long normaId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException {
 
         Dokument dokument;
 
@@ -55,22 +56,21 @@ public class ZuzycieService {
 
         if(stan == null){
             stan = new Stan();
-            stan.setWartosc(0D);
+            stan.setWartosc(BigDecimal.ZERO);
         }
 
-        double zatankowano = collect.stream().mapToDouble(Zuzycie::getZatankowano).sum();
-        double ogrzewanie = collect.stream().mapToDouble(Zuzycie::getOgrzewanie).sum();
+        BigDecimal zatankowano = collect.stream().map(Zuzycie::getZatankowano).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal ogrzewanie = collect.stream().map(Zuzycie::getOgrzewanie).reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        double sum = collect.stream().mapToDouble(z ->{
-                    return utilsService.myRound(z.getWartosc() * z.getNorma().getWartosc(), false);
-                }
-        ).sum();
+        BigDecimal sum = collect.stream()
+                .map(z -> (z.getWartosc().multiply(z.getNorma().getWartosc())).setScale(1, RoundingMode.HALF_UP))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return utilsService.myRound(stan.getWartosc() + zatankowano - ogrzewanie - sum, false);
+        return (stan.getWartosc().add(zatankowano).subtract(ogrzewanie).subtract(sum)).setScale(1, RoundingMode.HALF_UP);
 
     }
 
-    public Double getSumaYear(long normaId, int year){
+    public BigDecimal getSumaYear(long normaId, int year){
 
         Norma norma = new Norma();
         norma.setId(normaId);
@@ -83,9 +83,9 @@ public class ZuzycieService {
                         }
                 ).collect(Collectors.toList());
 
-        return collect.stream().mapToDouble(z ->
-                utilsService.myRound(z.getWartosc() * z.getNorma().getWartosc(), true)
-        ).sum();
+        return collect.stream().map(z ->
+                z.getWartosc().multiply(z.getNorma().getWartosc()).setScale(2, RoundingMode.HALF_UP)
+        ).reduce(BigDecimal.ZERO, BigDecimal::add);
 
     }
 

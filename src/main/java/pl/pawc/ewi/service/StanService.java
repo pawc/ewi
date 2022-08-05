@@ -10,6 +10,7 @@ import pl.pawc.ewi.model.RaportStan;
 import pl.pawc.ewi.repository.NormaRepository;
 import pl.pawc.ewi.repository.StanRepository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +37,7 @@ public class StanService {
             if(stan == null) {
                 stan = new Stan();
                 stan.setId(-1);
-                stan.setWartosc(0D);
+                stan.setWartosc(BigDecimal.ZERO);
             }
             raportStan.setStanid(stan.getId());
             raportStan.setStanpoczatkowy(stan.getWartosc());

@@ -7,6 +7,7 @@ import pl.pawc.ewi.model.RaportKilometry;
 
 import javax.transaction.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,7 +32,7 @@ class RaportServiceTest {
 		assertEquals(2, kilometryRaport.size());
 
 		for (RaportKilometry r : kilometryRaport) {
-			assertEquals(0, r.getStanpoczatkowy());
+			assertEquals(BigDecimal.ZERO, r.getStanpoczatkowy());
 		}
 
 	}

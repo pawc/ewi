@@ -127,29 +127,23 @@ $(document).ready(() => {
 
                 inputZuzycie.keyup(() => {
                     inputZuzycieEcho.html(inputZuzycie.val())
-                    wynik.html(Math.round(((inputZuzycie.val() * norma.wartosc) + 0.00001) * 10)/10)
-                    var inputTankowanieVal = (inputTankowanie.val() == '') ? 0 : parseFloat(inputTankowanie.val())
-                    inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : parseFloat(inputOgrzewanie.val())
-                    var sumaPo = normaSuma - parseFloat(wynik.html()) + inputTankowanieVal - inputOgrzewanieVal
-                    td5.html(Math.round((sumaPo + 0.00001) * 10)/10)
+                    inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : inputOgrzewanie.val()
+                    calc(td5, wynik, normaSuma, norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val())
                 })
+
+                var inputOgrzewanie = null
 
                 if(czyOgrzewanie){
                     var tdOgrzewanie = $('<td>')
 
                     if(norma.czyOgrzewanie){
-                        var inputOgrzewanie = $('<input>').attr({
+                        inputOgrzewanie = $('<input>').attr({
                             type: 'number',
                             step: '0.01',
                             normaId: norma.id,
                             class: 'form-control ogrzewanie-val',
                             value : '0'
                         }).appendTo(tdOgrzewanie)
-                        .keyup(() => {
-                            wynik.html(Math.round(((inputZuzycie.val() * norma.wartosc) + 0.00001) * 10)/10)
-                            var sumaPo = normaSuma - parseFloat(wynik.html()) + parseFloat(inputTankowanie.val()) - parseFloat(inputOgrzewanie.val())
-                            td5.html(Math.round((sumaPo + 0.00001) * 10)/10)
-                        })
                     }
                     tdOgrzewanie.appendTo(tr)
                 }
@@ -168,11 +162,15 @@ $(document).ready(() => {
                 var td5 = $('<td>')
                 td5.appendTo(tr)
 
+                if(czyOgrzewanie){
+                    inputOgrzewanie.keyup(() => {
+                        calc(td5, wynik, normaSuma ,norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val())
+                    })
+                }
+
                 inputTankowanie.keyup(() => {
-                    wynik.html(Math.round(((inputZuzycie.val() * norma.wartosc) + 0.00001) * 10)/10)
-                    inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : parseFloat(inputOgrzewanie.val())
-                    var sumaPo = normaSuma - parseFloat(wynik.html()) + parseFloat(inputTankowanie.val()) - inputOgrzewanieVal
-                    td5.html(Math.round((sumaPo + 0.00001) * 10)/10)
+                    inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : inputOgrzewanie.val()
+                    calc(td5, wynik, normaSuma, norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val())
                 })
 
             })
@@ -185,6 +183,28 @@ $(document).ready(() => {
     })
 
 })
+
+function calc(el1, el2, before, norma, normaVal, ogrzewanie, tankowanie){
+
+     if(isNaN(ogrzewanie) || ogrzewanie === '') ogrzewanie = 0;
+     if(isNaN(tankowanie) || tankowanie === '') tankowanie = 0;
+     if(isNaN(normaVal) || normaVal === '') normaVal = 0;
+
+     $.ajax({
+        url: contextRoot + 'calc',
+        data: {
+            before: parseFloat(before),
+            norma: parseFloat(norma),
+            normaVal: parseFloat(normaVal),
+            ogrzewanie: parseFloat(ogrzewanie),
+            tankowanie: parseFloat(tankowanie)
+        }
+    })
+    .done(result => {
+        el1.html(result[0])
+        el2.html(result[1])
+    })
+}
 
 function updateTable(){
 
@@ -286,6 +306,7 @@ function edytujBtn(numer){
             var wynikVal = zuzycie.wartosc * zuzycie.norma.wartosc
             var wynik = $('<span>').html(Math.round((wynikVal + 0.00001) * 10)/10).appendTo(td3)
 
+            var inputOgrzewanie = null
             if(czyOgrzewanie){
                var tdOgrzewanie = $('<td>')
 
@@ -298,10 +319,6 @@ function edytujBtn(numer){
                        value : '0'
                    }).appendTo(tdOgrzewanie)
                    .val(zuzycie.ogrzewanie)
-                   .keyup(() => {
-                       wynikVal = inputZuzycie.val() * zuzycie.norma.wartosc
-                       td5.html(formatter.format(sumaBefore - wynikVal - parseFloat(inputOgrzewanie.val()) + parseFloat(inputTankowanie.val())))
-                    })
                }
                tdOgrzewanie.appendTo(tr)
             }
@@ -318,20 +335,23 @@ function edytujBtn(numer){
             }).appendTo(td4)
             .val(zuzycie.zatankowano)
 
-            var td5 = $('<td>')
-                .html(formatter.format(sumaBefore - wynikVal - zuzycie.ogrzewanie + zuzycie.zatankowano))
-                .appendTo(tr)
+            var td5 = $('<td>').appendTo(tr)
+
+            if(czyOgrzewanie){
+                inputOgrzewanie.keyup(() => {
+                   calc(td5, wynik, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val())
+                })
+            }
+
+            calc(td5, wynik, sumaBefore, zuzycie.norma.wartosc, zuzycie.wartosc, zuzycie.ogrzewanie, zuzycie.zatankowano)
 
             inputZuzycie.keyup(() => {
                 inputZuzycieEcho.html(inputZuzycie.val())
-                wynikVal = inputZuzycie.val() * zuzycie.norma.wartosc
-                wynik.html(formatter.format(wynikVal))
-                td5.html(formatter.format(sumaBefore - wynikVal - parseFloat(inputOgrzewanie != null ? inputOgrzewanie.val() : 0) + parseFloat(inputTankowanie.val())))
+                calc(td5, wynik, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val())
             })
 
             inputTankowanie.keyup(() => {
-               wynikVal = inputZuzycie.val() * zuzycie.norma.wartosc
-               td5.html(formatter.format(sumaBefore - wynikVal - parseFloat(inputOgrzewanie != null ? inputOgrzewanie.val() : 0) + parseFloat(inputTankowanie.val())))
+               calc(td5, wynik, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val())
            })
         })
         dialog.dialog( "open" );
