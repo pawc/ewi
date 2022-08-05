@@ -99,7 +99,6 @@ class DokumentServiceTest {
 
 		assertEquals(new BigDecimal("9"), dokument1.getKilometry());
 		assertEquals(new BigDecimal("9"), dokument1.getKilometryPrzyczepa());
-		//assertEquals(2, dokument1.getZuzycie().size());
 		assertEquals(29, cal.get(Calendar.DAY_OF_MONTH));
 		assertEquals(4, cal.get(Calendar.MONTH));
 		assertEquals(2023, cal.get(Calendar.YEAR));

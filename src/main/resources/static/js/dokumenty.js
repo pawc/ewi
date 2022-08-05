@@ -126,9 +126,8 @@ $(document).ready(() => {
                 var wynik = $('<span>').html(0).appendTo(td3)
 
                 inputZuzycie.keyup(() => {
-                    inputZuzycieEcho.html(inputZuzycie.val())
                     inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : inputOgrzewanie.val()
-                    calc(td5, wynik, normaSuma, norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val())
+                    calc(td5, wynik, inputZuzycieEcho, normaSuma, norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val())
                 })
 
                 var inputOgrzewanie = null
@@ -164,13 +163,13 @@ $(document).ready(() => {
 
                 if(czyOgrzewanie){
                     inputOgrzewanie.keyup(() => {
-                        calc(td5, wynik, normaSuma ,norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val())
+                        calc(td5, wynik, inputZuzycieEcho, normaSuma ,norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val())
                     })
                 }
 
                 inputTankowanie.keyup(() => {
                     inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : inputOgrzewanie.val()
-                    calc(td5, wynik, normaSuma, norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val())
+                    calc(td5, wynik, inputZuzycieEcho, normaSuma, norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val())
                 })
 
             })
@@ -184,11 +183,13 @@ $(document).ready(() => {
 
 })
 
-function calc(el1, el2, before, norma, normaVal, ogrzewanie, tankowanie){
+function calc(el1, el2, el3, before, norma, normaVal, ogrzewanie, tankowanie){
 
      if(isNaN(ogrzewanie) || ogrzewanie === '') ogrzewanie = 0;
      if(isNaN(tankowanie) || tankowanie === '') tankowanie = 0;
      if(isNaN(normaVal) || normaVal === '') normaVal = 0;
+
+     el3.html(normaVal)
 
      $.ajax({
         url: contextRoot + 'calc',
@@ -339,19 +340,20 @@ function edytujBtn(numer){
 
             if(czyOgrzewanie){
                 inputOgrzewanie.keyup(() => {
-                   calc(td5, wynik, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val())
+                   calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val())
                 })
             }
 
-            calc(td5, wynik, sumaBefore, zuzycie.norma.wartosc, zuzycie.wartosc, zuzycie.ogrzewanie, zuzycie.zatankowano)
+            calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, zuzycie.wartosc, zuzycie.ogrzewanie, zuzycie.zatankowano)
 
             inputZuzycie.keyup(() => {
-                inputZuzycieEcho.html(inputZuzycie.val())
-                calc(td5, wynik, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val())
+                inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : inputOgrzewanie.val()
+                calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val())
             })
 
             inputTankowanie.keyup(() => {
-               calc(td5, wynik, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val())
+            inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : inputOgrzewanie.val()
+               calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val())
            })
         })
         dialog.dialog( "open" );
@@ -462,8 +464,8 @@ $(function() {
                         norma: {
                             id: normaId
                         },
-                        zatankowano: zatankowano,
-                        ogrzewanie: ogrzewanie
+                        zatankowano: zatankowano === '' ? 0 : zatankowano,
+                        ogrzewanie: ogrzewanie === '' ? 0 : ogrzewanie
 
                     }
                     zuzycie.push(z)

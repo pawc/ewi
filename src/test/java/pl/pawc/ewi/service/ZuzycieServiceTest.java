@@ -75,19 +75,17 @@ class ZuzycieServiceTest {
 
 	}
 
-/*	@Test
+	@Test
 	@Transactional
 	void testGetSumaYear(){
 
-	*//*	assertEquals(new BigDecimal("385.48"), zuzycieService.getSumaYear(1, 2022));
-		assertEquals(BigDecimal.ZERO, zuzycieService.getSumaYear(1, 2023));*//*
-
-		assertEquals(new BigDecimal("56.63"), zuzycieService.getSumaYear(2, 2022));
+		assertEquals(new BigDecimal("35.19"), zuzycieService.getSumaYear(1, 2022));
+		assertEquals(BigDecimal.ZERO, zuzycieService.getSumaYear(1, 2023));
+		assertEquals(new BigDecimal("152.76"), zuzycieService.getSumaYear(2, 2022));
 		assertEquals(BigDecimal.ZERO, zuzycieService.getSumaYear(2, 2023));
 
-		assertEquals(new BigDecimal("18.37"), zuzycieService.getSumaYear(26, 2022));
 		assertEquals(BigDecimal.ZERO, zuzycieService.getSumaYear(26, 2023));
 
-	}*/
+	}
 
 }
