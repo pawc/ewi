@@ -161,7 +161,7 @@ $(document).ready(() => {
                 var td5 = $('<td>')
                 td5.appendTo(tr)
 
-                if(czyOgrzewanie){
+                if(norma.czyOgrzewanie){
                     inputOgrzewanie.keyup(() => {
                         calc(td5, wynik, inputZuzycieEcho, normaSuma ,norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val())
                     })
@@ -338,7 +338,7 @@ function edytujBtn(numer){
 
             var td5 = $('<td>').appendTo(tr)
 
-            if(czyOgrzewanie){
+            if(zuzycie.norma.czyOgrzewanie){
                 inputOgrzewanie.keyup(() => {
                    calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val())
                 })

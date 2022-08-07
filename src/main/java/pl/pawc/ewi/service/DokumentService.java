@@ -151,10 +151,9 @@ public class DokumentService {
     public void delete(String numer) throws DocumentNotFoundException {
 
         Optional<Dokument> byId = dokumentRepository.findById(numer);
-
         if(byId.isPresent()) {
             Dokument dokumentDB = byId.get();
-            dokumentRepository.delete(dokumentDB);
+            zuzycieRepository.findByDokument(dokumentDB).forEach(z -> zuzycieRepository.delete(z));
         }
         else{
             throw new DocumentNotFoundException(numer);
