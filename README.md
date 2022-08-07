@@ -1,5 +1,3 @@
-[![Build Status](https://jenkins.pawc.pl/buildStatus/icon?job=ewi)](https://jenkins.pawc.pl/job/ewi/)
-
 Webaplikacja do ewidencji rozchodu paliwa wg norm określonych w definicjach maszyn/urządzeń
 
 - definiowanie dowolnej ilości maszyn z dowolną ilością godzinowych norm zużycia paliw,
