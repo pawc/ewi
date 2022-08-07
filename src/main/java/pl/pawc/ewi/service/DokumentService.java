@@ -153,7 +153,9 @@ public class DokumentService {
         Optional<Dokument> byId = dokumentRepository.findById(numer);
         if(byId.isPresent()) {
             Dokument dokumentDB = byId.get();
-            zuzycieRepository.findByDokument(dokumentDB).forEach(z -> zuzycieRepository.delete(z));
+            zuzycieRepository.findByDokument(dokumentDB)
+                    .forEach(zuzycieRepository::delete);
+            dokumentRepository.delete(dokumentDB);
         }
         else{
             throw new DocumentNotFoundException(numer);
