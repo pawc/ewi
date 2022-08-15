@@ -67,6 +67,23 @@ $(document).ready(() => {
 
         col3.appendTo(row)
 
+        var col5 = $('<td>')
+        .css('text-align', 'center')
+        col5.appendTo(row)
+        var czyZaokralganieCheck = $('<input>')
+        .attr({
+            type: 'checkbox',
+            class: 'form-check-input'
+        })
+        .css('display', 'inline-block')
+        .appendTo(col5)
+
+        $('<label>').attr({
+            class: 'form-check-label'
+        })
+        .text(' zaokr. 0.01 ')
+        .appendTo(col5)
+
         var col4 = $('<td>')
         $('<button>').attr({
             class: 'btn usunNormaBtn',
@@ -179,6 +196,24 @@ function edytujBtn(id){
 
             col3.appendTo(row)
 
+            var col5 = $('<td>')
+            .css('text-align', 'center')
+            col5.appendTo(row)
+            var czyZaokralganieCheck = $('<input>')
+            .attr({
+                type: 'checkbox',
+                class: 'form-check-input'
+            })
+            .prop('checked', norma.czyZaokr1setna)
+            .css('display', 'inline-block')
+            .appendTo(col5)
+
+            $('<label>').attr({
+                class: 'form-check-label'
+            })
+            .text(' zaokr. 0.01 ')
+            .appendTo(col5)
+
             row.appendTo($('#normyTable'))
 
         })
@@ -207,7 +242,7 @@ $(function() {
     dialog = $( "#dialog-form" ).dialog({
         autoOpen: false,
         height: 570,
-        width: 540,
+        width: 700,
         modal: true,
         buttons: {
             "Zapisz": function(){
@@ -218,11 +253,14 @@ $(function() {
                     var wartosc = $(this).find('td:eq(0) > input').val()
                     var jednostka = $(this).find('td:eq(1) > input').val()
                     var czyOgrzewanie = $(this).find('td:eq(2) > input').prop('checked')
+                    var czyZaokr1setna = $(this).find('td:eq(3) > input').prop('checked')
+
                     var norma = {
                         id: normaId,
                         wartosc: wartosc,
                         jednostka: jednostka,
-                        czyOgrzewanie: czyOgrzewanie
+                        czyOgrzewanie: czyOgrzewanie,
+                        czyZaokr1setna: czyZaokr1setna
                     }
 
                     if(jednostka && wartosc){

@@ -33,6 +33,9 @@ public class Norma {
     @Column(name = "wartosc")
     private BigDecimal wartosc;
 
+    @Column(name = "czyZaokr1setna", columnDefinition = "boolean default false")
+    private boolean czyZaokr1setna;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private Maszyna maszyna;

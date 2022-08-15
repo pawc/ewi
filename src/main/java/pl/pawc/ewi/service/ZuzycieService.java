@@ -8,6 +8,7 @@ import pl.pawc.ewi.entity.Stan;
 import pl.pawc.ewi.entity.Zuzycie;
 import pl.pawc.ewi.model.DocumentNotFoundException;
 import pl.pawc.ewi.repository.DokumentRepository;
+import pl.pawc.ewi.repository.NormaRepository;
 import pl.pawc.ewi.repository.StanRepository;
 import pl.pawc.ewi.repository.ZuzycieRepository;
 
@@ -24,6 +25,7 @@ public class ZuzycieService {
     private final ZuzycieRepository zuzycieRepository;
     private final StanRepository stanRepository;
     private final DokumentRepository dokumentRepository;
+    private final NormaRepository normaRepository;
 
     public BigDecimal getSuma(long normaId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException {
 
@@ -38,8 +40,7 @@ public class ZuzycieService {
             dokument = null;
         }
 
-        Norma norma = new Norma();
-        norma.setId(normaId);
+        Norma norma = normaRepository.findById(normaId).get();
         Calendar cal = Calendar.getInstance();
 
         List<Zuzycie> collect = zuzycieRepository.findByNorma(norma).stream()
@@ -63,10 +64,10 @@ public class ZuzycieService {
         BigDecimal ogrzewanie = collect.stream().map(Zuzycie::getOgrzewanie).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal sum = collect.stream()
-                .map(z -> (z.getWartosc().multiply(z.getNorma().getWartosc())).setScale(1, RoundingMode.HALF_UP))
+                .map(z -> (z.getWartosc().multiply(z.getNorma().getWartosc())).setScale(norma.isCzyZaokr1setna() ? 2 : 1, RoundingMode.HALF_UP))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return (stan.getWartosc().add(zatankowano).subtract(ogrzewanie).subtract(sum)).setScale(1, RoundingMode.HALF_UP);
+        return (stan.getWartosc().add(zatankowano).subtract(ogrzewanie).subtract(sum)).setScale(norma.isCzyZaokr1setna() ? 2 : 1, RoundingMode.HALF_UP);
 
     }
 

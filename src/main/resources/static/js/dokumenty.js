@@ -103,7 +103,7 @@ $(document).ready(() => {
                     class: 'zuzycie'
                 }).appendTo($('#zuzycieTable'))
 
-                var td1 = $('<td>').html(Math.round((normaSuma + 0.00001) * 10)/10)
+                var td1 = $('<td>').html(normaSuma)
                 td1.appendTo(tr)
 
                 var td2 = $('<td>')
@@ -127,7 +127,7 @@ $(document).ready(() => {
 
                 inputZuzycie.keyup(() => {
                     inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : inputOgrzewanie.val()
-                    calc(td5, wynik, inputZuzycieEcho, normaSuma, norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val())
+                    calc(td5, wynik, inputZuzycieEcho, normaSuma, norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val(), norma.czyZaokr1setna)
                 })
 
                 var inputOgrzewanie = null
@@ -163,13 +163,13 @@ $(document).ready(() => {
 
                 if(norma.czyOgrzewanie){
                     inputOgrzewanie.keyup(() => {
-                        calc(td5, wynik, inputZuzycieEcho, normaSuma ,norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val())
+                        calc(td5, wynik, inputZuzycieEcho, normaSuma ,norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val(), norma.czyZaokr1setna)
                     })
                 }
 
                 inputTankowanie.keyup(() => {
                     inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : inputOgrzewanie.val()
-                    calc(td5, wynik, inputZuzycieEcho, normaSuma, norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val())
+                    calc(td5, wynik, inputZuzycieEcho, normaSuma, norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val(), norma.czyZaokr1setna)
                 })
 
             })
@@ -183,7 +183,7 @@ $(document).ready(() => {
 
 })
 
-function calc(el1, el2, el3, before, norma, normaVal, ogrzewanie, tankowanie){
+function calc(el1, el2, el3, before, norma, normaVal, ogrzewanie, tankowanie, czyZaokr1setna){
 
      if(isNaN(ogrzewanie) || ogrzewanie === '') ogrzewanie = 0;
      if(isNaN(tankowanie) || tankowanie === '') tankowanie = 0;
@@ -198,7 +198,8 @@ function calc(el1, el2, el3, before, norma, normaVal, ogrzewanie, tankowanie){
             norma: parseFloat(norma),
             normaVal: parseFloat(normaVal),
             ogrzewanie: parseFloat(ogrzewanie),
-            tankowanie: parseFloat(tankowanie)
+            tankowanie: parseFloat(tankowanie),
+            czyZaokr1setna: czyZaokr1setna
         }
     })
     .done(result => {
@@ -340,20 +341,20 @@ function edytujBtn(numer){
 
             if(zuzycie.norma.czyOgrzewanie){
                 inputOgrzewanie.keyup(() => {
-                   calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val())
+                   calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val(), zuzycie.norma.czyZaokr1setna)
                 })
             }
 
-            calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, zuzycie.wartosc, zuzycie.ogrzewanie, zuzycie.zatankowano)
+            calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, zuzycie.wartosc, zuzycie.ogrzewanie, zuzycie.zatankowano, zuzycie.norma.czyZaokr1setna)
 
             inputZuzycie.keyup(() => {
                 inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : inputOgrzewanie.val()
-                calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val())
+                calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val(), zuzycie.norma.czyZaokr1setna)
             })
 
             inputTankowanie.keyup(() => {
             inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : inputOgrzewanie.val()
-               calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val())
+               calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val(), zuzycie.norma.czyZaokr1setna)
            })
         })
         dialog.dialog( "open" );

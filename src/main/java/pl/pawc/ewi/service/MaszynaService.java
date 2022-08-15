@@ -107,6 +107,7 @@ public class MaszynaService {
                             nOld.setWartosc(nNew.getWartosc());
                             nOld.setJednostka(nNew.getJednostka());
                             nOld.setCzyOgrzewanie(nNew.isCzyOgrzewanie());
+                            nOld.setCzyZaokr1setna(nNew.isCzyZaokr1setna());
                             normaRepository.save(nOld);
                         });
 

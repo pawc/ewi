@@ -28,5 +28,7 @@ public class Raport {
     private long normaId;
     private BigDecimal stanPoprz;
     private BigDecimal sumagodzin;
+    private BigDecimal endState;
+    private BigDecimal endStateKilometry;
 
 }

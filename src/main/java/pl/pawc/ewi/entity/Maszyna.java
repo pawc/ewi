@@ -12,6 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -62,6 +63,19 @@ public class Maszyna {
                 ", aktywna=" + aktywna +
                 ", sumaKilometry=" + sumaKilometry +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Maszyna maszyna = (Maszyna) o;
+        return Objects.equals(id, maszyna.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
 }

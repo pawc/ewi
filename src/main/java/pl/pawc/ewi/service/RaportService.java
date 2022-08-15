@@ -9,6 +9,7 @@ import pl.pawc.ewi.entity.Kilometry;
 import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.entity.Norma;
 import pl.pawc.ewi.entity.Stan;
+import pl.pawc.ewi.entity.Zuzycie;
 import pl.pawc.ewi.model.Raport;
 import pl.pawc.ewi.model.RaportKilometry;
 import pl.pawc.ewi.model.RaportRoczny;
@@ -20,13 +21,14 @@ import pl.pawc.ewi.repository.StanRepository;
 import pl.pawc.ewi.repository.ZuzycieRepository;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -42,8 +44,6 @@ public class RaportService {
     private final DokumentRepository dokumentRepository;
     private final NormaRepository normaRepository;
     private final ZuzycieRepository zuzycieRepository;
-    private final MathContext m1 = new MathContext(2);
-    private final MathContext m2 = new MathContext(3);
 
     public List<RaportKilometry> getKilometryRaport(int rok, int miesiac){
 
@@ -120,7 +120,7 @@ public class RaportService {
         return groupBy;
     }
 
-    public List<Raport> getRaport(int year, int month){
+    public List<Raport> getRaport(int year, int month) {
         Calendar cal = Calendar.getInstance();
         cal.set(year, month-1, 1);
         Date firstDayOfMonth = cal.getTime();
@@ -130,78 +130,66 @@ public class RaportService {
 
         List<Dokument> dokumentsByDataBetween = dokumentRepository.findByDataBetween(firstDayOfMonth, lastDayOfMonth);
 
+        Iterable<Norma> normy = normaRepository.findAll();
+
         List<Raport> results = new ArrayList<>();
 
-        dokumentsByDataBetween.forEach(d -> {
-            zuzycieRepository.findByDokument(d).forEach(z -> {
+        for (Norma norma : normy) {
 
-                BigDecimal suma = z.getWartosc().multiply(z.getNorma().getWartosc()).setScale(1, RoundingMode.HALF_UP);
+            Stream<Dokument> dokumentStream = dokumentsByDataBetween.stream().filter(d -> d.getMaszyna().equals(norma.getMaszyna()));
+            List<Dokument> dokumentList = dokumentStream.collect(Collectors.toList());
+            if(dokumentList.size() == 0) continue;
 
-                Raport raport = new Raport();
-                raport.setMaszynaidnormaid(d.getMaszyna().getId()+"-"+z.getNorma().getId());
-                raport.setMaszyna(d.getMaszyna().getNazwa() + "(" + d.getMaszyna().getId() + ")");
-                raport.setMaszynaid(d.getMaszyna().getId());
-                Kilometry kilometry = kilometryRepository.findOneByMaszynaAndRokAndMiesiac(d.getMaszyna(), year, month);
-                raport.setStankilometry(kilometry != null ? kilometry.getWartosc() : BigDecimal.ZERO);
-                raport.setKilometry(d.getKilometry());
-                raport.setKilometryprzyczepa(d.getKilometryPrzyczepa());
-                raport.setJednostka(z.getNorma().getJednostka());
-                raport.setSuma(suma);
-                raport.setSumagodzin(z.getWartosc().setScale(1, RoundingMode.HALF_UP));
-                raport.setZatankowano(z.getZatankowano().setScale(1, RoundingMode.HALF_UP));
-                raport.setOgrzewanie(z.getOgrzewanie().setScale(1, RoundingMode.HALF_UP));
-                raport.setNormaId(z.getNorma().getId());
-                Stan stan = stanRepository.findOneByNormaAndRokAndMiesiac(z.getNorma(), year, month);
-                BigDecimal stanPoprz = stan == null ? BigDecimal.ZERO : stan.getWartosc();
-                raport.setStanPoprz(stanPoprz);
-                results.add(raport);
-            });
-        });
+            int scale = norma.isCzyZaokr1setna() ? 2 : 1;
 
-        Map<String, List<Raport>> collect = results.stream().collect(groupingBy(Raport::getMaszynaidnormaid));
+            BigDecimal sumaWartosc = BigDecimal.ZERO;
+            BigDecimal sumaOgrzewanie = BigDecimal.ZERO;
+            BigDecimal sumaTankowanie = BigDecimal.ZERO;
+            BigDecimal sumaKilometry = BigDecimal.ZERO;
+            BigDecimal sumaKilometryPrzyczepa = BigDecimal.ZERO;
+            BigDecimal sumaGodzin = BigDecimal.ZERO;
 
-        List<Raport> grouped = new ArrayList<>();
+            for (Dokument d : dokumentList) {
+                Zuzycie zuzycie = zuzycieRepository.findByDokument(d).stream().filter(z -> z.getNorma().equals(norma)).findFirst().get();
+                sumaWartosc = sumaWartosc.add(zuzycie.getWartosc().multiply(norma.getWartosc()).setScale(scale, RoundingMode.HALF_UP));
+                sumaOgrzewanie = sumaOgrzewanie.add(zuzycie.getOgrzewanie());
+                sumaTankowanie = sumaTankowanie.add(zuzycie.getZatankowano());
+                sumaKilometry = sumaKilometry.add(d.getKilometry());
+                sumaKilometryPrzyczepa = sumaKilometryPrzyczepa.add(d.getKilometryPrzyczepa());
+                sumaGodzin = sumaGodzin.add(zuzycie.getWartosc()).setScale(scale, RoundingMode.HALF_UP);
+            }
 
-        for(String maszynaIdNormaId : collect.keySet()){
+            Stan stan = stanRepository.findOneByNormaAndRokAndMiesiac(norma, year, month);
+            BigDecimal stanPoprz = stan == null ? BigDecimal.ZERO : stan.getWartosc();
 
-            List<Raport> list = collect.get(maszynaIdNormaId);
-            Raport raportMain = list.get(0);
+            BigDecimal endState = stanPoprz.subtract(sumaWartosc).subtract(sumaOgrzewanie).add(sumaTankowanie).setScale(scale, RoundingMode.HALF_UP);
+
+            Kilometry kilometry = kilometryRepository.findOneByMaszynaAndRokAndMiesiac(norma.getMaszyna(), year, month);
+            BigDecimal stanKilometry = kilometry != null ? kilometry.getWartosc() : BigDecimal.ZERO;
+            BigDecimal endStateKilometry = stanKilometry.add(sumaKilometry);
 
             Raport raport = new Raport();
+            raport.setMaszynaidnormaid(norma.getMaszyna().getId()+"-"+norma.getId());
+            raport.setMaszyna(norma.getMaszyna().getNazwa() + "(" + norma.getMaszyna().getId() + ")");
+            raport.setMaszynaid(norma.getMaszyna().getId());
+            raport.setStankilometry(stanKilometry);
+            raport.setKilometry(sumaKilometry);
+            raport.setEndStateKilometry(endStateKilometry);
+            raport.setKilometryprzyczepa(sumaKilometryPrzyczepa);
+            raport.setJednostka(norma.getJednostka());
+            raport.setSuma(sumaWartosc);
+            raport.setSumagodzin(sumaGodzin);
+            raport.setZatankowano(sumaTankowanie);
+            raport.setOgrzewanie(sumaOgrzewanie);
+            raport.setNormaId(norma.getId());
+            raport.setStanPoprz(stanPoprz);
+            raport.setEndState(endState);
+            results.add(raport);
 
-            raport.setMaszynaidnormaid(maszynaIdNormaId);
-            raport.setMaszyna(raportMain.getMaszyna());
-            raport.setMaszynaid(raportMain.getMaszynaid());
-            raport.setNormaId(raportMain.getNormaId());
-            raport.setJednostka(raportMain.getJednostka());
-            raport.setStankilometry(raportMain.getStankilometry());
-            raport.setStanPoprz(raportMain.getStanPoprz());
-
-            BigDecimal zatankowano = list.stream().map(r -> r.getZatankowano().setScale(1, RoundingMode.HALF_UP)).reduce(BigDecimal.ZERO, BigDecimal::add);
-            raport.setZatankowano(zatankowano);
-
-            BigDecimal ogrzewanie = list.stream().map(r -> r.getOgrzewanie().setScale(1, RoundingMode.HALF_UP)).reduce(BigDecimal.ZERO, BigDecimal::add);
-            raport.setOgrzewanie(ogrzewanie);
-
-            BigDecimal sumagodzin = list.stream().map(r -> r.getSumagodzin().setScale(1, RoundingMode.HALF_UP)).reduce(BigDecimal.ZERO, BigDecimal::add);
-            raport.setSumagodzin(sumagodzin.setScale(1, RoundingMode.HALF_UP));
-
-            BigDecimal suma = new BigDecimal("0");
-            for (Raport r : list) {
-                suma = suma.add(r.getSuma());
-            }
-            raport.setSuma(suma);
-
-            BigDecimal kilometry = list.stream().map(Raport::getKilometry).reduce(BigDecimal.ZERO, BigDecimal::add);
-            raport.setKilometry(kilometry.setScale(2, RoundingMode.HALF_UP));
-
-            BigDecimal kilometryPrzyczepa = list.stream().map(Raport::getKilometryprzyczepa).reduce(BigDecimal.ZERO, BigDecimal::add);
-            raport.setKilometryprzyczepa(kilometryPrzyczepa.setScale(2, RoundingMode.HALF_UP));
-
-            grouped.add(raport);
         }
 
-        return grouped;
+        return results;
+
     }
 
 }

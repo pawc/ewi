@@ -9,12 +9,14 @@ import java.math.RoundingMode;
 public class UtilService {
 
     public BigDecimal[] calc(BigDecimal before, BigDecimal norma, BigDecimal normaVal,
-                 BigDecimal ogrzewanie, BigDecimal tankowanie){
+                 BigDecimal ogrzewanie, BigDecimal tankowanie, boolean czyZaokr1setna){
 
-        BigDecimal zuzycie = norma.multiply(normaVal).setScale(1, RoundingMode.HALF_UP);
+        int scale = czyZaokr1setna ? 2 : 1;
+
+        BigDecimal zuzycie = norma.multiply(normaVal).setScale(scale, RoundingMode.HALF_UP);
 
         return new BigDecimal[]{
-                before.subtract(zuzycie).subtract(ogrzewanie).add(tankowanie).setScale(1, RoundingMode.HALF_UP),
+                before.subtract(zuzycie).subtract(ogrzewanie).add(tankowanie).setScale(scale, RoundingMode.HALF_UP),
                 zuzycie
         };
 
