@@ -74,30 +74,28 @@ public class RaportService {
         Iterable<Kategoria> kategorieI = kategoriaRepository.findAll();
         List<Kategoria> kategorie = Lists.newArrayList(kategorieI);
 
-        kategorie.forEach(k -> {
-            k.getMaszyny().forEach(m -> {
+        kategorie.forEach(k -> k.getMaszyny().forEach(m -> {
 
-                List<Norma> normyByMaszyna = normaRepository.findByMaszyna(m);
+            List<Norma> normyByMaszyna = normaRepository.findByMaszyna(m);
 
-                normyByMaszyna.forEach(n -> {
+            normyByMaszyna.forEach(n -> {
 
-                    RaportRoczny raportRoczny = new RaportRoczny();
+                RaportRoczny raportRoczny = new RaportRoczny();
 
-                    String kategoria_jednostka =
-                            new StringBuilder(k.getNazwa()).append("-").append(n.getJednostka()).toString();
-                    raportRoczny.setKategoria_jednostka(kategoria_jednostka.toUpperCase());
+                String kategoria_jednostka =
+                        new StringBuilder(k.getNazwa()).append("-").append(n.getJednostka()).toString();
+                raportRoczny.setKategoria_jednostka(kategoria_jednostka.toUpperCase());
 
-                    raportRoczny.setKategoria(k.getNazwa());
-                    raportRoczny.setJednostka(n.getJednostka());
+                raportRoczny.setKategoria(k.getNazwa());
+                raportRoczny.setJednostka(n.getJednostka());
 
-                    BigDecimal sumaYear = zuzycieService.getSumaYear(n.getId(), year);
-                    raportRoczny.setSuma(sumaYear);
+                BigDecimal sumaYear = zuzycieService.getSumaYear(n.getId(), year);
+                raportRoczny.setSuma(sumaYear);
 
-                    result.add(raportRoczny);
+                result.add(raportRoczny);
 
-                });
             });
-        });
+        }));
 
         Map<String, List<RaportRoczny>> collect = result.stream().collect(groupingBy(RaportRoczny::getKategoria_jednostka));
 
