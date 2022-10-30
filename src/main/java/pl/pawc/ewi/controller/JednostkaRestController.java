@@ -35,7 +35,7 @@ public class JednostkaRestController {
         logger.info("[{}] POST /jednostka {}", ip, j);
     }
 
-    @GetMapping("jednostki")
+    @GetMapping("jednostkiGet")
     public List<Jednostka> jednostki(HttpServletRequest request){
 
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();

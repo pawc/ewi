@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.pawc.ewi.entity.Kategoria;
 import pl.pawc.ewi.entity.Maszyna;
+import pl.pawc.ewi.repository.JednostkaRepository;
 import pl.pawc.ewi.repository.KategoriaRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
 
@@ -26,6 +27,7 @@ public class ViewController {
     private static final Logger logger = LogManager.getLogger(ViewController.class);
     private final MaszynaRepository maszynaRepository;
     private final KategoriaRepository kategoriaRepository;
+    private final JednostkaRepository jednostkaRepository;
 
     @RequestMapping("/")
     public String index(
@@ -77,6 +79,20 @@ public class ViewController {
         model.addAttribute("kategorie", kategoriaRepository.findAll());
 
         return "maszyny";
+
+    }
+
+    @RequestMapping("/jednostki")
+    public String jednostki(
+            Model model,
+            HttpServletRequest request,
+            HttpServletResponse response) {
+
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
+        logger.info("[{}] /jednostki", ip);
+        model.addAttribute("jednostki", jednostkaRepository.findAll());
+
+        return "jednostki";
 
     }
 
