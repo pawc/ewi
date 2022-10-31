@@ -77,6 +77,7 @@ public class ViewController {
         logger.info("[{}] /maszyny", ip);
         model.addAttribute("maszyny", maszynaRepository.findAll());
         model.addAttribute("kategorie", kategoriaRepository.findAll());
+        model.addAttribute("jednostki", jednostkaRepository.findAll());
 
         return "maszyny";
 

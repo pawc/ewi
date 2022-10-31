@@ -38,11 +38,15 @@ $(document).ready(() => {
         normaWartosc.appendTo(col1)
         col1.appendTo(row)
 
-        var normaJednostka = $('<input>').attr({
-            type: 'text',
+        let normaJednostka = $('<select>').attr({
             class: 'form-control',
             placeholder: 'jednostka'
         })
+
+        $.each(jednostki, function(key, jednostka) {
+          normaJednostka.append($("<option></option>")
+             .attr("value", jednostka.id).text(jednostka.nazwa));
+        });
 
         var col2 = $('<td>')
         normaJednostka.appendTo(col2)
@@ -163,13 +167,17 @@ function edytujBtn(id){
             normaWartosc.appendTo(col1)
             col1.appendTo(row)
 
-            var normaJednostka = $('<input>').attr({
-                type: 'text',
+            var normaJednostka = $('<select>').attr({
                 class: 'form-control',
                 placeholder: 'jednostka'
             })
             .prop('disabled', true)
-            .val(norma.jednostka)
+
+            $.each(jednostki, function(key, jednostka) {
+              normaJednostka.append($("<option></option>")
+                 .attr("value", jednostka.id).text(jednostka.nazwa));
+            });
+            normaJednostka.val(norma.jednostkaObj.id)
 
             var col2 = $('<td>')
             normaJednostka.appendTo(col2)
@@ -251,24 +259,26 @@ $(function() {
                 $('.norma').each(function(i, tr){
                     var normaId = $(this).attr('normaId')
                     var wartosc = $(this).find('td:eq(0) > input').val()
-                    var jednostka = $(this).find('td:eq(1) > input').val()
+                    var jednostkaId = $(this).find('td:eq(1) > select').val()
                     var czyOgrzewanie = $(this).find('td:eq(2) > input').prop('checked')
                     var czyZaokr1setna = $(this).find('td:eq(3) > input').prop('checked')
 
                     var norma = {
                         id: normaId,
                         wartosc: wartosc,
-                        jednostka: jednostka,
+                        jednostkaObj: {
+                            id: jednostkaId
+                        },
                         czyOgrzewanie: czyOgrzewanie,
                         czyZaokr1setna: czyZaokr1setna
                     }
 
-                    if(jednostka && wartosc){
+                    if(jednostkaId && wartosc){
 
                         // unikalność jednostki
                         var test = true
-                        $.each(normy, (i, j) => {
-                            if(jednostka == j.jednostka) test = false
+                        $.each(normy, (i, n) => {
+                            if(jednostkaId == n.jednostkaObj.id) test = false
                         })
                         if(test) normy.push(norma);
 
