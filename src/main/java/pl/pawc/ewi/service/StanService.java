@@ -31,7 +31,8 @@ public class StanService {
             RaportStan raportStan = new RaportStan();
             raportStan.setMaszynanazwa(n.getMaszyna().getNazwa());
             raportStan.setMaszynaid(n.getMaszyna().getId());
-            raportStan.setJednostka(n.getJednostka());
+            String jednostka = n.getJednostkaObj() == null ? n.getJednostka() : n.getJednostkaObj().getNazwa();
+            raportStan.setJednostka(jednostka);
             raportStan.setNormaid(n.getId());
             Stan stan = stanRepository.findOneByNormaAndRokAndMiesiac(n, year, month);
             if(stan == null) {

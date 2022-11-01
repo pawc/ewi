@@ -82,12 +82,14 @@ public class RaportService {
 
                 RaportRoczny raportRoczny = new RaportRoczny();
 
+                String jednostka = n.getJednostkaObj() == null ? n.getJednostka() : n.getJednostkaObj().getNazwa();
+
                 String kategoria_jednostka =
-                        new StringBuilder(k.getNazwa()).append("-").append(n.getJednostka()).toString();
+                        new StringBuilder(k.getNazwa()).append("-").append(jednostka).toString();
                 raportRoczny.setKategoria_jednostka(kategoria_jednostka.toUpperCase());
 
                 raportRoczny.setKategoria(k.getNazwa());
-                raportRoczny.setJednostka(n.getJednostka());
+                raportRoczny.setJednostka(jednostka);
 
                 BigDecimal sumaYear = zuzycieService.getSumaYear(n.getId(), year);
                 raportRoczny.setSuma(sumaYear);
@@ -174,7 +176,7 @@ public class RaportService {
             raport.setKilometry(sumaKilometry);
             raport.setEndStateKilometry(endStateKilometry);
             raport.setKilometryprzyczepa(sumaKilometryPrzyczepa);
-            raport.setJednostka(norma.getJednostka());
+            raport.setJednostka(norma.getJednostkaObj() == null ? norma.getJednostka() : norma.getJednostkaObj().getNazwa());
             raport.setSuma(sumaWartosc);
             raport.setSumagodzin(sumaGodzin);
             raport.setZatankowano(sumaTankowanie);

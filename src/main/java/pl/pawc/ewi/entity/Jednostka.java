@@ -31,12 +31,4 @@ public class Jednostka {
         this.nazwa = nazwa;
     }
 
-    @Override
-    public String toString() {
-        return "Jednostka{" +
-                "id=" + id +
-                ", nazwa='" + nazwa + '\'' +
-                '}';
-    }
-
 }

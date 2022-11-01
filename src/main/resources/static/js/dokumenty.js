@@ -121,7 +121,7 @@ $(document).ready(() => {
                 td3.appendTo(tr)
 
                 var inputZuzycieEcho = $('<span>').html(0).appendTo(td3)
-                td3.append(` * ${norma.wartosc} [${norma.jednostka}] = `)
+                td3.append(` * ${norma.wartosc} [${norma.jednostkaObj == null ? norma.jednostka : norma.jednostkaObj.nazwa}] = `)
 
                 var wynik = $('<span>').html(0).appendTo(td3)
 
@@ -303,7 +303,7 @@ function edytujBtn(numer){
             td3.appendTo(tr)
 
             var inputZuzycieEcho = $('<span>').html(zuzycie.wartosc).appendTo(td3)
-            td3.append(` * ${zuzycie.norma.wartosc} [${zuzycie.norma.jednostka}] = `)
+            td3.append(` * ${zuzycie.norma.wartosc} [${zuzycie.norma.jednostkaObj == null ? zuzycie.norma.jednostka : zuzycie.norma.jednostkaObj.nazwa}] = `)
 
             var wynikVal = zuzycie.wartosc * zuzycie.norma.wartosc
             var wynik = $('<span>').html(Math.round((wynikVal + 0.00001) * 10)/10).appendTo(td3)

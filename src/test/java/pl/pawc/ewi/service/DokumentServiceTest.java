@@ -105,9 +105,7 @@ class DokumentServiceTest {
 
 		dokumentService.delete("15/04/2022/C1");
 
-		assertThrows(DocumentNotFoundException.class, () -> {
-			dokumentService.delete("15/04/2022/C1");
-		});
+		assertThrows(DocumentNotFoundException.class, () -> dokumentService.delete("15/04/2022/C1"));
 
 	}
 

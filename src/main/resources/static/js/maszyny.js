@@ -177,7 +177,12 @@ function edytujBtn(id){
               normaJednostka.append($("<option></option>")
                  .attr("value", jednostka.id).text(jednostka.nazwa));
             });
-            normaJednostka.val(norma.jednostkaObj.id)
+
+            if(norma.jednostkaObj != null) normaJednostka.val(norma.jednostkaObj.id)
+            else {
+                normaJednostka.append($("<option></option>").attr("value", norma.jednostka).text(norma.jednostka));
+                normaJednostka.val(norma.jednostka)
+            }
 
             var col2 = $('<td>')
             normaJednostka.appendTo(col2)
