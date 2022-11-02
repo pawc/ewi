@@ -18,6 +18,8 @@ public class RaportRoczny {
     private String kategoria_jednostka;
     private String kategoria;
     private String jednostka;
+    private BigDecimal waga;
     private BigDecimal suma;
+    private BigDecimal sumaRazyWaga;
 
 }

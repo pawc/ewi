@@ -27,16 +27,18 @@ $(document).ready(() => {
 
 var dialog, form
 
-function edytujBtn(id, nazwa){
+function edytujBtn(id, nazwa, waga){
     $("span.ui-dialog-title").text('Edytuj jednostkę');
     jednostkaId = id
     $('#nazwa').val(nazwa)
+    $('#waga').val(waga)
     dialog.dialog("open");
 }
 
 function dodajBtn(){
     jednostkaId = null
     $('#nazwa').val('')
+    $('#waga').val('')
     $("span.ui-dialog-title").text('Dodaj jednostkę');
     dialog.dialog("open");
 }
@@ -45,15 +47,16 @@ $(function() {
 
     dialog = $( "#dialog-form" ).dialog({
         autoOpen: false,
-        height: 190,
-        width: 200,
+        height: 260,
+        width: 210,
         modal: true,
         buttons: {
             "Zapisz": function(){
 
                var jednostka = {
                     id: jednostkaId,
-                    nazwa: $('#nazwa').val()
+                    nazwa: $('#nazwa').val(),
+                    waga: $('#waga').val()
                 }
 
                 var headers = {};

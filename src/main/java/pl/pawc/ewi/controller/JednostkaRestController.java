@@ -26,8 +26,11 @@ public class JednostkaRestController {
             HttpServletRequest request) {
 
         Jednostka j = jednostkaRepository.findById(jednostka.getId()).orElse(null);
-        if(j != null) j.setNazwa(jednostka.getNazwa());
-        else j = new Jednostka(jednostka.getNazwa());
+        if (j == null) {
+            j = new Jednostka();
+        }
+        j.setNazwa(jednostka.getNazwa());
+        j.setWaga(jednostka.getWaga());
 
         jednostkaRepository.save(j);
 

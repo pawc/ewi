@@ -74,7 +74,9 @@ function updateTable(){
             t.row.add( [
                 pozycja.kategoria,
                 pozycja.jednostka,
-                pozycja.suma
+                pozycja.waga,
+                pozycja.suma,
+                pozycja.sumaRazyWaga
             ]).draw(false);
         })
         $('#loadingDiv').hide()

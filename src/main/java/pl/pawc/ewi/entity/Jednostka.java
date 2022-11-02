@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.math.BigDecimal;
 
 @Entity
 @Getter
@@ -23,6 +24,9 @@ public class Jednostka {
 
     @Column(name = "nazwa")
     private String nazwa;
+
+    @Column(name = "waga")
+    private BigDecimal waga;
 
     public Jednostka(){
     }
