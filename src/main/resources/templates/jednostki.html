@@ -3,7 +3,7 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 
 <head>
-    <title>Ewi - maszyny</title>
+    <title>Ewi - jednostki</title>
 
     <head>
 
@@ -21,10 +21,7 @@
         <script src="https://kit.fontawesome.com/4d0e5d2f0b.js" crossorigin="anonymous"></script>
         <script th:inline="javascript"> var contextRoot = /*[[@{/}]]*/ ''; </script>
         <script src="js/index.js"></script>
-        <script th:inline="javascript">
-            var jednostki = /*[[${jednostki}]]*/ [];
-        </script>
-        <script src="js/maszyny.js"></script>
+        <script src="js/jednostki.js"></script>
 
     </head>
 
@@ -36,27 +33,29 @@
 
         <div class="container">
             <div class="alert alert-success text-center" role="alert" th:if="${(param.success != null)}">
-                Dodano maszynę o numerze <b> [[${param.success}]] </b>
+                Dodano/zaktualizowano jednostkę <b> [[${param.success}]] </b>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <table class="table" id="maszynyTable">
+            <table class="table" id="jednostkiTable">
                 <thead>
                 <tr>
-                    <th> Numer </th>
+                    <th> ID </th>
                     <th> Nazwa </th>
-                    <th> Opis </th>
+                    <th> Waga </th>
+                    <th> Przypisane maszyny </th>
                     <th class="text-right"> <button class="btn btn-success" onclick="dodajBtn()">dodaj <i class="fas fa-plus-circle"></i></button> </th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="maszyna : ${maszyny}">
-                    <td><span th:text="${maszyna.id}"> Numer </span> </td>
-                    <td><span th:text="${maszyna.nazwa}"> Nazwa </span></td>
-                    <td><span th:text="${maszyna.opis}"> Opis  </span></td>
+                <tr th:each="jednostka : ${jednostki}">
+                    <td><span th:text="${jednostka.id}"> Numer </span> </td>
+                    <td><span th:text="${jednostka.nazwa}"> Nazwa </span></td>
+                    <td><span th:text="${jednostka.waga}"> Waga </span></td>
+                    <td><span th:text="${jednostka.nazwa}"> Przypisane maszyny  </span></td>
                     <td class="text-right">
-                        <button class="btn btn-info" th:onclick="edytujBtn([[${maszyna.id}]])">edytuj <i class="fas fa-edit"></i></button>
+                        <button class="btn btn-info" th:onclick="edytujBtn([[${jednostka.id}]], [[${jednostka.nazwa}]], [[${jednostka.waga}]] )">edytuj <i class="fas fa-edit"></i></button>
                     </td>
                 </tr>
                 </tbody>
@@ -66,37 +65,15 @@
         <div id="dialog-form" title="">
 
             <form>
-                <label for="numer">Numer</label>
-                <input type="text" name="numer" id="numer" autocomplete="off" value="" class="text ui-widget-content ui-corner-all">
-                <label class="text-danger" id="error">Maszyna o podanym numerze już istnieje.</label>
-                <label for="nazwa">Nazwa</label>
-                <input type="text" name="nazwa" id="nazwa" autocomplete="off" value="" class="text ui-widget-content ui-corner-all">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label for="normy">Normy</label>
-                        <button class="btn btn-success" id="dodajNormaBtn">dodaj</button>
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="czyAktywna">Czy normy aktualne</label>
-                        <input type="checkbox" id="czyAktywna" checked/>
-                    </div>
-                </div>
-                <div id="normy" class="container">
-                    <table id="normyTable"></table>
-                </div>
-                <br>
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm-6">
-                            <label for="opis">Opis</label>
-                            <textarea name="opis" id="opis" rows="6" style="width: 100%;" class=""></textarea>
+                        <div class="col-sm-12">
+                            <label for="nazwa">Nazwa</label>
+                            <input type="text" name="nazwa" id="nazwa" style="width: 100%;" class="text ui-widget-content ui-corner-all" autocomplete="off"/>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="checkbox">
-                                <ul th:each="kategoria : ${kategorie}">
-                                    <input type="checkbox" name="kategorie" th:value="${kategoria.nazwa}"><span th:text="${kategoria.nazwa}"></span></input>
-                                </ul>
-                            </div>
+                        <div class="col-sm-12">
+                            <label for="waga">Waga</label>
+                            <input type="number" step="0.1" name="waga" id="waga" style="width: 100%;" autocomplete="off" value="1" class="text ui-widget-content ui-corner-all">
                         </div>
                     </div>
                 </div>

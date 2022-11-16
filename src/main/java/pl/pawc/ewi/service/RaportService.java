@@ -82,12 +82,16 @@ public class RaportService {
 
                 RaportRoczny raportRoczny = new RaportRoczny();
 
+                String jednostka = n.getJednostkaObj() == null ? n.getJednostka() : n.getJednostkaObj().getNazwa();
+                BigDecimal waga = n.getJednostkaObj() == null ? BigDecimal.ONE : n.getJednostkaObj().getWaga();
+
                 String kategoria_jednostka =
-                        new StringBuilder(k.getNazwa()).append("-").append(n.getJednostka()).toString();
+                        new StringBuilder(k.getNazwa()).append("-").append(jednostka).toString();
                 raportRoczny.setKategoria_jednostka(kategoria_jednostka.toUpperCase());
 
                 raportRoczny.setKategoria(k.getNazwa());
-                raportRoczny.setJednostka(n.getJednostka());
+                raportRoczny.setJednostka(jednostka);
+                raportRoczny.setWaga(waga);
 
                 BigDecimal sumaYear = zuzycieService.getSumaYear(n.getId(), year);
                 raportRoczny.setSuma(sumaYear);
@@ -100,6 +104,7 @@ public class RaportService {
         Map<String, List<RaportRoczny>> collect = result.stream().collect(groupingBy(RaportRoczny::getKategoria_jednostka));
 
         List<RaportRoczny> groupBy = new ArrayList<>();
+
         collect.forEach((s, lista) -> {
             BigDecimal sum = lista.stream().map(RaportRoczny::getSuma).reduce(BigDecimal.ZERO, BigDecimal::add);
             if(BigDecimal.ZERO.equals(sum)) return;
@@ -109,7 +114,11 @@ public class RaportService {
             raportRoczny.setKategoria_jednostka(s);
             raportRoczny.setKategoria(lista.get(0).getKategoria());
             raportRoczny.setJednostka(lista.get(0).getJednostka());
-            raportRoczny.setSuma(sum.setScale(2, RoundingMode.HALF_UP));
+            BigDecimal waga = lista.get(0).getWaga();
+            raportRoczny.setWaga(waga);
+            BigDecimal suma = sum.setScale(2, RoundingMode.HALF_UP);
+            raportRoczny.setSuma(suma);
+            raportRoczny.setSumaRazyWaga(suma.multiply(waga));
 
             groupBy.add(raportRoczny);
 
@@ -174,7 +183,7 @@ public class RaportService {
             raport.setKilometry(sumaKilometry);
             raport.setEndStateKilometry(endStateKilometry);
             raport.setKilometryprzyczepa(sumaKilometryPrzyczepa);
-            raport.setJednostka(norma.getJednostka());
+            raport.setJednostka(norma.getJednostkaObj() == null ? norma.getJednostka() : norma.getJednostkaObj().getNazwa());
             raport.setSuma(sumaWartosc);
             raport.setSumagodzin(sumaGodzin);
             raport.setZatankowano(sumaTankowanie);

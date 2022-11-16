@@ -30,6 +30,9 @@ public class Norma {
     @Column(name = "jednostka")
     private String jednostka;
 
+    @ManyToOne
+    private Jednostka jednostkaObj;
+
     @Column(name = "wartosc")
     private BigDecimal wartosc;
 

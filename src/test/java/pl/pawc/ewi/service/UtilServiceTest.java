@@ -1,12 +1,16 @@
 package pl.pawc.ewi.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import pl.pawc.ewi.entity.Maszyna;
 
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
 class UtilServiceTest {
@@ -33,6 +37,19 @@ class UtilServiceTest {
 
 		assertEquals(new BigDecimal("-8.41"), calc[0]);
 		assertEquals(new BigDecimal("5.04"), calc[1]);
+	}
+
+	@Test
+	void testJsonParseMaszyna(){
+		String maszynaJson = "{\"id\":\"maszyna_id\",\"nazwa\":\"maszyna nazwa\",\"opis\":\"\",\"normy\":[{\"wartosc\":\"1\",\"jednostkaObj\":{\"id\":\"3270\"},\"czyOgrzewanie\":false,\"czyZaokr1setna\":false}],\"kategorie\":[],\"aktywna\":true}";
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			Maszyna maszyna = mapper.readValue(maszynaJson, Maszyna.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			fail();
+		}
+
 	}
 
 }

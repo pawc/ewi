@@ -102,7 +102,7 @@ public class MaszynaService {
             maszyna.getNormy().forEach(nNew -> {
 
                 normyDB.stream()
-                        .filter(nOld -> nNew.equals(nOld)).findFirst()
+                        .filter(nNew::equals).findFirst()
                         .ifPresent(nOld -> {
                             nOld.setWartosc(nNew.getWartosc());
                             nOld.setJednostka(nNew.getJednostka());

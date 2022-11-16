@@ -48,7 +48,6 @@ public class DokumentRestController {
         }
         else {
             dokument = new Dokument();
-            logger.warn("[{}] /dokument GET numer = {} - nie odnaleziono ", ip, numer);
         }
         return dokument;
 
