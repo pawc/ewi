@@ -53,6 +53,19 @@ public class ViewController {
 
     }
 
+    @RequestMapping("/raportMaszynaKilometry")
+    public String raportMaszynaKilometry(
+            Model model,
+            HttpServletRequest request,
+            HttpServletResponse response){
+
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
+        model.addAttribute("maszyny", maszynaRepository.findAllActive());
+        logger.info("[{}] /raportMaszynaKilometry", ip);
+        return "raportMaszynaKilometry";
+
+    }
+
     @RequestMapping("/dokumenty")
     public String dokumenty(
             Model model,

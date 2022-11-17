@@ -52,7 +52,7 @@ public class RaportRestController {
 
     }
 
-    @RequestMapping(value = "/raportMaszynaKilometry", method = RequestMethod.GET)
+    @RequestMapping(value = "/getRaportMaszynaKilometry", method = RequestMethod.GET)
     public RaportMaszynaKilometry raportMaszynaKilometry(
             HttpServletRequest request,
             HttpServletResponse response,
