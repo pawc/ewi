@@ -17,6 +17,7 @@ public interface DokumentRepository extends CrudRepository<Dokument, String> {
 
     List<Dokument> findByMaszyna(Maszyna maszyna);
     List<Dokument> findByDataBetween(Date start, Date end);
+    List<Dokument> findByMaszynaAndDataBetween(Maszyna maszyna, Date start, Date end);
 
     @Query(value = "select " +
             "ifnull(s.wartosc, 0) - ifnull(sum(round(CAST((z.wartosc * n.wartosc) AS DECIMAL(14, 4)), 1)), 0)  " +

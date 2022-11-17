@@ -12,7 +12,10 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+		"spring.datasource.driverClassName=org.h2.Driver",
+		"spring.datasource.url=jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1",
+})
 class UtilServiceTest {
 
 	@Autowired

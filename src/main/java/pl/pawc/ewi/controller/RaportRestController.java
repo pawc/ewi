@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.pawc.ewi.model.Raport;
+import pl.pawc.ewi.model.RaportMaszynaKilometry;
 import pl.pawc.ewi.model.RaportRoczny;
-import pl.pawc.ewi.repository.RaportRepository;
-import pl.pawc.ewi.repository.RaportRocznyRepository;
+import pl.pawc.ewi.service.RaportMaszynaKilometryService;
 import pl.pawc.ewi.service.RaportService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -23,9 +24,8 @@ public class RaportRestController {
 
     private static final Logger logger = LogManager.getLogger(RaportRestController.class);
 
-    private final RaportRepository raportRepository;
-    private final RaportRocznyRepository raportRocznyRepository;
     private final RaportService raportService;
+    private final RaportMaszynaKilometryService raportMaszynaKilometryService;
 
     @RequestMapping(value = "/raport", method = RequestMethod.GET)
     public List<Raport> raport(
@@ -49,6 +49,27 @@ public class RaportRestController {
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         logger.info("[{}] /raportRoczny GET {}", ip, rok);
         return raportService.getRaportRoczny(rok);
+
+    }
+
+    @RequestMapping(value = "/raportMaszynaKilometry", method = RequestMethod.GET)
+    public RaportMaszynaKilometry raportMaszynaKilometry(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @RequestParam("start") String dateStart,
+            @RequestParam("end") String dateEnd,
+            @RequestParam("maszynaId") String maszynaId){
+
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
+
+        try {
+            logger.info("[{}] /raportMaszynaKilometry GET maszynaId: {} {}-{}", ip, maszynaId, dateStart, dateEnd);
+            return raportMaszynaKilometryService.getRaportKilometry(maszynaId, dateStart, dateEnd);
+        } catch (ParseException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.error("[{}] /raportMaszynaKilometry GET maszynaId: {} {}-{}", ip, maszynaId, dateStart, dateEnd);
+            return null;
+        }
 
     }
 
