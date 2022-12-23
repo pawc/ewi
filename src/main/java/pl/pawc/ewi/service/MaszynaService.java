@@ -5,7 +5,6 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.entity.Norma;
-import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.MaszynaRepository;
 import pl.pawc.ewi.repository.NormaRepository;
 
@@ -22,7 +21,6 @@ public class MaszynaService {
     
     private final MaszynaRepository maszynaRepository;
     private final NormaRepository normaRepository;
-    private final DokumentRepository dokumentRepository;
     private final ZuzycieService zuzycieService;
     private final DokumentService dokumentService;
 
