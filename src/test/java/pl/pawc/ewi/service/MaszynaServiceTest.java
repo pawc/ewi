@@ -38,7 +38,7 @@ class MaszynaServiceTest {
 
 	@Test
 	@Transactional
-	void testGetPostPut() throws JsonProcessingException {
+	void testPost() throws JsonProcessingException {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		String input = "{\"id\":\"ABC123\",\"nazwa\":\"Machine 1\",\"opis\":\"test machine\",\"normy\":[{\"wartosc\":\"1.2\",\"jednostka\":\"L/H\",\"czyOgrzewanie\":false},{\"wartosc\":\"3.27\",\"jednostka\":\"ON/H\",\"czyOgrzewanie\":true}],\"kategorie\":[],\"aktywna\":true}";
@@ -49,6 +49,28 @@ class MaszynaServiceTest {
 		assertEquals(2, m.getNormy().size());
 		assertTrue(m.isAktywna());
 		m.getNormy().forEach(n -> assertEquals("ABC123", n.getMaszyna().getId()));
+
+		m = new Maszyna();
+		m.setId("C1");
+		Maszyna postM = maszynaService.post(m);
+		assertNull(postM);
+
+	}
+
+	@Test
+	@Transactional
+	void testGetPut() {
+
+		Maszyna c1 = maszynaService.get("C1", "2022-05");
+		assertNotNull(c1);
+		assertNotNull(c1.getSumaKilometry());
+		c1.getNormy().forEach(n -> assertNotNull(n.getSuma()));
+		assertEquals("Ciągnik 1", c1.getNazwa());
+		c1.setNazwa("Ciągnik Test");
+		maszynaService.put(c1);
+		c1 = maszynaService.get("C1", "2022-05");
+		assertNotNull(c1);
+		assertEquals("Ciągnik Test", c1.getNazwa());
 
 	}
 
