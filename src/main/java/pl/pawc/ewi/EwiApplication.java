@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -21,8 +20,6 @@ import pl.pawc.ewi.config.auth.DatabaseUserDetailsService;
 @SpringBootApplication
 @EnableWebSecurity
 public class EwiApplication extends WebSecurityConfigurerAdapter {
-
-	private final Environment env;
 
 	@Value("${bcryptWorkFactor}")
 	String bcryptWorkFactor;
