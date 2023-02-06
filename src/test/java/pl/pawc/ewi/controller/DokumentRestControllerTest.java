@@ -103,7 +103,6 @@ class DokumentRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(result -> {
-                    System.out.println(result);
                     List<Dokument> dokumenty = objectMapper.readValue(result.getResponse().getContentAsString(), List.class);
                     assertEquals(17, dokumenty.size());
                 });

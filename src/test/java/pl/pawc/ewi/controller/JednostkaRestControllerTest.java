@@ -77,7 +77,6 @@ class JednostkaRestControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(result -> {
-                System.out.println(result);
                 List<Jednostka> jednostki = objectMapper.readValue(result.getResponse().getContentAsString(), List.class);
                 assertEquals(1, jednostki.size());
             });
