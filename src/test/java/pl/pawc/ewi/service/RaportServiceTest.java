@@ -3,6 +3,7 @@ package pl.pawc.ewi.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import pl.pawc.ewi.model.Raport;
 import pl.pawc.ewi.model.RaportKilometry;
 import pl.pawc.ewi.model.RaportRoczny;
 
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(properties = {
 		"spring.datasource.driverClassName=org.h2.Driver",
@@ -34,6 +36,9 @@ class RaportServiceTest {
 
 		for (RaportKilometry r : kilometryRaport) {
 			assertEquals(BigDecimal.ZERO, r.getStanpoczatkowy());
+			assertNotNull(r.getMaszynaid());
+			assertNotNull(r.getMaszynanazwa());
+			assertNotNull(r.toString());
 		}
 
 	}
@@ -44,6 +49,7 @@ class RaportServiceTest {
 
 		List<RaportRoczny> raportRoczny = raportService.getRaportRoczny(2022);
 		assertEquals(2, raportRoczny.size());
+		assertNotNull(raportRoczny.stream().findFirst().toString());
 		assertEquals(new BigDecimal("152.76"), raportRoczny.stream().filter(r -> "L/H".equals(r.getJednostka())).findFirst().get().getSuma());
 		assertEquals(new BigDecimal("35.19"), raportRoczny.stream().filter(r -> "ON/H".equals(r.getJednostka())).findFirst().get().getSuma());
 
@@ -56,7 +62,11 @@ class RaportServiceTest {
 	void testGetRaport() {
 
 		assertEquals(4, raportService.getRaport(2022, 4).size());
-		assertEquals(4, raportService.getRaport(2022, 5).size());
+
+		List<Raport> raport = raportService.getRaport(2022, 5);
+		assertEquals(4, raport.size());
+		assertNotNull(raport.stream().findFirst().toString());
+
 		assertEquals(0, raportService.getRaport(2023, 5).size());
 
 	}

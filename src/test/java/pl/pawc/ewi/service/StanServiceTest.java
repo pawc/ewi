@@ -55,6 +55,7 @@ class StanServiceTest {
 
 		Optional<RaportStan> first = stanService.findBy(2022, 5).stream()
 				.filter(rs -> rs.getNormaid() == 1L).findFirst();
+		assertNotNull(first.toString());
 		assertTrue(first.isPresent());
 		RaportStan rs = first.get();
 		assertNotNull(rs);

@@ -54,7 +54,7 @@ class JednostkaRestControllerTest {
     @Order(1)
     void jednostkaPostTest() throws Exception {
 
-        Jednostka jednostka = new Jednostka();
+        Jednostka jednostka = new Jednostka("L/H");
         jednostka.setNazwa("ON/H");
         jednostka.setWaga(BigDecimal.valueOf(1.23));
 

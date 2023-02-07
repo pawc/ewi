@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(properties = {
 		"spring.datasource.driverClassName=org.h2.Driver",
@@ -28,6 +29,7 @@ class RaportMaszynaKilometryServiceTest {
 		assertEquals(new BigDecimal("102.9"), raportMaszynaKilometry.getSumaKilometry());
 		assertEquals(new BigDecimal("121.2"), raportMaszynaKilometry.getSumaKilometryPrzyczepa());
 		assertEquals(10, raportMaszynaKilometry.getDokumenty().size());
+		assertNotNull(raportMaszynaKilometry.toString());
 
 	}
 

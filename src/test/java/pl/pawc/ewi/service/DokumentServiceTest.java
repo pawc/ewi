@@ -2,7 +2,6 @@ package pl.pawc.ewi.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +15,8 @@ import javax.transaction.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(properties = {
 		"spring.datasource.driverClassName=org.h2.Driver",
@@ -39,11 +40,11 @@ class DokumentServiceTest {
 		for (Kilometry kilometry : kilometryRepository.findAll()) {
 			Double expected = dokumentRepository.getSumaKilometry(kilometry.getMaszyna().getId(), kilometry.getRok(), kilometry.getMiesiac());
 			BigDecimal actual = dokumentService.getSumaKilometry(kilometry.getMaszyna().getId(), kilometry.getRok(), kilometry.getMiesiac(), null);
-			Assertions.assertEquals(BigDecimal.valueOf(expected), actual);
-
+			assertEquals(BigDecimal.valueOf(expected), actual);
+			assertNotNull(kilometry.toString());
 		}
 
-		Assertions.assertEquals(BigDecimal.ZERO, dokumentService.getSumaKilometry("C11", 2022, 4, null));
+		assertEquals(BigDecimal.ZERO, dokumentService.getSumaKilometry("C11", 2022, 4, null));
 
 	}
 
@@ -52,21 +53,21 @@ class DokumentServiceTest {
 	void testGetSumaKilometryBeforeDate() {
 
 		try {
-			Assertions.assertEquals(new BigDecimal("120.0"), dokumentService.getSumaKilometry("C1", 2022, 4,"1/04/2022/C1"));
-			Assertions.assertEquals(new BigDecimal("130.0"), dokumentService.getSumaKilometry("C1", 2022, 4,"2/04/2022/C1"));
-			Assertions.assertEquals(new BigDecimal("141.0"), dokumentService.getSumaKilometry("C1", 2022, 4,"3/04/2022/C1"));
-			Assertions.assertEquals(new BigDecimal("141.0"), dokumentService.getSumaKilometry("C1", 2022, 4,"4/04/2022/C1"));
-			Assertions.assertEquals(new BigDecimal("146.0"), dokumentService.getSumaKilometry("C1", 2022, 4,"5/04/2022/C1"));
-			Assertions.assertEquals(new BigDecimal("147.4"), dokumentService.getSumaKilometry("C1", 2022, 4,"6/04/2022/C1"));
-			Assertions.assertEquals(new BigDecimal("154.4"), dokumentService.getSumaKilometry("C1", 2022, 4,"7/04/2022/C1"));
-			Assertions.assertEquals(new BigDecimal("172.9"), dokumentService.getSumaKilometry("C1", 2022, 4,"8/04/2022/C1"));
-			Assertions.assertEquals(new BigDecimal("190.9"), dokumentService.getSumaKilometry("C1", 2022, 4,"9/04/2022/C1"));
-			Assertions.assertEquals(new BigDecimal("209.9"), dokumentService.getSumaKilometry("C1", 2022, 4,"10/04/2022/C1"));
+			assertEquals(new BigDecimal("120.0"), dokumentService.getSumaKilometry("C1", 2022, 4,"1/04/2022/C1"));
+			assertEquals(new BigDecimal("130.0"), dokumentService.getSumaKilometry("C1", 2022, 4,"2/04/2022/C1"));
+			assertEquals(new BigDecimal("141.0"), dokumentService.getSumaKilometry("C1", 2022, 4,"3/04/2022/C1"));
+			assertEquals(new BigDecimal("141.0"), dokumentService.getSumaKilometry("C1", 2022, 4,"4/04/2022/C1"));
+			assertEquals(new BigDecimal("146.0"), dokumentService.getSumaKilometry("C1", 2022, 4,"5/04/2022/C1"));
+			assertEquals(new BigDecimal("147.4"), dokumentService.getSumaKilometry("C1", 2022, 4,"6/04/2022/C1"));
+			assertEquals(new BigDecimal("154.4"), dokumentService.getSumaKilometry("C1", 2022, 4,"7/04/2022/C1"));
+			assertEquals(new BigDecimal("172.9"), dokumentService.getSumaKilometry("C1", 2022, 4,"8/04/2022/C1"));
+			assertEquals(new BigDecimal("190.9"), dokumentService.getSumaKilometry("C1", 2022, 4,"9/04/2022/C1"));
+			assertEquals(new BigDecimal("209.9"), dokumentService.getSumaKilometry("C1", 2022, 4,"10/04/2022/C1"));
 		} catch (DocumentNotFoundException e) {
-			Assertions.fail();
+			fail();
 		}
 
-		Assertions.assertThrows(DocumentNotFoundException.class,
+		assertThrows(DocumentNotFoundException.class,
 				() -> dokumentService.getSumaKilometry("C1", 2022, 4,"11/04/2022/C1"));
 
 	}
@@ -82,17 +83,17 @@ class DokumentServiceTest {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(dokument1.getData());
 
-		Assertions.assertNotNull(dokument1);
-		Assertions.assertEquals(new BigDecimal("25"), dokument1.getKilometry());
-		Assertions.assertEquals(new BigDecimal("25"), dokument1.getKilometryPrzyczepa());
-		Assertions.assertEquals(2, dokument1.getZuzycie().size());
-		Assertions.assertEquals(17, cal.get(Calendar.DAY_OF_MONTH));
-		Assertions.assertEquals(3, cal.get(Calendar.MONTH));
-		Assertions.assertEquals(2022, cal.get(Calendar.YEAR));
+		assertNotNull(dokument1);
+		assertEquals(new BigDecimal("25"), dokument1.getKilometry());
+		assertEquals(new BigDecimal("25"), dokument1.getKilometryPrzyczepa());
+		assertEquals(2, dokument1.getZuzycie().size());
+		assertEquals(17, cal.get(Calendar.DAY_OF_MONTH));
+		assertEquals(3, cal.get(Calendar.MONTH));
+		assertEquals(2022, cal.get(Calendar.YEAR));
 
 		dokumentService.delete("15/04/2022/C1");
 
-		Assertions.assertThrows(DocumentNotFoundException.class, () -> dokumentService.delete("15/04/2022/C1"));
+		assertThrows(DocumentNotFoundException.class, () -> dokumentService.delete("15/04/2022/C1"));
 
 	}
 

@@ -66,6 +66,7 @@ class ZuzycieServiceTest {
 			BigDecimal actual = zuzycieService.getSuma(z.getNorma().getId(), year, month, z.getDokument().getNumer());
 
 			assertEquals(BigDecimal.valueOf(expected), actual);
+			assertNotNull(z.toString());
 
 		}
 

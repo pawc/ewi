@@ -55,6 +55,8 @@ class StanRestControllerTest {
     void stanPostPutTest() throws Exception {
         Norma norma = new Norma();
         norma.setId(1);
+        assertNotNull(norma.toString());
+        assertNotNull(norma.hashCode());
 
         Stan stan = new Stan();
         stan.setId(10);
