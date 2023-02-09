@@ -2,6 +2,7 @@ package pl.pawc.ewi.config;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.ApplicationArguments;
@@ -22,6 +23,9 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class InitialDataLoaderTest {
 
+    @InjectMocks
+    InitialDataLoader initialDataLoader;
+
     @Mock
     PasswordEncoder passwordEncoder;
 
@@ -34,7 +38,6 @@ class InitialDataLoaderTest {
     @Test
     void myUserTest() {
 
-        InitialDataLoader initialDataLoader = new InitialDataLoader(passwordEncoder, userRepository);
         Optional<User> optionalUser = Optional.empty();
         when(userRepository.findById(anyString())).thenReturn(optionalUser);
         ReflectionTestUtils.setField(initialDataLoader, "myUser", "pawc");

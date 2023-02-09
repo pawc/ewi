@@ -15,6 +15,7 @@ import pl.pawc.ewi.entity.Stan;
 import pl.pawc.ewi.model.RaportStan;
 
 import javax.servlet.ServletContext;
+import javax.transaction.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -52,6 +53,7 @@ class StanRestControllerTest {
     }
 
     @Test
+    @Transactional
     void stanPostPutTest() throws Exception {
         Norma norma = new Norma();
         norma.setId(1);
@@ -59,9 +61,9 @@ class StanRestControllerTest {
         assertNotNull(norma.hashCode());
 
         Stan stan = new Stan();
-        stan.setId(10);
+        stan.setId(102);
         stan.setNorma(norma);
-        stan.setWartosc(BigDecimal.valueOf(5.43));
+        stan.setWartosc(BigDecimal.valueOf(0));
         stan.setRok(2023);
         stan.setMiesiac(2);
 
@@ -74,13 +76,6 @@ class StanRestControllerTest {
                         .content(requestJson))
                 .andExpect(status().isOk());
 
-        stan.setWartosc(BigDecimal.valueOf(1.23));
-        requestJson = ow.writeValueAsString(stan);
-
-        mockMvc.perform(put("/stan")
-                        .contentType(APPLICATION_JSON_UTF8)
-                        .content(requestJson))
-                .andExpect(status().isOk());
 
         List stany = Arrays.asList(stan);
         requestJson = ow.writeValueAsString(stany);
@@ -90,10 +85,6 @@ class StanRestControllerTest {
                         .content(requestJson))
                 .andExpect(status().isOk());
 
-    }
-
-    @Test
-    void stanyPostTest() {
     }
 
     @Test

@@ -2,6 +2,7 @@ package pl.pawc.ewi.config.auth;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -16,6 +17,9 @@ import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(MockitoExtension.class)
 class DatabaseUserDetailsPasswordServiceTest {
 
+    @InjectMocks
+    DatabaseUserDetailsPasswordService service;
+
     @Mock
     UserDetailsMapper userDetailsMapper;
 
@@ -25,7 +29,6 @@ class DatabaseUserDetailsPasswordServiceTest {
     @Test
     void updatePasswordTest(){
 
-        DatabaseUserDetailsPasswordService service = new DatabaseUserDetailsPasswordService(userRepository, userDetailsMapper);
         User user = new User("pawc", "abc123", Collections.emptyList());
         Mockito.when(userRepository.findById(user.getUsername())).thenReturn(Optional.of(new pl.pawc.ewi.entity.User()));
         service.updatePassword(user, "123abc");

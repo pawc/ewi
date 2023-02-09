@@ -83,10 +83,10 @@ INSERT INTO `maszyna_kategorie` (`maszyna_id`, `kategorie_nazwa`) VALUES
 -- Zrzucanie danych dla tabeli ewidb.stan: ~4 rows (około)
 /*!40000 ALTER TABLE `stan` DISABLE KEYS */;
 INSERT INTO `stan` (`id`, `miesiac`, `rok`, `wartosc`, `norma_id`) VALUES
-	(7, 4, 2022, 2.4, 1),
-	(8, 4, 2022, 1.2, 2),
-	(9, 4, 2022, 5.5, 3),
-	(10, 4, 2022, 12.1, 4);
+	(1, 4, 2022, 2.4, 1),
+	(2, 4, 2022, 1.2, 2),
+	(3, 4, 2022, 5.5, 3),
+	(4, 4, 2022, 12.1, 4);
 /*!40000 ALTER TABLE `stan` ENABLE KEYS */;
 
 
