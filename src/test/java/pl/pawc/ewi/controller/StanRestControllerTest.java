@@ -43,11 +43,15 @@ class StanRestControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    private ObjectWriter ow;
+    private String requestJson;
+
     @BeforeEach
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
         ServletContext servletContext = webApplicationContext.getServletContext();
-
+        objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ow = objectMapper.writer().withDefaultPrettyPrinter();
         assertNotNull(servletContext);
         assertNotNull(webApplicationContext.getBean("stanRestController"));
     }
@@ -67,15 +71,12 @@ class StanRestControllerTest {
         stan.setRok(2023);
         stan.setMiesiac(2);
 
-        objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(stan);
+        requestJson = ow.writeValueAsString(stan);
 
         mockMvc.perform(put("/stan")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());
-
 
         List stany = Arrays.asList(stan);
         requestJson = ow.writeValueAsString(stany);

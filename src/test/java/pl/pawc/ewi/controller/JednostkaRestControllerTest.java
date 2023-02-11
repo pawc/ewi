@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import pl.pawc.ewi.entity.*;
+import pl.pawc.ewi.entity.Jednostka;
 
 import javax.servlet.ServletContext;
 import java.math.BigDecimal;
@@ -41,11 +41,15 @@ class JednostkaRestControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    private ObjectWriter ow;
+    private String requestJson;
+
     @BeforeEach
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
         ServletContext servletContext = webApplicationContext.getServletContext();
-
+        objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ow = objectMapper.writer().withDefaultPrettyPrinter();
         assertNotNull(servletContext);
         assertNotNull(webApplicationContext.getBean("jednostkaRestController"));
     }
@@ -57,10 +61,7 @@ class JednostkaRestControllerTest {
         Jednostka jednostka = new Jednostka("L/H");
         jednostka.setNazwa("ON/H");
         jednostka.setWaga(BigDecimal.valueOf(1.23));
-
-        objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(jednostka);
+        requestJson = ow.writeValueAsString(jednostka);
 
         mockMvc.perform(post("/jednostka")
                 .contentType(APPLICATION_JSON_UTF8)

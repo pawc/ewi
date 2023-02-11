@@ -52,11 +52,15 @@ class DokumentRestControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    private ObjectWriter ow;
+    private String requestJson;
+
     @BeforeEach
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
         ServletContext servletContext = webApplicationContext.getServletContext();
-
+        objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ow = objectMapper.writer().withDefaultPrettyPrinter();
         assertNotNull(servletContext);
         assertNotNull(webApplicationContext.getBean("dokumentRestController"));
     }
@@ -135,9 +139,7 @@ class DokumentRestControllerTest {
         dokument.setMaszyna(maszyna);
         dokument.setZuzycie(Arrays.asList(zuzycie));
 
-        objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(dokument);
+        requestJson = ow.writeValueAsString(dokument);
 
         mockMvc.perform(post("/dokument")
                         .contentType(APPLICATION_JSON_UTF8)
@@ -167,11 +169,8 @@ class DokumentRestControllerTest {
         dokument.setMaszyna(maszyna);
         dokument.setZuzycie(Collections.EMPTY_LIST);
 
-        objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = objectMapper.writer().withDefaultPrettyPrinter();
-
         dokument.setNumer("81/09/2022/C1");
-        String requestJson = ow.writeValueAsString(dokument);
+        requestJson = ow.writeValueAsString(dokument);
 
         mockMvc.perform(put("/dokument")
                         .contentType(APPLICATION_JSON_UTF8)

@@ -29,7 +29,7 @@ public class StanRestController {
     private final StanService stanService;
 
     @PutMapping("stan")
-    public void stanPost(
+    public void stanPut(
             @RequestBody Stan stan,
             HttpServletRequest request,
             HttpServletResponse response) {
