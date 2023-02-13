@@ -61,7 +61,7 @@ INSERT INTO `dokument` (`numer`, `data`, `kilometry`, `kilometry_przyczepa`, `ma
 -- Zrzucanie danych dla tabeli ewidb.kategoria: ~1 rows (około)
 /*!40000 ALTER TABLE `kategoria` DISABLE KEYS */;
 INSERT INTO `kategoria` (`nazwa`, `przenoszona_na_kolejny_okres`) VALUES
-	('Ciągniki', 0);
+	('Ciągniki', 1);
 /*!40000 ALTER TABLE `kategoria` ENABLE KEYS */;
 
 
