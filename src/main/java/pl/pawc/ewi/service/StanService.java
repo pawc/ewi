@@ -51,6 +51,7 @@ public class StanService {
 
     public boolean post(Stan stan){
         Stan stanDB = stanRepository.findOneByNormaAndRokAndMiesiac(stan.getNorma(), stan.getRok(), stan.getMiesiac());
+        if(stan.getWartosc() == null) stan.setWartosc(BigDecimal.ZERO);
         if(stanDB == null){
             stanRepository.save(stan);
             return true;
@@ -63,7 +64,6 @@ public class StanService {
     }
 
     public void stanyPost(List<Stan> stany){
-        List<Stan> byParams;
         Stan stanDB;
         for(Stan stan : stany){
 
@@ -73,6 +73,7 @@ public class StanService {
             }
 
             stanDB = stanRepository.findOneByNormaAndRokAndMiesiac(stan.getNorma(), stan.getRok(), stan.getMiesiac());
+            if(stan.getWartosc() == null) stan.setWartosc(BigDecimal.ZERO);
             if(stanDB == null){
                 stanRepository.save(stan);
             }
