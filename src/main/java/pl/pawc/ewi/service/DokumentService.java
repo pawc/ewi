@@ -116,7 +116,12 @@ public class DokumentService {
     }
 
     public void post(Dokument dokument){
+        if(dokument.getKilometry() == null) dokument.setKilometry(BigDecimal.ZERO);
+        if(dokument.getKilometryPrzyczepa() == null) dokument.setKilometryPrzyczepa(BigDecimal.ZERO);
         for(Zuzycie zuzycie : dokument.getZuzycie()){
+            if(zuzycie.getWartosc() == null) zuzycie.setWartosc(BigDecimal.ZERO);
+            if(zuzycie.getZatankowano() == null) zuzycie.setZatankowano(BigDecimal.ZERO);
+            if(zuzycie.getOgrzewanie() == null) zuzycie.setOgrzewanie(BigDecimal.ZERO);
             zuzycie.setDokument(dokument);
             zuzycieRepository.save(zuzycie);
         }
@@ -124,6 +129,8 @@ public class DokumentService {
 
     public void put(Dokument dokument) throws DocumentNotFoundException {
         Optional<Dokument> byId = dokumentRepository.findById(dokument.getNumer());
+        if(dokument.getKilometry() == null) dokument.setKilometry(BigDecimal.ZERO);
+        if(dokument.getKilometryPrzyczepa() == null) dokument.setKilometryPrzyczepa(BigDecimal.ZERO);
 
         if(byId.isPresent()){
             Dokument dokumentDB = byId.get();
@@ -135,7 +142,9 @@ public class DokumentService {
 
             for(Zuzycie zuzycie : dokument.getZuzycie()) {
                 Zuzycie zuzycieDB = zuzycieRepository.findById(zuzycie.getId()).orElse(null);
-
+                if(zuzycie.getWartosc() == null) zuzycie.setWartosc(BigDecimal.ZERO);
+                if(zuzycie.getZatankowano() == null) zuzycie.setZatankowano(BigDecimal.ZERO);
+                if(zuzycie.getOgrzewanie() == null) zuzycie.setOgrzewanie(BigDecimal.ZERO);
                 zuzycieDB.setWartosc(zuzycie.getWartosc());
                 zuzycieDB.setZatankowano(zuzycie.getZatankowano());
                 zuzycieDB.setOgrzewanie(zuzycie.getOgrzewanie());
