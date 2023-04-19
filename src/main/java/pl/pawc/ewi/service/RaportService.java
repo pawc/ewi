@@ -127,11 +127,14 @@ public class RaportService {
         return groupBy;
     }
 
-    public List<Raport> getRaport(int year, int month) {
+    public List<Raport> getRaport(int year, int month, boolean isQuarterly) {
         Calendar cal = Calendar.getInstance();
+
+        if(isQuarterly) month = getFirstMonthOfQuarter(month);
         cal.set(year, month-1, 1);
+
         Date firstDayOfMonth = cal.getTime();
-        cal.add(Calendar.MONTH, 1);
+        cal.add(Calendar.MONTH, isQuarterly ? 3 : 1);
         cal.add(Calendar.DAY_OF_MONTH, -1);
         Date lastDayOfMonth = cal.getTime();
 
@@ -197,6 +200,13 @@ public class RaportService {
 
         return results;
 
+    }
+
+    private int getFirstMonthOfQuarter(int quarter){
+        if(quarter == 1) return 1;
+        if(quarter == 2) return 4;
+        if(quarter == 3) return 6;
+        else return 9;
     }
 
 }

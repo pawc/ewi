@@ -61,13 +61,13 @@ class RaportServiceTest {
 	@Transactional
 	void testGetRaport() {
 
-		assertEquals(4, raportService.getRaport(2022, 4).size());
+		assertEquals(4, raportService.getRaport(2022, 4, false).size());
 
-		List<Raport> raport = raportService.getRaport(2022, 5);
+		List<Raport> raport = raportService.getRaport(2022, 5, false);
 		assertEquals(4, raport.size());
 		assertNotNull(raport.stream().findFirst().toString());
 
-		assertEquals(0, raportService.getRaport(2023, 5).size());
+		assertEquals(0, raportService.getRaport(2023, 5, false).size());
 
 	}
 

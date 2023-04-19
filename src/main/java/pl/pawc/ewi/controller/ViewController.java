@@ -41,6 +41,18 @@ public class ViewController {
 
     }
 
+    @RequestMapping("/raportKwartalny")
+    public String raportKwartalny(
+            Model model,
+            HttpServletRequest request,
+            HttpServletResponse response){
+
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
+        logger.info("[{}] /raportKwartalny", ip);
+        return "raportKwartalny";
+
+    }
+
     @RequestMapping("/raport2")
     public String raport2(
             Model model,

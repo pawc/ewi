@@ -36,7 +36,19 @@ public class RaportRestController {
 
         String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         logger.info("[{}] /raport GET {}-{}", ip, rok, miesiac);
-        return raportService.getRaport(rok, miesiac);
+        return raportService.getRaport(rok, miesiac, false);
+
+    }
+
+    @RequestMapping(value = "/getRaportKwartalny", method = RequestMethod.GET)
+    public List<Raport> getRaportKwartalny(
+            HttpServletRequest request,
+            @RequestParam("rok") int rok,
+            @RequestParam("kwartal") int kwartal){
+
+        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
+        logger.info("[{}] /getRaportKwartalny GET {}-{}", ip, rok, kwartal);
+        return raportService.getRaport(rok, kwartal, true);
 
     }
 
