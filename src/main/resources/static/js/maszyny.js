@@ -160,7 +160,6 @@ function edytujBtn(id){
                 class: 'form-control'
             })
             .css('width', '90px')
-            .prop('disabled', true)
             .val(norma.wartosc)
 
             var col1 = $('<td>')
