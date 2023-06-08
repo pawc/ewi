@@ -1,8 +1,8 @@
 var t;
 $(document).ready(function() {
 
-    $('#raportMaszynaKilometryLink').css("font-weight", "bold");
-    $('#raportMaszynaKilometryLink').css("text-decoration", "underline");
+    $('#raportMaszynaKilometryLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#raportyDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
     $('#loadingDiv').hide()
 
     t = $('#raportMaszynaKilometry').DataTable({

@@ -1,8 +1,8 @@
 var t;
 $(document).ready(function() {
 
-    $('#stanyLink').css("font-weight", "bold");
-    $('#stanyLink').css("text-decoration", "underline");
+    $('#stanyLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#stanyDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
 
     var month = new Date().getMonth()+1
     if(month < 10) month = '0' + month

@@ -1,8 +1,8 @@
 var t;
 $(document).ready(function() {
 
-    $('#raportKwartalnyLink').css("font-weight", "bold");
-    $('#raportKwartalnyLink').css("text-decoration", "underline");
+    $('#raportKwartalnyLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#raportyDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
 
     var quarter = '0' + Math.floor((new Date().getMonth() + 3) / 3);
 

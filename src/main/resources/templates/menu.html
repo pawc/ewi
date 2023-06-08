@@ -6,17 +6,40 @@
     <div id="header-container" class="container navbar-container">
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <!--<li><img style="height: 50px;" src="https://jf-staeulalia.pt/img/other/23/collection-santa-hat-picture.gif"></li>-->
-                <li><a th:href="@{/}" id="raportLink"><i class="fas fa-chart-pie"></i> Raport<br>miesięczny</a></li>
-                <li><a th:href="@{/raportKwartalny}" id="raportKwartalnyLink"><i class="fas fa-chart-pie"></i> Raport<br>kwartalny</a></li>
-                <li><a th:href="@{/raport2}" id="raportRocznyLink"><i class="fas fa-chart-pie"></i> Raport<br>roczny<br>(kategorie)</a></li>
-                <li><a th:href="@{/raportMaszynaKilometry}" id="raportMaszynaKilometryLink"><i class="fas fa-chart-pie"></i> Raport<br>kilometry</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="raportyDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-chart-pie"></i> Raporty
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="raportyDropdownMenuLink" style="width: 250px;">
+                        <p style="margin: 10px;"><a th:href="@{/}" id="raportLink"><i class="fas fa-chart-pie"></i> Raport miesięczny</a></p>
+                        <p style="margin: 10px;"><a th:href="@{/raportKwartalny}" id="raportKwartalnyLink"><i class="fas fa-chart-pie"></i> Raport kwartalny</a></p>
+                        <p style="margin: 10px;"><a th:href="@{/raport2}" id="raportRocznyLink"><i class="fas fa-chart-pie"></i> Raport roczny (kategorie)</a></p>
+                        <p style="margin: 10px;"><a th:href="@{/raportMaszynaKilometry}" id="raportMaszynaKilometryLink"> <i class="fas fa-chart-pie"></i> Raport kilometry</a></p>
+                    </div>
+                </li>
+
                 <li><a th:href="@{/dokumenty}" id="dokumentyLink"><i class="far fa-file-alt"></i> Dokumenty</a></li>
-                <li><a th:href="@{/maszyny}" id="maszynyLink"><i class="fas fa-subway"></i> Maszyny</a></li>
-                <li><a th:href="@{/jednostki}" id="jednostkiLink"><i class="fa fa-balance-scale"></i> Jednostki</a></li>
-                <li><a th:href="@{/stany}" id="stanyLink"><i class="fas fa-gas-pump"></i> Stany<br>początkowe<br>paliw</a></li>
-                <li><a th:href="@{/kilometry}" id="kilometryLink"><i class="fas fa-digital-tachograph"></i> Stany<br>początkowe<br>kilometrów</a></li>
-                <li><a th:href="@{/kategorie}" id="kategorieLink"><i class="fab fa-korvue"></i> Kategorie</a></li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="definicjeDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-subway"></i> Definicje
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="definicjeDropdownMenuLink" style="width: 200px;">
+                        <p style="margin: 10px;"><a th:href="@{/maszyny}" id="maszynyLink"><i class="fas fa-subway"></i> Maszyny</a></p>
+                        <p style="margin: 10px;"><a th:href="@{/jednostki}" id="jednostkiLink"><i class="fa fa-balance-scale"></i> Jednostki norm</a></p>
+                        <p style="margin: 10px;"><a th:href="@{/kategorie}" id="kategorieLink"><i class="fab fa-korvue"></i> Kategorie maszyn</a></p>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="stanyDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-digital-tachograph"></i> Stany początkowe
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="stanyDropdownMenuLink" style="width: 270px;">
+                        <p style="margin: 10px;"><a th:href="@{/stany}" id="stanyLink"><i class="fas fa-gas-pump"></i> Stany początkowe paliw</a></p>
+                        <p style="margin: 10px;"><a th:href="@{/kilometry}" id="kilometryLink"><i class="fas fa-digital-tachograph"></i> Stany początkowe kilometrów</a></p>
+                    </div>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="javascript: document.logoutForm.submit()"><i class="fas fa-sign-out-alt"></i> Wyloguj się</a></li>

@@ -1,8 +1,8 @@
 var t;
 $(document).ready(function() {
 
-    $('#kilometryLink').css("font-weight", "bold");
-    $('#kilometryLink').css("text-decoration", "underline");
+    $('#kilometryLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#stanyDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
 
     var queryString = window.location.search;
     var urlParams = new URLSearchParams(queryString);

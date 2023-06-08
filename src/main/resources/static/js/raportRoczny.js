@@ -1,8 +1,8 @@
 var t;
 $(document).ready(function() {
 
-    $('#raportRocznyLink').css("font-weight", "bold");
-    $('#raportRocznyLink').css("text-decoration", "underline");
+    $('#raportRocznyLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#raportyDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
 
     $("#rok").datepicker({
         changeMonth: false,

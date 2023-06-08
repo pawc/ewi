@@ -1,7 +1,7 @@
 $(document).ready(() => {
 
-    $('#kategorieLink').css("font-weight", "bold");
-    $('#kategorieLink').css("text-decoration", "underline");
+    $('#kategorieLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#definicjeDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
 
     $('#kategorieTable').DataTable({
         "language": {

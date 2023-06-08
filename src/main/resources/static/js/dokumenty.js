@@ -49,9 +49,16 @@ $(document).ready(() => {
         updateTable();
     })
 
-    $('#maszyna').change(() => {
+    const maszynaSelect = (type) => {
 
-        var maszynaId = $('#maszyna option:selected').val();
+        var maszynaId;
+        if(type){
+            maszynaId = $('#maszyna option:selected').val();
+            $('#tags').val('')
+        }
+        else maszynaId = $('#tags').val().match(/\((.*?)\)/)[1];
+
+
 
         var maxRelDoc = 0;
         var rows = $('#dokumentyTable').DataTable().rows().data()
@@ -174,12 +181,24 @@ $(document).ready(() => {
 
             })
         })
-    })
+    }
 
     $('#error').hide();
     $('#numer').keypress(() => {
         $('#error').hide();
     })
+
+    $('#maszyna').change(() => maszynaSelect(true))
+
+    $( function() {
+        $("#tags").autocomplete({
+            source: maszynyX.map(m => m.nazwa + '(' + m.id + ')'),
+            select: function(event, ui) {
+                $(this).val(ui.item.value);
+                maszynaSelect(false)
+            }
+        });
+    });
 
 })
 
@@ -236,6 +255,8 @@ function updateTable(){
 function edytujBtn(numer){
     $("span.ui-dialog-title").text('Edytuj dokument');
     type = 'PUT'
+
+    $('#tags').val('').prop("disabled", true);
 
     var headers = {};
     headers["Content-Type"] = "application/json; charset=utf-8";
@@ -376,6 +397,7 @@ function dodajBtn(){
     $("span.ui-dialog-title").text('Dodaj dokument');
     $('#maszyna').prop("disabled", false);
     $('#numer').prop("disabled", false);
+    $('#tags').val('').prop("disabled", false);
 
     var today = new Date().getDate();
     var todayS = (today > 9) ? today : '0' + today
@@ -446,7 +468,7 @@ $(function() {
 
     dialog = $( "#dialog-form" ).dialog({
         autoOpen: false,
-        height: 490,
+        height: 590,
         width: 1100,
         modal: true,
         buttons: {
@@ -473,13 +495,17 @@ $(function() {
                     zuzycie.push(z)
                 })
 
+                var maszynaId
+                if($('#tags').val()) maszynaId = $('#tags').val().match(/\((.*?)\)/)[1]
+                else maszynaId = $('#maszyna option:selected').val()
+
                 var dokument = {
                     numer: $('#numer').val(),
                     data: $('#data').val(),
                     kilometry: $('#kilometry').val(),
                     kilometryPrzyczepa: $('#kilometryPrzyczepa').val(),
                     maszyna: {
-                        id: $('#maszyna option:selected').val()
+                        id: maszynaId
                     },
                     zuzycie: zuzycie
                 }

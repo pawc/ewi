@@ -2,8 +2,8 @@ let jednostkaId = null
 
 $(document).ready(() => {
 
-    $('#jednostkiLink').css("font-weight", "bold");
-    $('#jednostkiLink').css("text-decoration", "underline");
+    $('#jednostkiLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#definicjeDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
 
     $('#jednostkiTable').DataTable({
         "language": {

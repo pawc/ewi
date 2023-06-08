@@ -1,7 +1,7 @@
 $(document).ready(() => {
 
-    $('#maszynyLink').css("font-weight", "bold");
-    $('#maszynyLink').css("text-decoration", "underline");
+    $('#maszynyLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#definicjeDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
 
     $('#maszynyTable').DataTable({
         "language": {
