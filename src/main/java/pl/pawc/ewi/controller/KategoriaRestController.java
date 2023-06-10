@@ -3,76 +3,49 @@ package pl.pawc.ewi.controller;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import pl.pawc.ewi.entity.Kategoria;
-import pl.pawc.ewi.repository.KategoriaRepository;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Optional;
+import pl.pawc.ewi.model.BadRequestException;
+import pl.pawc.ewi.service.KategoriaService;
 
 @RequiredArgsConstructor
 @RestController
 public class KategoriaRestController {
 
     private static final Logger logger = LogManager.getLogger(KategoriaRestController.class);
-    private final KategoriaRepository kategoriaRepository;
+    private final KategoriaService kategoriaService;
 
     @PostMapping("/kategoria")
-    public void kategoriaPost(
-            HttpServletRequest request,
-            HttpServletResponse response,
+    public void post(
             @RequestBody Kategoria kategoria){
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
-        Optional<Kategoria> byId = kategoriaRepository.findById(kategoria.getNazwa());
-        if(!byId.isPresent()){
-            logger.info("[{}] /kategoria POST {}", ip, kategoria.getNazwa());
-            kategoriaRepository.save(kategoria);
+        if(kategoriaService.post(kategoria)) logger.info("/kategoria POST {}", kategoria.getNazwa());
+        else {
+            logger.warn("/kategoria POST {} - category already exists", kategoria.getNazwa());
+            throw new BadRequestException();
         }
-        else{
-            logger.warn("[{}] /kategoria POST {} - category already exists", ip, kategoria.getNazwa());
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        }
+
     }
 
     @DeleteMapping("/kategoria")
-    public void kategoriaDelete(
-            HttpServletRequest request,
-            HttpServletResponse response,
+    public void delete(
             @RequestBody Kategoria kategoria){
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
+        logger.info("/kategoria DELETE {}", kategoria.getNazwa());
+        kategoriaService.delete(kategoria);
 
-        Optional<Kategoria> byId = kategoriaRepository.findById(kategoria.getNazwa());
-        if(byId.isPresent()){
-            logger.info("[{}] /kategoria DELETE {}", ip, kategoria.getNazwa());
-            kategoriaRepository.delete(kategoria);
-        }
-        else{
-            logger.warn("[{}] /kategoria DELETE {} - category not found", ip, kategoria.getNazwa());
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        }
     }
 
     @PutMapping("/togglePrzenoszonaNaKolejnyOkres")
-    public void togglePrzenoszonaNaKolejnyOkres(
-            HttpServletRequest request,
-            HttpServletResponse response,
+    public void toggle(
             @RequestBody Kategoria kategoria) {
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
-        Optional<Kategoria> byId = kategoriaRepository.findById(kategoria.getNazwa());
-        if(byId.isPresent()){
-            logger.info("[{}] /togglePrzenoszonaNaKolejnyOkres PUT {}", ip, kategoria.getNazwa());
-            Kategoria kat = byId.get();
-            kat.setPrzenoszonaNaKolejnyOkres(!kat.isPrzenoszonaNaKolejnyOkres());
-            kategoriaRepository.save(kat);
-        }
-        else{
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            logger.warn("[{}] /togglePrzenoszonaNaKolejnyOkres PUT {} - category not found", ip, kategoria.getNazwa());
-        }
+        logger.info("/togglePrzenoszonaNaKolejnyOkres PUT {}", kategoria.getNazwa());
+        if(!kategoriaService.togglePrzenoszonaNaKolejnyOkres(kategoria)) throw new BadRequestException();
 
     }
 

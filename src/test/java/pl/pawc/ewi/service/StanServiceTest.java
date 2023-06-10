@@ -7,7 +7,7 @@ import pl.pawc.ewi.entity.Norma;
 import pl.pawc.ewi.entity.Stan;
 import pl.pawc.ewi.model.RaportStan;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -16,10 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(properties = {
-		"spring.datasource.driverClassName=org.h2.Driver",
-		"spring.datasource.url=jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1",
-})
+@SpringBootTest
 class StanServiceTest {
 
 	@Autowired

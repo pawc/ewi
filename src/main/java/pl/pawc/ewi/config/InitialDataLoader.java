@@ -24,9 +24,7 @@ public class InitialDataLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args){
-
         myUser();
-
     }
 
     private void myUser() {

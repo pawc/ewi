@@ -14,8 +14,8 @@ import pl.pawc.ewi.entity.Norma;
 import pl.pawc.ewi.entity.Stan;
 import pl.pawc.ewi.model.RaportStan;
 
-import javax.servlet.ServletContext;
-import javax.transaction.Transactional;
+import jakarta.servlet.ServletContext;
+import jakarta.transaction.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -29,10 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(properties = {
-        "spring.datasource.driverClassName=org.h2.Driver",
-        "spring.datasource.url=jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1",
-})
+@SpringBootTest
 class StanRestControllerTest {
 
     @Autowired

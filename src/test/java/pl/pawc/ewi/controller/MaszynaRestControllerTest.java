@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import pl.pawc.ewi.entity.Maszyna;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import java.util.Collections;
 
@@ -22,10 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(properties = {
-        "spring.datasource.driverClassName=org.h2.Driver",
-        "spring.datasource.url=jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1",
-})
+@SpringBootTest
 class MaszynaRestControllerTest {
 
     @Autowired

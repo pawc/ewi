@@ -8,9 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.pawc.ewi.entity.Jednostka;
-import pl.pawc.ewi.repository.JednostkaRepository;
+import pl.pawc.ewi.service.JednostkaService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -18,32 +17,21 @@ import java.util.List;
 public class JednostkaRestController {
 
     private static final Logger logger = LogManager.getLogger(JednostkaRestController.class);
-    private final JednostkaRepository jednostkaRepository;
+    private final JednostkaService jednostkaService;
 
     @PostMapping("jednostka")
     public void jednostka(
-            @RequestBody Jednostka jednostka,
-            HttpServletRequest request) {
+            @RequestBody Jednostka jednostka) {
 
-        Jednostka j = jednostkaRepository.findById(jednostka.getId()).orElse(null);
-        if (j == null) {
-            j = new Jednostka();
-        }
-        j.setNazwa(jednostka.getNazwa());
-        j.setWaga(jednostka.getWaga());
-
-        jednostkaRepository.save(j);
-
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
-        logger.info("[{}] POST /jednostka {}", ip, j);
+        logger.info(" POST /jednostka {}", jednostka);
+        jednostkaService.put(jednostka);
     }
 
     @GetMapping("jednostkiGet")
-    public List<Jednostka> jednostki(HttpServletRequest request){
+    public List<Jednostka> jednostki(){
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
-        logger.info("[{}] /jednostki", ip);
-        return jednostkaRepository.findAll();
+        logger.info(" /jednostki");
+        return jednostkaService.findAll();
 
     }
 

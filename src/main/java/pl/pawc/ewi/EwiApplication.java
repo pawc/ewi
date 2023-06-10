@@ -5,12 +5,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.pawc.ewi.config.auth.DatabaseUserDetailsPasswordService;
@@ -18,8 +17,7 @@ import pl.pawc.ewi.config.auth.DatabaseUserDetailsService;
 
 @RequiredArgsConstructor
 @SpringBootApplication
-@EnableWebSecurity
-public class EwiApplication extends WebSecurityConfigurerAdapter {
+public class EwiApplication {
 
 	@Value("${bcryptWorkFactor}")
 	String bcryptWorkFactor;
@@ -30,28 +28,6 @@ public class EwiApplication extends WebSecurityConfigurerAdapter {
 	public static void main(String[] args) {
 		System.setProperty("server.servlet.context-path", "/paliwo");
 		SpringApplication.run(EwiApplication.class, args);
-	}
-
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-
-		http
-			.authorizeRequests()
-			.antMatchers("/login*").permitAll()
-			.antMatchers("/css/**").permitAll()
-			.antMatchers("/*").access("hasRole('ROLE_USER')")
-			.anyRequest().authenticated()
-			.and()
-			.formLogin()
-			.loginPage("/login")
-			.loginProcessingUrl("/login")
-			.defaultSuccessUrl("/", true)
-			.failureUrl("/login?error=true")
-			.and()
-			.logout()
-			.logoutUrl("/logout")
-			.deleteCookies("JSESSIONID");
-
 	}
 
 	@Bean
@@ -78,9 +54,12 @@ public class EwiApplication extends WebSecurityConfigurerAdapter {
 		return provider;
 	}
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth){
-		auth.authenticationProvider(daoAuthenticationProvider());
+	@Bean
+	public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+		AuthenticationManagerBuilder authenticationManagerBuilder =
+				http.getSharedObject(AuthenticationManagerBuilder.class);
+		authenticationManagerBuilder.authenticationProvider(daoAuthenticationProvider());
+		return authenticationManagerBuilder.build();
 	}
 
 }

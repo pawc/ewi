@@ -15,7 +15,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import pl.pawc.ewi.entity.Jednostka;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
+import pl.pawc.ewi.repository.JednostkaRepository;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -26,15 +28,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(properties = {
-        "spring.datasource.driverClassName=org.h2.Driver",
-        "spring.datasource.url=jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1",
-})
+@SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class JednostkaRestControllerTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
+
+    @Autowired
+    JednostkaRepository jednostkaRepository;
 
     private MockMvc mockMvc;
 
@@ -59,7 +61,7 @@ class JednostkaRestControllerTest {
     void jednostkaPostTest() throws Exception {
 
         Jednostka jednostka = new Jednostka("L/H");
-        jednostka.setNazwa("ON/H");
+        jednostka.setNazwa("ET/H");
         jednostka.setWaga(BigDecimal.valueOf(1.23));
         requestJson = ow.writeValueAsString(jednostka);
 

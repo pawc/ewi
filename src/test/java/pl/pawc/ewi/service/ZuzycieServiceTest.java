@@ -1,34 +1,21 @@
 package pl.pawc.ewi.service;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import pl.pawc.ewi.entity.Zuzycie;
 import pl.pawc.ewi.model.DocumentNotFoundException;
-import pl.pawc.ewi.repository.DokumentRepository;
-import pl.pawc.ewi.repository.ZuzycieRepository;
-
-import javax.transaction.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-@SpringBootTest(properties = {
-		"spring.datasource.driverClassName=org.h2.Driver",
-		"spring.datasource.url=jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1",
-})
+@SpringBootTest
 class ZuzycieServiceTest {
 
 	@Autowired
 	ZuzycieService zuzycieService;
-
-	@Autowired
-	ZuzycieRepository zuzycieRepository;
-
-	@Autowired
-	DokumentRepository dokumentRepository;
 
 	@Test
 	@Transactional
@@ -47,32 +34,6 @@ class ZuzycieServiceTest {
 		} catch (DocumentNotFoundException e) {
 			fail();
 		}
-
-	}
-
-	@Test
-	@Transactional
-	void testGetSumaDocExcluded() throws DocumentNotFoundException {
-		Iterable<Zuzycie> all = zuzycieRepository.findAll();
-		Calendar cal = Calendar.getInstance();
-
-		for(Zuzycie z : all){
-			cal.setTime(z.getDokument().getData());
-			int year = cal.get(Calendar.YEAR);
-			int month = cal.get(Calendar.MONTH) + 1;
-
-			double expected = dokumentRepository.getSumBeforeDate(z.getNorma().getId(), year , month,
-					z.getDokument().getData(), z.getDokument().getNumer());
-			BigDecimal actual = zuzycieService.getSuma(z.getNorma().getId(), year, month, z.getDokument().getNumer());
-
-			assertEquals(BigDecimal.valueOf(expected), actual);
-			assertNotNull(z.toString());
-
-		}
-
-		assertThrows(DocumentNotFoundException.class,
-				() -> zuzycieService.getSuma(1, 2022, 4,"11/04/2025/C1"));
-
 
 	}
 

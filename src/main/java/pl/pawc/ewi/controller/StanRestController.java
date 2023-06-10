@@ -11,12 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.pawc.ewi.entity.Stan;
 import pl.pawc.ewi.model.RaportStan;
-import pl.pawc.ewi.repository.NormaRepository;
-import pl.pawc.ewi.repository.StanRepository;
 import pl.pawc.ewi.service.StanService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,47 +20,32 @@ import java.util.List;
 public class StanRestController {
 
     private static final Logger logger = LogManager.getLogger(StanRestController.class);
-    private final StanRepository stanRepository;
-    private final NormaRepository normaRepository;
     private final StanService stanService;
 
     @PutMapping("stan")
     public void stanPut(
-            @RequestBody Stan stan,
-            HttpServletRequest request,
-            HttpServletResponse response) {
+            @RequestBody Stan stan) {
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
-        if(stanService.post(stan)){
-            logger.info("[{}] /stan dodano {} - normaID={}", ip, stan, stan.getNorma().getId());
-        }
-        else{
-            logger.info("[{}] /stan zaktualizowano {} - normaID={}", ip, stan, stan.getNorma().getId());
-        }
+        if(stanService.post(stan)) logger.info(" /stan dodano {} - normaID={}", stan, stan.getNorma().getId());
+        else logger.info(" /stan zaktualizowano {} - normaID={}", stan, stan.getNorma().getId());
     }
 
     @PostMapping("stany")
     public void stanyPost(
-            @RequestBody List<Stan> stany,
-            HttpServletRequest request,
-            HttpServletResponse response) {
+            @RequestBody List<Stan> stany) {
 
         stanService.stanyPost(stany);
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
         for(Stan stan : stany){
-            logger.info("[{}] /stany {}-{} - normaID={}", ip, stan.getRok(), stan.getMiesiac(), stan.getNorma().getId());
+            logger.info(" /stany {}-{} - normaID={}", stan.getRok(), stan.getMiesiac(), stan.getNorma().getId());
         }
     }
 
     @GetMapping("stanyGet")
     public List<RaportStan> stanyGet(
-            HttpServletRequest request,
-            HttpServletResponse response,
             @RequestParam("rok") int rok,
             @RequestParam("miesiac") int miesiac){
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getRemoteAddr();
-        logger.info("[{}] /stanyGet {}-{}", ip, rok, miesiac);
+        logger.info(" /stanyGet {}-{}", rok, miesiac);
         return stanService.findBy(rok, miesiac);
 
     }

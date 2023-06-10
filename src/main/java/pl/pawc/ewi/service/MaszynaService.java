@@ -12,8 +12,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 @Component
 @RequiredArgsConstructor
@@ -25,15 +23,21 @@ public class MaszynaService {
     private final DokumentService dokumentService;
 
     public List<Maszyna> findAllActive(){
-        Iterable<Maszyna> all = maszynaRepository.findAll();
-        Stream<Maszyna> stream = StreamSupport.stream(all.spliterator(), false);
-        return stream.filter(Maszyna::isAktywna).collect(Collectors.toList());
+        return maszynaRepository.findByAktywnaTrue();
+    }
+
+    public List<Maszyna> findAll(){
+        return maszynaRepository.findAll();
     }
 
     public List<Maszyna> findAllUncategorized(){
-        Iterable<Maszyna> all = maszynaRepository.findAll();
-        Stream<Maszyna> stream = StreamSupport.stream(all.spliterator(), false);
-        return stream.filter(m -> m.getKategorie().isEmpty()).collect(Collectors.toList());
+        return maszynaRepository.findAll().stream().
+                filter(m -> m.getKategorie().isEmpty())
+                .collect(Collectors.toList());
+    }
+
+    public Optional<Maszyna> findById(String id){
+        return maszynaRepository.findById(id);
     }
 
     @SneakyThrows

@@ -6,5 +6,4 @@ import pl.pawc.ewi.entity.User;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, String> {
-
 }

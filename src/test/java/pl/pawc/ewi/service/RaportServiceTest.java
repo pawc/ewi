@@ -7,7 +7,7 @@ import pl.pawc.ewi.model.Raport;
 import pl.pawc.ewi.model.RaportKilometry;
 import pl.pawc.ewi.model.RaportRoczny;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,10 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest(properties = {
-		"spring.datasource.driverClassName=org.h2.Driver",
-		"spring.datasource.url=jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1",
-})
+@SpringBootTest
 class RaportServiceTest {
 
 	@Autowired

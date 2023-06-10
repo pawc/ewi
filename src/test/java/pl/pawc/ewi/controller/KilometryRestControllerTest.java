@@ -3,6 +3,7 @@ package pl.pawc.ewi.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import jakarta.servlet.ServletContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,7 @@ import pl.pawc.ewi.entity.Kilometry;
 import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.model.RaportKilometry;
 
-import javax.servlet.ServletContext;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -27,10 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(properties = {
-        "spring.datasource.driverClassName=org.h2.Driver",
-        "spring.datasource.url=jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1",
-})
+@SpringBootTest
 class KilometryRestControllerTest {
 
     @Autowired

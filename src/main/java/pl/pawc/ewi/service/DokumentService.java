@@ -28,6 +28,10 @@ public class DokumentService {
     private final StanRepository stanRepository;
     private final ZuzycieService zuzycieService;
 
+    public List<Dokument> getDokumenty(int year, int month){
+        return dokumentRepository.getDokumenty(year, month);
+    }
+
     public BigDecimal getSumaKilometry(String maszynaId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException {
 
         final Dokument dokument;
@@ -157,18 +161,12 @@ public class DokumentService {
         }
     }
 
-    public void delete(String numer) throws DocumentNotFoundException {
+    public void delete(String numer) {
 
-        Optional<Dokument> byId = dokumentRepository.findById(numer);
-        if(byId.isPresent()) {
-            Dokument dokumentDB = byId.get();
-            zuzycieRepository.findByDokument(dokumentDB)
-                    .forEach(zuzycieRepository::delete);
-            dokumentRepository.delete(dokumentDB);
-        }
-        else{
-            throw new DocumentNotFoundException(numer);
-        }
+        dokumentRepository.findById(numer).ifPresent(dok -> {
+            zuzycieRepository.findByDokument(dok).forEach(zuzycieRepository::delete);
+            dokumentRepository.delete(dok);
+        });
 
     }
 

@@ -10,12 +10,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.pawc.ewi.entity.Kategoria;
 import pl.pawc.ewi.entity.Maszyna;
-import pl.pawc.ewi.repository.JednostkaRepository;
-import pl.pawc.ewi.repository.KategoriaRepository;
-import pl.pawc.ewi.repository.MaszynaRepository;
+import pl.pawc.ewi.service.JednostkaService;
+import pl.pawc.ewi.service.KategoriaService;
+import pl.pawc.ewi.service.MaszynaService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Set;
 
@@ -25,68 +23,53 @@ import java.util.Set;
 public class ViewController {
 
     private static final Logger logger = LogManager.getLogger(ViewController.class);
-    private final MaszynaRepository maszynaRepository;
-    private final KategoriaRepository kategoriaRepository;
-    private final JednostkaRepository jednostkaRepository;
+    private final MaszynaService maszynaService;
+    private final KategoriaService kategoriaService;
+    private final JednostkaService jednostkaService;
 
     @RequestMapping("/")
     public String index(
-            Model model,
-            HttpServletRequest request,
-            HttpServletResponse response){
+            Model model){
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
-        logger.info("[{}] /", ip);
+        logger.info(" /");
         return "index";
 
     }
 
     @RequestMapping("/raportKwartalny")
     public String raportKwartalny(
-            Model model,
-            HttpServletRequest request,
-            HttpServletResponse response){
+            Model model){
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
-        logger.info("[{}] /raportKwartalny", ip);
+        logger.info(" /raportKwartalny");
         return "raportKwartalny";
 
     }
 
     @RequestMapping("/raport2")
     public String raport2(
-            Model model,
-            HttpServletRequest request,
-            HttpServletResponse response){
+            Model model){
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
-        logger.info("[{}] /raport2", ip);
+        logger.info(" /raport2");
         return "raportRoczny";
 
     }
 
     @RequestMapping("/raportMaszynaKilometry")
     public String raportMaszynaKilometry(
-            Model model,
-            HttpServletRequest request,
-            HttpServletResponse response){
+            Model model){
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
-        model.addAttribute("maszyny", maszynaRepository.findAllActive());
-        logger.info("[{}] /raportMaszynaKilometry", ip);
+        model.addAttribute("maszyny", maszynaService.findAllActive());
+        logger.info(" /raportMaszynaKilometry");
         return "raportMaszynaKilometry";
 
     }
 
     @RequestMapping("/dokumenty")
     public String dokumenty(
-            Model model,
-            HttpServletRequest request,
-            HttpServletResponse response) {
+            Model model) {
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
-        logger.info("[{}] /dokumenty", ip);
-        model.addAttribute("maszyny", maszynaRepository.findAllActive());
+        logger.info(" /dokumenty");
+        model.addAttribute("maszyny", maszynaService.findAllActive());
 
         return "dokumenty";
 
@@ -94,15 +77,12 @@ public class ViewController {
 
     @RequestMapping("/maszyny")
     public String maszyny(
-            Model model,
-            HttpServletRequest request,
-            HttpServletResponse response) {
+            Model model) {
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
-        logger.info("[{}] /maszyny", ip);
-        model.addAttribute("maszyny", maszynaRepository.findAll());
-        model.addAttribute("kategorie", kategoriaRepository.findAll());
-        model.addAttribute("jednostki", jednostkaRepository.findAll());
+        logger.info(" /maszyny");
+        model.addAttribute("maszyny", maszynaService.findAll());
+        model.addAttribute("kategorie", kategoriaService.findAll());
+        model.addAttribute("jednostki", jednostkaService.findAll());
 
         return "maszyny";
 
@@ -110,54 +90,41 @@ public class ViewController {
 
     @RequestMapping("/jednostki")
     public String jednostki(
-            Model model,
-            HttpServletRequest request,
-            HttpServletResponse response) {
+            Model model) {
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
-        logger.info("[{}] /jednostki", ip);
-        model.addAttribute("jednostki", jednostkaRepository.findAll());
+        logger.info(" /jednostki");
+        model.addAttribute("jednostki", jednostkaService.findAll());
 
         return "jednostki";
 
     }
 
     @RequestMapping("/stany")
-    public String stany(
-            Model model,
-            HttpServletRequest request,
-            HttpServletResponse response) {
+    public String stany(Model model) {
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
-        logger.info("[{}] /stany", ip);
+        logger.info(" /stany");
         return "stany";
 
     }
 
     @RequestMapping("/kilometry")
     public String kilometry(
-            Model model,
-            HttpServletRequest request,
-            HttpServletResponse response) {
+            Model model) {
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
-        logger.info("[{}] /kilometry", ip);
+        logger.info(" /kilometry");
         return "kilometry";
 
     }
 
     @RequestMapping("/kategorie")
     public String kategorie(
-            Model model,
-            HttpServletRequest request,
-            HttpServletResponse response) {
+            Model model) {
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
-        logger.info("[{}] /kategorie", ip);
+        logger.info(" /kategorie");
 
-        List<Kategoria> kategorie = Lists.newArrayList(kategoriaRepository.findAll());
+        List<Kategoria> kategorie = Lists.newArrayList(kategoriaService.findAll());
 
-        Iterable<Maszyna> allUncategorized = maszynaRepository.findAllUncategorized();
+        Iterable<Maszyna> allUncategorized = maszynaService.findAllUncategorized();
         Set<Maszyna> maszyny = Sets.newHashSet(allUncategorized);
 
         if(!maszyny.isEmpty()){
@@ -177,12 +144,9 @@ public class ViewController {
     }
 
     @RequestMapping("/login")
-    public String login(
-            HttpServletRequest request,
-            HttpServletResponse response) {
+    public String login() {
 
-        String ip = request.getHeader("X-Real-IP") != null ? request.getHeader("X-Real-IP") : request.getLocalAddr();
-        logger.info("[{}] /login", ip);
+        logger.info(" /login");
         return "login";
 
     }

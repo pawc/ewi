@@ -13,16 +13,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import pl.pawc.ewi.entity.Kategoria;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(properties = {
-        "spring.datasource.driverClassName=org.h2.Driver",
-        "spring.datasource.url=jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1",
-})
+@SpringBootTest
 class KategoriaRestControllerTest {
 
     @Autowired
@@ -54,11 +51,6 @@ class KategoriaRestControllerTest {
         kategoria.setNazwa("Test");
         kategoria.setPrzenoszonaNaKolejnyOkres(true);
         requestJson = ow.writeValueAsString(kategoria);
-
-        mockMvc.perform(delete("/kategoria")
-                        .contentType(APPLICATION_JSON_UTF8)
-                        .content(requestJson))
-                .andExpect(status().isBadRequest());
 
         mockMvc.perform(put("/togglePrzenoszonaNaKolejnyOkres")
                         .contentType(APPLICATION_JSON_UTF8)

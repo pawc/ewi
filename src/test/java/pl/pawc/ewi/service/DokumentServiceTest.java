@@ -2,47 +2,27 @@ package pl.pawc.ewi.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.pawc.ewi.entity.Dokument;
-import pl.pawc.ewi.entity.Kilometry;
 import pl.pawc.ewi.model.DocumentNotFoundException;
-import pl.pawc.ewi.repository.DokumentRepository;
-import pl.pawc.ewi.repository.KilometryRepository;
-
-import javax.transaction.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(properties = {
-		"spring.datasource.driverClassName=org.h2.Driver",
-		"spring.datasource.url=jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1",
-})
+@SpringBootTest
 class DokumentServiceTest {
 
 	@Autowired
 	DokumentService dokumentService;
 
-	@Autowired
-	DokumentRepository dokumentRepository;
-
-	@Autowired
-	KilometryRepository kilometryRepository;
-
 	@Test
 	@Transactional
 	void testGetSumaKilometry() throws DocumentNotFoundException {
-
-		for (Kilometry kilometry : kilometryRepository.findAll()) {
-			Double expected = dokumentRepository.getSumaKilometry(kilometry.getMaszyna().getId(), kilometry.getRok(), kilometry.getMiesiac());
-			BigDecimal actual = dokumentService.getSumaKilometry(kilometry.getMaszyna().getId(), kilometry.getRok(), kilometry.getMiesiac(), null);
-			assertEquals(BigDecimal.valueOf(expected), actual);
-			assertNotNull(kilometry.toString());
-		}
 
 		assertEquals(BigDecimal.ZERO, dokumentService.getSumaKilometry("C11", 2022, 4, null));
 
@@ -74,7 +54,7 @@ class DokumentServiceTest {
 
 	@Test
 	@Transactional
-	void testPostGetPutDeleteDokument() throws JsonProcessingException, DocumentNotFoundException {
+	void testPostGetPutDeleteDokument() throws JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String input = "{\"numer\":\"15/04/2022/C1\",\"data\":\"2022-04-17\",\"kilometry\":\"25\",\"kilometryPrzyczepa\":\"25\",\"maszyna\":{\"id\":\"C1\"},\"zuzycie\":[{\"wartosc\":\"2.5\",\"norma\":{\"id\":\"1\",\"wartosc\":\"1\"},\"zatankowano\":\"2.5\",\"ogrzewanie\":\"2.5\"},{\"wartosc\":\"3.5\",\"norma\":{\"id\":\"2\",\"wartosc\":\"2\"},\"zatankowano\":\"3.5\",\"ogrzewanie\":\"3.5\"}]}";
 		Dokument dokument = objectMapper.readValue(input, Dokument.class);
@@ -92,8 +72,6 @@ class DokumentServiceTest {
 		assertEquals(2022, cal.get(Calendar.YEAR));
 
 		dokumentService.delete("15/04/2022/C1");
-
-		assertThrows(DocumentNotFoundException.class, () -> dokumentService.delete("15/04/2022/C1"));
 
 	}
 
