@@ -120,7 +120,6 @@ class DokumentRestControllerTest {
         Maszyna maszyna = new Maszyna();
         maszyna.setId("C1");
         Zuzycie zuzycie = new Zuzycie();
-        zuzycie.setId(123);
         zuzycie.setWartosc(BigDecimal.ZERO);
         zuzycie.setOgrzewanie(BigDecimal.ZERO);
         zuzycie.setZatankowano(BigDecimal.ZERO);

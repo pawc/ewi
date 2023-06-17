@@ -65,7 +65,7 @@ class MaszynaServiceTest {
 		assertNotNull(c1);
 		assertNotNull(c1.getSumaKilometry());
 		c1.getNormy().forEach(n -> assertNotNull(n.getSuma()));
-		assertEquals("Ciągnik 1", c1.getNazwa());
+		assertEquals("Ciagnik 1", c1.getNazwa());
 		c1.setNazwa("Ciągnik Test");
 		maszynaService.put(c1);
 		c1 = maszynaService.get("C1", "2022-05");
