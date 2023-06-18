@@ -18,10 +18,10 @@ import jakarta.servlet.ServletContext;
 import jakarta.transaction.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -75,7 +75,7 @@ class StanRestControllerTest {
                         .content(requestJson))
                 .andExpect(status().isOk());
 
-        List stany = Arrays.asList(stan);
+        List<Stan> stany = List.of(stan);
         requestJson = ow.writeValueAsString(stany);
 
         mockMvc.perform(post("/stany")

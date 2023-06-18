@@ -18,12 +18,14 @@ import pl.pawc.ewi.model.RaportKilometry;
 import jakarta.transaction.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -80,7 +82,7 @@ class KilometryRestControllerTest {
         kilometry.setMaszyna(maszyna);
         kilometry.setWartosc(BigDecimal.valueOf(99.99));
 
-        requestJson = ow.writeValueAsString(Arrays.asList(kilometry));
+        requestJson = ow.writeValueAsString(List.of(kilometry));
 
         mockMvc.perform(post("/kilometryList")
                         .contentType(APPLICATION_JSON_UTF8)
@@ -90,7 +92,7 @@ class KilometryRestControllerTest {
         kilometry.setRok(2022);
         kilometry.setMiesiac(4);
         kilometry.setWartosc(BigDecimal.valueOf(120));
-        requestJson = ow.writeValueAsString(Arrays.asList(kilometry));
+        requestJson = ow.writeValueAsString(List.of(kilometry));
 
         mockMvc.perform(post("/kilometryList")
                         .contentType(APPLICATION_JSON_UTF8)

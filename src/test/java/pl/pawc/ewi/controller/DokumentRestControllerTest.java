@@ -22,7 +22,6 @@ import jakarta.servlet.ServletContext;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -133,7 +132,7 @@ class DokumentRestControllerTest {
         dokument.setKilometryPrzyczepa(BigDecimal.ZERO);
         dokument.setData(new Date(System.currentTimeMillis()));
         dokument.setMaszyna(maszyna);
-        dokument.setZuzycie(Arrays.asList(zuzycie));
+        dokument.setZuzycie(List.of(zuzycie));
 
         requestJson = ow.writeValueAsString(dokument);
 
