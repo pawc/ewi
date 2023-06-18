@@ -23,6 +23,9 @@ import java.util.Set;
 public class ViewController {
 
     private static final Logger logger = LogManager.getLogger(ViewController.class);
+    public static final String MASZYNY = "maszyny";
+    public static final String KATEGORIE = "kategorie";
+    public static final String JEDNOSTKI = "jednostki";
     private final MaszynaService maszynaService;
     private final KategoriaService kategoriaService;
     private final JednostkaService jednostkaService;
@@ -58,7 +61,7 @@ public class ViewController {
     public String raportMaszynaKilometry(
             Model model){
 
-        model.addAttribute("maszyny", maszynaService.findAllActive());
+        model.addAttribute(MASZYNY, maszynaService.findAllActive());
         logger.info(" /raportMaszynaKilometry");
         return "raportMaszynaKilometry";
 
@@ -69,33 +72,33 @@ public class ViewController {
             Model model) {
 
         logger.info(" /dokumenty");
-        model.addAttribute("maszyny", maszynaService.findAllActive());
+        model.addAttribute(MASZYNY, maszynaService.findAllActive());
 
         return "dokumenty";
 
     }
 
     @RequestMapping("/maszyny")
-    public String maszyny(
+    public String maszynyView(
             Model model) {
 
         logger.info(" /maszyny");
-        model.addAttribute("maszyny", maszynaService.findAll());
-        model.addAttribute("kategorie", kategoriaService.findAll());
-        model.addAttribute("jednostki", jednostkaService.findAll());
+        model.addAttribute(MASZYNY, maszynaService.findAll());
+        model.addAttribute(KATEGORIE, kategoriaService.findAll());
+        model.addAttribute(JEDNOSTKI, jednostkaService.findAll());
 
-        return "maszyny";
+        return MASZYNY;
 
     }
 
     @RequestMapping("/jednostki")
-    public String jednostki(
+    public String jednostkiView(
             Model model) {
 
         logger.info(" /jednostki");
-        model.addAttribute("jednostki", jednostkaService.findAll());
+        model.addAttribute(JEDNOSTKI, jednostkaService.findAll());
 
-        return "jednostki";
+        return JEDNOSTKI;
 
     }
 
@@ -117,7 +120,7 @@ public class ViewController {
     }
 
     @RequestMapping("/kategorie")
-    public String kategorie(
+    public String kategorieView(
             Model model) {
 
         logger.info(" /kategorie");
@@ -137,9 +140,9 @@ public class ViewController {
             kategorie.add(kategoria);
         }
 
-        model.addAttribute("kategorie", kategorie);
+        model.addAttribute(KATEGORIE, kategorie);
 
-        return "kategorie";
+        return KATEGORIE;
 
     }
 

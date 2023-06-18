@@ -103,9 +103,8 @@ public class RaportService {
         String jednostka = n.getJednostkaObj() == null ? n.getJednostka() : n.getJednostkaObj().getNazwa();
         BigDecimal waga = n.getJednostkaObj() == null ? BigDecimal.ONE : n.getJednostkaObj().getWaga();
 
-        String kategoria_jednostka =
-                new StringBuilder(k.getNazwa()).append("-").append(jednostka).toString();
-        raportRoczny.setKategoria_jednostka(kategoria_jednostka.toUpperCase());
+        String kategoriaJednostka = new StringBuilder(k.getNazwa()).append("-").append(jednostka).toString();
+        raportRoczny.setKategoria_jednostka(kategoriaJednostka.toUpperCase());
 
         raportRoczny.setKategoria(k.getNazwa());
         raportRoczny.setJednostka(jednostka);
@@ -137,7 +136,7 @@ public class RaportService {
         for (Norma norma : normy) {
 
             List<Dokument> dokumentList  = dokumentsByDataBetween.stream().filter(d -> d.getMaszyna().equals(norma.getMaszyna())).toList();
-            if(dokumentList.size() == 0) continue;
+            if(dokumentList.isEmpty()) continue;
 
             int scale = norma.isCzyZaokr1setna() ? 2 : 1;
 
@@ -149,7 +148,8 @@ public class RaportService {
             BigDecimal sumaGodzin = BigDecimal.ZERO;
 
             for (Dokument d : dokumentList) {
-                Zuzycie zuzycie = zuzycieRepository.findByDokument(d).stream().filter(z -> z.getNorma().equals(norma)).findFirst().get();
+                Zuzycie zuzycie = zuzycieRepository.findByDokument(d).stream().filter(z -> z.getNorma().equals(norma)).findFirst().orElse(null);
+                if(zuzycie == null) continue;
                 sumaWartosc = sumaWartosc.add(zuzycie.getWartosc().multiply(norma.getWartosc()).setScale(scale, RoundingMode.HALF_UP));
                 sumaOgrzewanie = sumaOgrzewanie.add(zuzycie.getOgrzewanie());
                 sumaTankowanie = sumaTankowanie.add(zuzycie.getZatankowano());

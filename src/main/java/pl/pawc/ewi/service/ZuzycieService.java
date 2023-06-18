@@ -7,6 +7,7 @@ import pl.pawc.ewi.entity.Norma;
 import pl.pawc.ewi.entity.Stan;
 import pl.pawc.ewi.entity.Zuzycie;
 import pl.pawc.ewi.model.DocumentNotFoundException;
+import pl.pawc.ewi.model.NormaNotFoundException;
 import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.NormaRepository;
 import pl.pawc.ewi.repository.StanRepository;
@@ -16,7 +17,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class ZuzycieService {
     private final DokumentRepository dokumentRepository;
     private final NormaRepository normaRepository;
 
-    public BigDecimal getSuma(long normaId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException {
+    public BigDecimal getSuma(long normaId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException, NormaNotFoundException {
 
         Dokument dokument;
 
@@ -40,7 +40,8 @@ public class ZuzycieService {
             dokument = null;
         }
 
-        Norma norma = normaRepository.findById(normaId).get();
+        Norma norma = normaRepository.findById(normaId).orElse(null);
+        if(norma == null) throw new NormaNotFoundException(normaId);
         Calendar cal = Calendar.getInstance();
 
         List<Zuzycie> collect = zuzycieRepository.findByNorma(norma).stream()
@@ -51,7 +52,7 @@ public class ZuzycieService {
                             && (dokument == null || !z.getDokument().getNumer().equals(excludedDocNumber))
                             && (dokument == null || dokument.getData().compareTo(z.getDokument().getData()) > 0);
                     }
-                ).collect(Collectors.toList());
+                ).toList();
 
         Stan stan = stanRepository.findOneByNormaAndRokAndMiesiac(norma, year, month);
 
@@ -82,7 +83,7 @@ public class ZuzycieService {
                             cal.setTime(z.getDokument().getData());
                             return cal.get(Calendar.YEAR) == year;
                         }
-                ).collect(Collectors.toList());
+                ).toList();
 
         return collect.stream().map(z ->
                 z.getWartosc().multiply(z.getNorma().getWartosc()).setScale(2, RoundingMode.HALF_UP)

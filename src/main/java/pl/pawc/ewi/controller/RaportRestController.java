@@ -3,8 +3,7 @@ package pl.pawc.ewi.controller;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.pawc.ewi.model.BadRequestException;
@@ -26,7 +25,7 @@ public class RaportRestController {
     private final RaportService raportService;
     private final RaportMaszynaKilometryService raportMaszynaKilometryService;
 
-    @RequestMapping(value = "/raport", method = RequestMethod.GET)
+    @GetMapping("/raport")
     public List<Raport> raport(
             @RequestParam("rok") int rok,
             @RequestParam("miesiac") int miesiac){
@@ -36,7 +35,7 @@ public class RaportRestController {
 
     }
 
-    @RequestMapping(value = "/getRaportKwartalny", method = RequestMethod.GET)
+    @GetMapping("/getRaportKwartalny")
     public List<Raport> getRaportKwartalny(
             @RequestParam("rok") int rok,
             @RequestParam("kwartal") int kwartal){
@@ -46,7 +45,7 @@ public class RaportRestController {
 
     }
 
-    @RequestMapping(value = "/raportRoczny", method = RequestMethod.GET)
+    @GetMapping("/raportRoczny")
     public List<RaportRoczny> raportRoczny(
             @RequestParam("rok") int rok){
 
@@ -55,7 +54,7 @@ public class RaportRestController {
 
     }
 
-    @RequestMapping(value = "/getRaportMaszynaKilometry", method = RequestMethod.GET)
+    @GetMapping("/getRaportMaszynaKilometry")
     public RaportMaszynaKilometry raportMaszynaKilometry(
             @RequestParam("start") String dateStart,
             @RequestParam("end") String dateEnd,

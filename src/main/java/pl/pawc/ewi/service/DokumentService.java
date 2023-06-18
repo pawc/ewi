@@ -8,6 +8,7 @@ import pl.pawc.ewi.entity.Maszyna;
 import pl.pawc.ewi.entity.Stan;
 import pl.pawc.ewi.entity.Zuzycie;
 import pl.pawc.ewi.model.DocumentNotFoundException;
+import pl.pawc.ewi.model.NormaNotFoundException;
 import pl.pawc.ewi.repository.DokumentRepository;
 import pl.pawc.ewi.repository.KilometryRepository;
 import pl.pawc.ewi.repository.StanRepository;
@@ -90,7 +91,7 @@ public class DokumentService {
                     suma = zuzycieService.getSuma(zuzycie.getNorma().getId(), year, month, null);
                     sumaBefore = zuzycieService.getSuma(zuzycie.getNorma().getId(), year, month, dokument.getNumer());
 
-                } catch (DocumentNotFoundException e) {
+                } catch (DocumentNotFoundException | NormaNotFoundException e) {
                     e.printStackTrace();
                 }
 
@@ -146,6 +147,7 @@ public class DokumentService {
 
             for(Zuzycie zuzycie : dokument.getZuzycie()) {
                 Zuzycie zuzycieDB = zuzycieRepository.findById(zuzycie.getId()).orElse(null);
+                if(zuzycieDB == null) continue;
                 if(zuzycie.getWartosc() == null) zuzycie.setWartosc(BigDecimal.ZERO);
                 if(zuzycie.getZatankowano() == null) zuzycie.setZatankowano(BigDecimal.ZERO);
                 if(zuzycie.getOgrzewanie() == null) zuzycie.setOgrzewanie(BigDecimal.ZERO);

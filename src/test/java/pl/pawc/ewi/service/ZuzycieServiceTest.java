@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.pawc.ewi.model.DocumentNotFoundException;
+import pl.pawc.ewi.model.NormaNotFoundException;
 
 import java.math.BigDecimal;
 
@@ -31,7 +32,7 @@ class ZuzycieServiceTest {
 			assertEquals(new BigDecimal("1.3"), zuzycieService.getSuma(3, 2022, 5, null));
 			assertEquals(new BigDecimal("17.2"), zuzycieService.getSuma(4, 2022, 5, null));
 
-		} catch (DocumentNotFoundException e) {
+		} catch (DocumentNotFoundException | NormaNotFoundException e) {
 			fail();
 		}
 

@@ -68,9 +68,7 @@ public class StanService {
         for(Stan stan : stany){
 
             Optional<Norma> byId = normaRepository.findById(stan.getNorma().getId());
-            if(byId.isPresent()){
-                if(!byId.get().getMaszyna().isPrzenoszonaNaKolejnyOkres()) continue;
-            }
+            if(byId.isPresent() && !byId.get().getMaszyna().isPrzenoszonaNaKolejnyOkres()) continue;
 
             stanDB = stanRepository.findOneByNormaAndRokAndMiesiac(stan.getNorma(), stan.getRok(), stan.getMiesiac());
             if(stan.getWartosc() == null) stan.setWartosc(BigDecimal.ZERO);
