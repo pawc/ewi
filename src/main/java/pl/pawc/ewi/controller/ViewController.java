@@ -34,7 +34,7 @@ public class ViewController {
     public String index(
             Model model){
 
-        logger.info(" /");
+        logger.info("/");
         return "index";
 
     }
@@ -43,7 +43,7 @@ public class ViewController {
     public String raportKwartalny(
             Model model){
 
-        logger.info(" /raportKwartalny");
+        logger.info("/raportKwartalny");
         return "raportKwartalny";
 
     }
@@ -52,7 +52,7 @@ public class ViewController {
     public String raport2(
             Model model){
 
-        logger.info(" /raport2");
+        logger.info("/raport2");
         return "raportRoczny";
 
     }
@@ -62,7 +62,7 @@ public class ViewController {
             Model model){
 
         model.addAttribute(MASZYNY, maszynaService.findAllActive());
-        logger.info(" /raportMaszynaKilometry");
+        logger.info("/raportMaszynaKilometry");
         return "raportMaszynaKilometry";
 
     }
@@ -71,7 +71,7 @@ public class ViewController {
     public String dokumenty(
             Model model) {
 
-        logger.info(" /dokumenty");
+        logger.info("/dokumenty");
         model.addAttribute(MASZYNY, maszynaService.findAllActive());
 
         return "dokumenty";
@@ -82,7 +82,7 @@ public class ViewController {
     public String maszynyView(
             Model model) {
 
-        logger.info(" /maszyny");
+        logger.info("/maszyny");
         model.addAttribute(MASZYNY, maszynaService.findAll());
         model.addAttribute(KATEGORIE, kategoriaService.findAll());
         model.addAttribute(JEDNOSTKI, jednostkaService.findAll());
@@ -95,7 +95,7 @@ public class ViewController {
     public String jednostkiView(
             Model model) {
 
-        logger.info(" /jednostki");
+        logger.info("/jednostki");
         model.addAttribute(JEDNOSTKI, jednostkaService.findAll());
 
         return JEDNOSTKI;
@@ -105,7 +105,7 @@ public class ViewController {
     @RequestMapping("/stany")
     public String stany(Model model) {
 
-        logger.info(" /stany");
+        logger.info("/stany");
         return "stany";
 
     }
@@ -114,7 +114,7 @@ public class ViewController {
     public String kilometry(
             Model model) {
 
-        logger.info(" /kilometry");
+        logger.info("/kilometry");
         return "kilometry";
 
     }
@@ -123,7 +123,7 @@ public class ViewController {
     public String kategorieView(
             Model model) {
 
-        logger.info(" /kategorie");
+        logger.info("/kategorie");
 
         List<Kategoria> kategorie = Lists.newArrayList(kategoriaService.findAll());
 
@@ -149,7 +149,7 @@ public class ViewController {
     @RequestMapping("/login")
     public String login() {
 
-        logger.info(" /login");
+        logger.info("/login");
         return "login";
 
     }

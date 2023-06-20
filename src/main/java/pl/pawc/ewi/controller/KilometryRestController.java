@@ -28,8 +28,8 @@ public class KilometryRestController {
     public void kilometry(
             @RequestBody Kilometry kilometry) {
 
-        if(kilometryService.post(kilometry)) logger.info(" /kilometry POST dodano {}", kilometry);
-        else logger.info(" /kilometry POST zaktualizowano {}", kilometry);
+        if(kilometryService.post(kilometry)) logger.info("/kilometry POST dodano {}", kilometry);
+        else logger.info("/kilometry POST zaktualizowano {}", kilometry);
 
     }
 
@@ -38,7 +38,7 @@ public class KilometryRestController {
             @RequestParam("rok") int rok,
             @RequestParam("miesiac") int miesiac){
 
-        logger.info(" /kilometryGet {}-{}", rok, miesiac);
+        logger.info("/kilometryGet {}-{}", rok, miesiac);
         return raportService.getKilometryRaport(rok, miesiac);
 
     }

@@ -26,7 +26,7 @@ public class MaszynaRestController {
             @RequestParam("id") String id,
             @RequestParam(name = "miesiac", required = false) String miesiac){
 
-        logger.info(" /maszyna GET id={}", id);
+        logger.info("/maszyna GET id={}", id);
         return maszynaService.get(id, miesiac);
 
     }
@@ -36,10 +36,10 @@ public class MaszynaRestController {
             @RequestBody Maszyna maszyna) {
 
         if(maszynaService.post(maszyna) != null){
-            logger.info(" /maszyna POST id={}", maszyna.getId());
+            logger.info("/maszyna POST id={}", maszyna.getId());
         }
         else{
-            logger.warn(" /maszyna POST id={} BAD REQUEST", maszyna.getId());
+            logger.warn("/maszyna POST id={} - BAD REQUEST", maszyna.getId());
             throw new BadRequestException();
         }
 
@@ -52,11 +52,11 @@ public class MaszynaRestController {
         Optional<Maszyna> byId = maszynaService.findById(maszyna.getId());
 
         if(byId.isPresent()){
-            logger.info(" /maszyna PUT id={}", maszyna.getId());
+            logger.info("/maszyna PUT id={}", maszyna.getId());
             maszynaService.put(maszyna);
         }
         else{
-            logger.warn(" /maszyna PUT id={} - BAD REQUEST", maszyna.getId());
+            logger.warn("/maszyna PUT id={} - BAD REQUEST", maszyna.getId());
             throw new BadRequestException();
         }
 

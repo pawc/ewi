@@ -23,14 +23,14 @@ public class JednostkaRestController {
     public void jednostka(
             @RequestBody Jednostka jednostka) {
 
-        logger.info(" POST /jednostka {}", jednostka);
+        logger.info("POST /jednostka {}", jednostka);
         jednostkaService.put(jednostka);
     }
 
     @GetMapping("jednostkiGet")
     public List<Jednostka> jednostki(){
 
-        logger.info(" /jednostki");
+        logger.info("/jednostki");
         return jednostkaService.findAll();
 
     }

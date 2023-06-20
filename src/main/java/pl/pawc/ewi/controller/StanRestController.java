@@ -26,8 +26,8 @@ public class StanRestController {
     public void stanPut(
             @RequestBody Stan stan) {
 
-        if(stanService.post(stan)) logger.info(" /stan dodano {} - normaID={}", stan, stan.getNorma().getId());
-        else logger.info(" /stan zaktualizowano {} - normaID={}", stan, stan.getNorma().getId());
+        if(stanService.post(stan)) logger.info("/stan dodano {} - normaID={}", stan, stan.getNorma().getId());
+        else logger.info("/stan zaktualizowano {} - normaID={}", stan, stan.getNorma().getId());
     }
 
     @PostMapping("stany")
@@ -36,7 +36,7 @@ public class StanRestController {
 
         stanService.stanyPost(stany);
         for(Stan stan : stany){
-            logger.info(" /stany {}-{} - normaID={}", stan.getRok(), stan.getMiesiac(), stan.getNorma().getId());
+            logger.info("/stany {}-{} - normaID={}", stan.getRok(), stan.getMiesiac(), stan.getNorma().getId());
         }
     }
 
@@ -45,7 +45,7 @@ public class StanRestController {
             @RequestParam("rok") int rok,
             @RequestParam("miesiac") int miesiac){
 
-        logger.info(" /stanyGet {}-{}", rok, miesiac);
+        logger.info("/stanyGet {}-{}", rok, miesiac);
         return stanService.findBy(rok, miesiac);
 
     }

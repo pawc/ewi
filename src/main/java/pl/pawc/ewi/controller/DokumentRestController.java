@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.thymeleaf.util.StringUtils;
 import pl.pawc.ewi.entity.Dokument;
 import pl.pawc.ewi.model.BadRequestException;
 import pl.pawc.ewi.model.DocumentNotFoundException;
@@ -28,7 +29,7 @@ public class DokumentRestController {
     public Dokument dokumentGet(
             @RequestParam("numer") String numer) {
 
-        logger.info(" /dokument GET numer = {} ", numer);
+        logger.info("/dokument GET numer={} ", numer);
         Dokument dokument = dokumentService.get(numer);
         return dokument == null ? new Dokument() : dokument;
 
@@ -39,7 +40,7 @@ public class DokumentRestController {
             @RequestParam("rok") int rok,
             @RequestParam("miesiac") int miesiac){
 
-        logger.info(" /dokumentyGet {}-{} ", rok, miesiac);
+        logger.info("/dokumentyGet {}-{} ", rok, miesiac);
         List<Dokument> dokumenty = dokumentService.getDokumenty(rok, miesiac);
         dokumenty.forEach(d -> d.setZuzycie(null));
         return dokumenty;
@@ -50,8 +51,15 @@ public class DokumentRestController {
     public void dokumentPost(
             @RequestBody Dokument dokument) {
 
-        logger.info(" /dokument POST numer={}", dokument.getNumer());
-        dokumentService.post(dokument);
+        logger.info("/dokument POST numer={}", dokument.getNumer());
+        if(StringUtils.isEmpty(dokument.getNumer()) ||
+                dokument.getMaszyna().getId() == null) throw new BadRequestException();
+        try {
+            dokumentService.post(dokument);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new BadRequestException();
+        }
 
     }
 
@@ -61,10 +69,10 @@ public class DokumentRestController {
 
         try {
             dokumentService.put(dokument);
-            logger.info(" /dokument PUT numer={}", dokument.getNumer());
+            logger.info("/dokument PUT numer={}", dokument.getNumer());
         }
         catch (DocumentNotFoundException e) {
-            logger.warn(" /dokument PUT - DocumentNotFoundException");
+            logger.warn("/dokument PUT - DocumentNotFoundException");
             throw new BadRequestException();
         }
 
@@ -74,7 +82,7 @@ public class DokumentRestController {
     public void dokumentDelete(
             @RequestParam("numer") String numer) {
 
-        logger.info(" /dokument DELETE numer={}", numer);
+        logger.info("/dokument DELETE numer={}", numer);
         dokumentService.delete(numer);
 
 

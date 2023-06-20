@@ -40,11 +40,11 @@ public class KilometryService {
 
             Kilometry kilometryDB = kilometryRepository.findOneByMaszynaAndRokAndMiesiac(km.getMaszyna(), km.getRok(), km.getMiesiac());
             if(kilometryDB == null){
-                logger.info(" /kilometryList POST dodano {}", km);
+                logger.info("/kilometryList POST dodano {}", km);
                 kilometryRepository.save(km);
             }
             else{
-                logger.info(" /kilometryList POST zaktualizowano {}", km);
+                logger.info("/kilometryList POST zaktualizowano {}", km);
                 kilometryDB.setWartosc(km.getWartosc());
                 kilometryRepository.save(kilometryDB);
             }

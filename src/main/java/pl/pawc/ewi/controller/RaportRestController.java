@@ -30,7 +30,7 @@ public class RaportRestController {
             @RequestParam("rok") int rok,
             @RequestParam("miesiac") int miesiac){
 
-        logger.info(" /raport GET {}-{}", rok, miesiac);
+        logger.info("/raport GET {}-{}", rok, miesiac);
         return raportService.getRaport(rok, miesiac, false);
 
     }
@@ -40,7 +40,7 @@ public class RaportRestController {
             @RequestParam("rok") int rok,
             @RequestParam("kwartal") int kwartal){
 
-        logger.info(" /getRaportKwartalny GET {}-{}", rok, kwartal);
+        logger.info("/getRaportKwartalny GET {}-{}", rok, kwartal);
         return raportService.getRaport(rok, kwartal, true);
 
     }
@@ -49,7 +49,7 @@ public class RaportRestController {
     public List<RaportRoczny> raportRoczny(
             @RequestParam("rok") int rok){
 
-        logger.info(" /raportRoczny GET {}", rok);
+        logger.info("/raportRoczny GET {}", rok);
         return raportService.getRaportRoczny(rok);
 
     }
@@ -62,10 +62,10 @@ public class RaportRestController {
 
 
         try {
-            logger.info(" /raportMaszynaKilometry GET maszynaId: {} {}-{}", maszynaId, dateStart, dateEnd);
+            logger.info("/raportMaszynaKilometry GET maszynaId: {} {}-{}", maszynaId, dateStart, dateEnd);
             return raportMaszynaKilometryService.getRaportKilometry(maszynaId, dateStart, dateEnd);
         } catch (ParseException e) {
-            logger.warn(" /raportMaszynaKilometry GET maszynaId: {} {}-{}", maszynaId, dateStart, dateEnd);
+            logger.warn("/raportMaszynaKilometry GET maszynaId: {} {}-{}", maszynaId, dateStart, dateEnd);
             throw new BadRequestException();
         }
 
