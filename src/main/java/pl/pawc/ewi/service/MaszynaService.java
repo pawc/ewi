@@ -74,23 +74,15 @@ public class MaszynaService {
     }
 
     public Maszyna post(Maszyna maszyna){
-        Optional<Maszyna> byId = maszynaRepository.findById(maszyna.getId());
-
-        if(!byId.isPresent()){
-            maszyna.getNormy().forEach(n -> {
-                n.setMaszyna(maszyna);
-                normaRepository.save(n);
-            });
-            return maszyna;
-        }
-        else{
-            return null;
-        }
+        maszyna.getNormy().forEach(n -> {
+            n.setMaszyna(maszyna);
+            normaRepository.save(n);
+        });
+        return maszyna;
     }
 
     public void put(Maszyna maszyna){
         Optional<Maszyna> byId = maszynaRepository.findById(maszyna.getId());
-
         if(byId.isPresent()) {
 
             Maszyna maszynaDB = byId.get();

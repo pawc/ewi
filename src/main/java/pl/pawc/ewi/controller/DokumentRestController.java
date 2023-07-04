@@ -53,13 +53,10 @@ public class DokumentRestController {
 
         logger.info("/dokument POST numer={}", dokument.getNumer());
         if(StringUtils.isEmpty(dokument.getNumer()) ||
-                dokument.getMaszyna().getId() == null) throw new BadRequestException();
-        try {
-            dokumentService.post(dokument);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            throw new BadRequestException();
-        }
+                dokument.getMaszyna().getId() == null) throw new BadRequestException("No document details");
+
+        if(dokumentService.findById(dokument.getNumer()).isEmpty()) dokumentService.post(dokument);
+        else throw new BadRequestException("document" + dokument.getNumer() + " already exists");
 
     }
 

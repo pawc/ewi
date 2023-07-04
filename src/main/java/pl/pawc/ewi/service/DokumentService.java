@@ -33,6 +33,10 @@ public class DokumentService {
         return dokumentRepository.getDokumenty(year, month);
     }
 
+    public Optional<Dokument> findById(String numer){
+        return dokumentRepository.findById(numer);
+    }
+
     public BigDecimal getSumaKilometry(String maszynaId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException {
 
         final Dokument dokument;
@@ -133,33 +137,30 @@ public class DokumentService {
     }
 
     public void put(Dokument dokument) throws DocumentNotFoundException {
-        Optional<Dokument> byId = dokumentRepository.findById(dokument.getNumer());
+        Optional<Dokument> byId = findById(dokument.getNumer());
+        if(byId.isEmpty()) throw new DocumentNotFoundException(dokument.getNumer());
+
         if(dokument.getKilometry() == null) dokument.setKilometry(BigDecimal.ZERO);
         if(dokument.getKilometryPrzyczepa() == null) dokument.setKilometryPrzyczepa(BigDecimal.ZERO);
 
-        if(byId.isPresent()){
-            Dokument dokumentDB = byId.get();
+        Dokument dokumentDB = byId.get();
 
-            dokumentDB.setData(dokument.getData());
-            dokumentDB.setKilometry(dokument.getKilometry());
-            dokumentDB.setKilometryPrzyczepa(dokument.getKilometryPrzyczepa());
-            dokumentRepository.save(dokumentDB);
+        dokumentDB.setData(dokument.getData());
+        dokumentDB.setKilometry(dokument.getKilometry());
+        dokumentDB.setKilometryPrzyczepa(dokument.getKilometryPrzyczepa());
+        dokumentRepository.save(dokumentDB);
 
-            for(Zuzycie zuzycie : dokument.getZuzycie()) {
-                Zuzycie zuzycieDB = zuzycieRepository.findById(zuzycie.getId()).orElse(null);
-                if(zuzycieDB == null) continue;
-                if(zuzycie.getWartosc() == null) zuzycie.setWartosc(BigDecimal.ZERO);
-                if(zuzycie.getZatankowano() == null) zuzycie.setZatankowano(BigDecimal.ZERO);
-                if(zuzycie.getOgrzewanie() == null) zuzycie.setOgrzewanie(BigDecimal.ZERO);
-                zuzycieDB.setWartosc(zuzycie.getWartosc());
-                zuzycieDB.setZatankowano(zuzycie.getZatankowano());
-                zuzycieDB.setOgrzewanie(zuzycie.getOgrzewanie());
+        for(Zuzycie zuzycie : dokument.getZuzycie()) {
+            Zuzycie zuzycieDB = zuzycieRepository.findById(zuzycie.getId()).orElse(null);
+            if(zuzycieDB == null) continue;
+            if(zuzycie.getWartosc() == null) zuzycie.setWartosc(BigDecimal.ZERO);
+            if(zuzycie.getZatankowano() == null) zuzycie.setZatankowano(BigDecimal.ZERO);
+            if(zuzycie.getOgrzewanie() == null) zuzycie.setOgrzewanie(BigDecimal.ZERO);
+            zuzycieDB.setWartosc(zuzycie.getWartosc());
+            zuzycieDB.setZatankowano(zuzycie.getZatankowano());
+            zuzycieDB.setOgrzewanie(zuzycie.getOgrzewanie());
 
-                zuzycieRepository.save(zuzycieDB);
-            }
-        }
-        else{
-            throw new DocumentNotFoundException(dokument.getNumer());
+            zuzycieRepository.save(zuzycieDB);
         }
     }
 

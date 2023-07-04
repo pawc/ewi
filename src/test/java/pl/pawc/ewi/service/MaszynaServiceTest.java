@@ -50,11 +50,6 @@ class MaszynaServiceTest {
 		assertTrue(m.isAktywna());
 		m.getNormy().forEach(n -> assertEquals("ABC123", n.getMaszyna().getId()));
 
-		m = new Maszyna();
-		m.setId("C1");
-		Maszyna postM = maszynaService.post(m);
-		assertNull(postM);
-
 	}
 
 	@Test

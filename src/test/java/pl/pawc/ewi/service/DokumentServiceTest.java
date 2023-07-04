@@ -12,10 +12,7 @@ import pl.pawc.ewi.model.DocumentNotFoundException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class DokumentServiceTest {
@@ -76,6 +73,13 @@ class DokumentServiceTest {
 
 		dokumentService.delete("15/04/2022/C1");
 
+	}
+
+	@Test
+	@Transactional
+	void testFindOneById(){
+		assertFalse(dokumentService.findById("3/04/2022/C1").isEmpty());
+		assertTrue(dokumentService.findById("3/04/20223/C1").isEmpty());
 	}
 
 }
