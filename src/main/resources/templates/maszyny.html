@@ -51,12 +51,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="maszyna : ${maszyny}">
-                    <td><span th:text="${maszyna.id}"> Numer </span> </td>
-                    <td><span th:text="${maszyna.nazwa}"> Nazwa </span></td>
-                    <td><span th:text="${maszyna.opis}"> Opis  </span></td>
+                <tr th:each="machine : ${maszyny}">
+                    <td><span th:text="${machine.id}"> Numer </span> </td>
+                    <td><span th:text="${machine.nazwa}"> Nazwa </span></td>
+                    <td><span th:text="${machine.opis}"> Opis  </span></td>
                     <td class="text-right">
-                        <button class="btn btn-info" th:onclick="edytujBtn([[${maszyna.id}]])">edytuj <i class="fas fa-edit"></i></button>
+                        <button class="btn btn-info" th:onclick="edytujBtn([[${machine.id}]])">edytuj <i class="fas fa-edit"></i></button>
                     </td>
                 </tr>
                 </tbody>
@@ -93,8 +93,8 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="checkbox">
-                                <ul th:each="kategoria : ${kategorie}">
-                                    <input type="checkbox" name="kategorie" th:value="${kategoria.nazwa}"><span th:text="${kategoria.nazwa}"></span></input>
+                                <ul th:each="category : ${kategorie}">
+                                    <input type="checkbox" name="kategorie" th:value="${category.nazwa}"><span th:text="${category.nazwa}"></span></input>
                                 </ul>
                             </div>
                         </div>

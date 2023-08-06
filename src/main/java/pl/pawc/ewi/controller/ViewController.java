@@ -8,11 +8,11 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import pl.pawc.ewi.entity.Kategoria;
-import pl.pawc.ewi.entity.Maszyna;
-import pl.pawc.ewi.service.JednostkaService;
-import pl.pawc.ewi.service.KategoriaService;
-import pl.pawc.ewi.service.MaszynaService;
+import pl.pawc.ewi.entity.Category;
+import pl.pawc.ewi.entity.Machine;
+import pl.pawc.ewi.service.UnitService;
+import pl.pawc.ewi.service.CategoryService;
+import pl.pawc.ewi.service.MachineService;
 
 import java.util.List;
 import java.util.Set;
@@ -26,9 +26,9 @@ public class ViewController {
     public static final String MASZYNY = "maszyny";
     public static final String KATEGORIE = "kategorie";
     public static final String JEDNOSTKI = "jednostki";
-    private final MaszynaService maszynaService;
-    private final KategoriaService kategoriaService;
-    private final JednostkaService jednostkaService;
+    private final MachineService machineService;
+    private final CategoryService categoryService;
+    private final UnitService unitService;
 
     @RequestMapping("/")
     public String index(
@@ -61,7 +61,7 @@ public class ViewController {
     public String raportMaszynaKilometry(
             Model model){
 
-        model.addAttribute(MASZYNY, maszynaService.findAllActive());
+        model.addAttribute(MASZYNY, machineService.findAllActive());
         logger.info("/raportMaszynaKilometry");
         return "raportMaszynaKilometry";
 
@@ -72,7 +72,7 @@ public class ViewController {
             Model model) {
 
         logger.info("/dokumenty");
-        model.addAttribute(MASZYNY, maszynaService.findAllActive());
+        model.addAttribute(MASZYNY, machineService.findAllActive());
 
         return "dokumenty";
 
@@ -83,9 +83,9 @@ public class ViewController {
             Model model) {
 
         logger.info("/maszyny");
-        model.addAttribute(MASZYNY, maszynaService.findAll());
-        model.addAttribute(KATEGORIE, kategoriaService.findAll());
-        model.addAttribute(JEDNOSTKI, jednostkaService.findAll());
+        model.addAttribute(MASZYNY, machineService.findAll());
+        model.addAttribute(KATEGORIE, categoryService.findAll());
+        model.addAttribute(JEDNOSTKI, unitService.findAll());
 
         return MASZYNY;
 
@@ -96,7 +96,7 @@ public class ViewController {
             Model model) {
 
         logger.info("/jednostki");
-        model.addAttribute(JEDNOSTKI, jednostkaService.findAll());
+        model.addAttribute(JEDNOSTKI, unitService.findAll());
 
         return JEDNOSTKI;
 
@@ -125,19 +125,19 @@ public class ViewController {
 
         logger.info("/kategorie");
 
-        List<Kategoria> kategorie = Lists.newArrayList(kategoriaService.findAll());
+        List<Category> kategorie = Lists.newArrayList(categoryService.findAll());
 
-        Iterable<Maszyna> allUncategorized = maszynaService.findAllUncategorized();
-        Set<Maszyna> maszyny = Sets.newHashSet(allUncategorized);
+        Iterable<Machine> allUncategorized = machineService.findAllUncategorized();
+        Set<Machine> maszyny = Sets.newHashSet(allUncategorized);
 
         if(!maszyny.isEmpty()){
-            Kategoria kategoria = new Kategoria();
+            Category category = new Category();
 
-            kategoria.setNazwa("Nieprzydzielone");
-            kategoria.setMaszyny(maszyny);
-            kategoria.setPrzenoszonaNaKolejnyOkres(false);
+            category.setName("Nieprzydzielone");
+            category.setMachines(maszyny);
+            category.setCarriedOver(false);
 
-            kategorie.add(kategoria);
+            kategorie.add(category);
         }
 
         model.addAttribute(KATEGORIE, kategorie);

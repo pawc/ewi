@@ -43,24 +43,24 @@
                 <tr>
                     <th> Nazwa kategorii </th>
                     <th> Przypisane maszyny </th>
-                    <th class="text-center"> Czy stan końcowy norm <br>maszyn z kategorii przenoszony <br>na kolejny okres </th>
+                    <th class="text-center"> Czy fuelInitialState końcowy norm <br>maszyn z kategorii przenoszony <br>na kolejny okres </th>
                     <th class="text-right"> <button class="btn btn-success" onclick="dodajBtn()">dodaj <i class="fas fa-plus-circle"></i></button> </th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="kategoria : ${kategorie}">
-                    <td><span th:text="${kategoria.nazwa}"></span></td>
+                <tr th:each="category : ${kategorie}">
+                    <td><span th:text="${category.nazwa}"></span></td>
                     <td>
-                        <span th:each="maszyna : ${kategoria.maszyny}">
-                            <span th:text="${maszyna.nazwa} + ' (' + ${maszyna.id} + ')'"></span><br>
+                        <span th:each="machine : ${category.maszyny}">
+                            <span th:text="${machine.nazwa} + ' (' + ${machine.id} + ')'"></span><br>
                         </span>
                     </td>
                     <td>
-                        <input type="checkbox" th:attr="onclick=|togglePrzenoszonaNaKolejnyOkres('${kategoria.nazwa}')|"
-                               th:checked="${kategoria.przenoszonaNaKolejnyOkres}"/>
+                        <input type="checkbox" th:attr="onclick=|togglePrzenoszonaNaKolejnyOkres('${category.nazwa}')|"
+                               th:checked="${category.przenoszonaNaKolejnyOkres}"/>
                     </td>
                     <td class="text-right">
-                        <button class="btn btn-danger" th:onclick="usunBtn([[${kategoria.nazwa}]])">Usuń <i class="fas fa-trash-alt"></i></button>
+                        <button class="btn btn-danger" th:onclick="usunBtn([[${category.nazwa}]])">Usuń <i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
                 </tbody>

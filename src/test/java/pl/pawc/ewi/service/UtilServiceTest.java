@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import pl.pawc.ewi.entity.Maszyna;
+import pl.pawc.ewi.entity.Machine;
 
 import java.math.BigDecimal;
 
@@ -41,10 +41,10 @@ class UtilServiceTest {
 
 	@Test
 	void testJsonParseMaszyna(){
-		String maszynaJson = "{\"id\":\"maszyna_id\",\"nazwa\":\"maszyna nazwa\",\"opis\":\"\",\"normy\":[{\"wartosc\":\"1\",\"jednostkaObj\":{\"id\":\"3270\"},\"czyOgrzewanie\":false,\"czyZaokr1setna\":false}],\"kategorie\":[],\"aktywna\":true}";
+		String maszynaJson = "{\"id\":\"maszyna_id\",\"name\":\"maszyna nazwa\",\"description\":\"\",\"fuelConsumptionStandards\":[{\"value\":\"1\",\"unitObj\":{\"id\":\"3270\"},\"usedForHeating\":false,\"rounded\":false}],\"categories\":[],\"active\":true}";
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			Maszyna maszyna = mapper.readValue(maszynaJson, Maszyna.class);
+			Machine machine = mapper.readValue(maszynaJson, Machine.class);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			fail();

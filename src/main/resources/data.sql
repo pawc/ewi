@@ -1,14 +1,14 @@
-INSERT INTO `maszyna` (`id`, `aktywna`, `nazwa`, `opis`) VALUES
-	('C1', 1, 'Ciagnik 1', 'test ciągnik'),
-	('W2', 1, 'Wózek', 'testowy wózek');
+INSERT INTO `machine` (`id`, `is_active`, `name`, `description`) VALUES
+	('C1', 1, 'Ciagnik 1', 'test ciagnik'),
+	('W2', 1, 'Wozek', 'testowy wozek');
 
-INSERT INTO `norma` (`id`, `czy_ogrzewanie`, `jednostka`, `wartosc`, `maszyna_id`) VALUES
-	(1, 1, 'ON/H', 1.23, 'C1'),
-	(2, 0, 'L/H', 4.56, 'C1'),
-	(3, 1, 'ON/H', 4.21, 'W2'),
-	(4, 0, 'C', 1.2, 'W2');
+INSERT INTO `fuel_consumption_standard` (`id`, `is_used_for_heating`, `unit`, `val`, `machine_id`) VALUES
+    (1, 1, 'ON/H', 1.23, 'C1'),
+    (2, 0, 'L/H', 4.56, 'C1'),
+    (3, 1, 'ON/H', 4.21, 'W2'),
+    (4, 0, 'C', 1.2, 'W2');
 
-INSERT INTO `dokument` (`numer`, `data`, `kilometry`, `kilometry_przyczepa`, `maszyna_id`) VALUES
+INSERT INTO `document` (`number`, `date`, `kilometers`, `kilometers_trailer`, `machine_id`) VALUES
 	('1/04/2022/C1', '2022-04-01', 10, 10, 'C1'),
 	('1/04/2022/W2', '2022-04-20', 10, 9, 'W2'),
 	('1/05/2022/C1', '2022-05-01', 15, 1, 'C1'),
@@ -37,23 +37,24 @@ INSERT INTO `dokument` (`numer`, `data`, `kilometry`, `kilometry_przyczepa`, `ma
 	('8/04/2022/C1', '2022-04-08', 18, 18, 'C1'),
 	('9/04/2022/C1', '2022-04-09', 19, 19, 'C1');
 
-INSERT INTO `kategoria` (`nazwa`, `przenoszona_na_kolejny_okres`) VALUES
+
+INSERT INTO `category` (`name`, `is_carried_over`) VALUES
 	('Ciągniki', 1);
 
-INSERT INTO `kilometry` (`id`, `miesiac`, `rok`, `wartosc`, `maszyna_id`) VALUES
+INSERT INTO `kilometers` (`id`, `month_val`, `year_val`, `val`, `machine_id`) VALUES
 	(1, 4, 2022, 120, 'C1'),
 	(2, 4, 2022, 50, 'W2');
 
-INSERT INTO `maszyna_kategorie` (`maszyna_id`, `kategorie_nazwa`) VALUES
+INSERT INTO `machine_category` (`machine_id`, `category_name`) VALUES
 	('C1', 'Ciągniki');
 
-INSERT INTO `stan` (`id`, `miesiac`, `rok`, `wartosc`, `norma_id`) VALUES
+INSERT INTO `fuel_initial_state` (`id`, `month_val`, `year_val`, `val`, `fuel_consumption_standard_id`) VALUES
 	(1, 4, 2022, 2.4, 1),
 	(2, 4, 2022, 1.2, 2),
 	(3, 4, 2022, 5.5, 3),
 	(4, 4, 2022, 12.1, 4);
 
-INSERT INTO `zuzycie` (`id`, `ogrzewanie`, `wartosc`, `zatankowano`, `dokument_numer`, `norma_id`) VALUES
+INSERT INTO `fuel_consumption` (`id`, `heating`, `val`, `refueled`, `document_number`, `fuel_consumption_standard_id`) VALUES
 	(1, 1, 1.1, 0, '1/04/2022/C1', 1),
 	(2, 0, 2.1, 11, '1/04/2022/C1', 2),
 	(3, 1, 1.2, 4, '2/04/2022/C1', 1),

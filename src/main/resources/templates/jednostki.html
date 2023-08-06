@@ -49,13 +49,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="jednostka : ${jednostki}">
-                    <td><span th:text="${jednostka.id}"> Numer </span> </td>
-                    <td><span th:text="${jednostka.nazwa}"> Nazwa </span></td>
-                    <td><span th:text="${jednostka.waga}"> Waga </span></td>
-                    <td><span th:text="${jednostka.nazwa}"> Przypisane maszyny  </span></td>
+                <tr th:each="unit : ${jednostki}">
+                    <td><span th:text="${unit.id}"> Numer </span> </td>
+                    <td><span th:text="${unit.nazwa}"> Nazwa </span></td>
+                    <td><span th:text="${unit.waga}"> Waga </span></td>
+                    <td><span th:text="${unit.nazwa}"> Przypisane maszyny  </span></td>
                     <td class="text-right">
-                        <button class="btn btn-info" th:onclick="edytujBtn([[${jednostka.id}]], [[${jednostka.nazwa}]], [[${jednostka.waga}]] )">edytuj <i class="fas fa-edit"></i></button>
+                        <button class="btn btn-info" th:onclick="edytujBtn([[${unit.id}]], [[${unit.nazwa}]], [[${unit.waga}]] )">edytuj <i class="fas fa-edit"></i></button>
                     </td>
                 </tr>
                 </tbody>

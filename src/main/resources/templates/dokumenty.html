@@ -42,7 +42,7 @@
                     <input type="month" id="miesiac" min="2021-01" value="2021-04">
                 </div>
                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-right">
-                    <button class="btn btn-success" onclick="dodajBtn()">dodaj dokument <i class="fas fa-plus-circle"></i></button>
+                    <button class="btn btn-success" onclick="dodajBtn()">dodaj document <i class="fas fa-plus-circle"></i></button>
                 </div>
             </div>
             <p></p>
@@ -50,7 +50,7 @@
 
         <div class="container">
             <div class="alert alert-success text-center" role="alert" th:if="${(param.success != null)}">
-                Dodano dokument o numerze <b> [[${param.success}]] </b>
+                Dodano document o numerze <b> [[${param.success}]] </b>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -87,8 +87,8 @@
                     <input type="number" step="0.1" name="kilometryPrzyczepa" id="kilometryPrzyczepa" autocomplete="off" value="0" class="text ui-widget-content ui-corner-all">
                 </div>
                 <div class="col-lg-2" style="vertical-align: text-top;">
-                    <label for="kilometry">Kilometry/olej</label>
-                    <input type="number" step="0.1" name="kilometry" id="kilometry" autocomplete="off" value="" class="text ui-widget-content ui-corner-all">
+                    <label for="kilometers">Kilometry/olej</label>
+                    <input type="number" step="0.1" name="kilometers" id="kilometers" autocomplete="off" value="" class="text ui-widget-content ui-corner-all">
                 </div>
                 <div class="col-lg-2" style="vertical-align: text-top;">
                     <table style="float: left; margin-top: 10px;">
@@ -106,11 +106,11 @@
 
             <div class="row">
                 <div class="col-lg-3">
-                    <label for="maszyna">Maszyna</label>
+                    <label for="machine">Maszyna</label>
                     <input id="tags" placeholder="szukajka maszyn" style="width: 100%; margin-bottom: 20px;">
-                    <select name="maszyna" id="maszyna" size="15">
-                        <option th:each="maszyna : ${maszyny}" th:value="${maszyna.id}">
-                            <span th:text="${maszyna.nazwa}"></span> (<span th:text="${maszyna.id}"></span>)
+                    <select name="machine" id="machine" size="15">
+                        <option th:each="machine : ${maszyny}" th:value="${machine.id}">
+                            <span th:text="${machine.nazwa}"></span> (<span th:text="${machine.id}"></span>)
                         </option>
                     </select>
                 </div>

@@ -25,7 +25,7 @@
         <script th:inline="javascript"> var contextRoot = /*[[@{/}]]*/ ''; </script>
 
         <script src="js/index.js"></script>
-        <script src="js/raportMaszynaKilometry.js"></script>
+        <script src="js/reportMachineKilometers.js"></script>
     </head>
 
 </head>
@@ -37,10 +37,10 @@
     <div class="container-fluid" style="margin-bottom: 10px;">
         <div class="row">
             <div class="col-sm-2" style="vertical-align: text-top; margin-left: 100px;">
-                <label for="maszyna">Maszyna</label>
-                <select id="maszyna" class="text ui-widget-content ui-corner-all" style="height: 35px;">
+                <label for="machine">Maszyna</label>
+                <select id="machine" class="text ui-widget-content ui-corner-all" style="height: 35px;">
                     <option value="0">Wybierz</option>
-                    <option th:each="maszyna : ${maszyny}" th:value="${maszyna.id}" th:text="${maszyna.nazwa + ' (' + maszyna.id +')'}"></option>
+                    <option th:each="machine : ${maszyny}" th:value="${machine.id}" th:text="${machine.nazwa + ' (' + machine.id +')'}"></option>
                 </select>
             </div>
             <div class="col-sm-2" style="vertical-align: text-top;">
@@ -53,7 +53,7 @@
             </div>
             <div class="col-sm-2" style="vertical-align: text-top;">
                 <label>Kilometry</label>
-                <p id="kilometry">-</p>
+                <p id="kilometers">-</p>
             </div>
             <div class="col-sm-2" style="vertical-align: text-top;">
                 <label>Kilometry z przyczepą</label>
@@ -76,7 +76,7 @@
     </div>
 
     <div class="container" id="tableDiv">
-        <table class="table" id="raportMaszynaKilometry" style="width:100% !important">
+        <table class="table" id="reportMachineKilometers" style="width:100% !important">
             <thead>
             <tr>
                 <th class="text-center"> Dokument data </th>

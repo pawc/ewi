@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.pawc.ewi.model.BadRequestException;
-import pl.pawc.ewi.model.Raport;
-import pl.pawc.ewi.model.RaportMaszynaKilometry;
-import pl.pawc.ewi.model.RaportRoczny;
-import pl.pawc.ewi.service.RaportMaszynaKilometryService;
-import pl.pawc.ewi.service.RaportService;
+import pl.pawc.ewi.model.Report;
+import pl.pawc.ewi.model.ReportMachineKilometers;
+import pl.pawc.ewi.model.AnnualReport;
+import pl.pawc.ewi.service.ReportMachineKilometersService;
+import pl.pawc.ewi.service.ReportService;
 
 import java.text.ParseException;
 import java.util.List;
@@ -22,40 +22,40 @@ public class RaportRestController {
 
     private static final Logger logger = LogManager.getLogger(RaportRestController.class);
 
-    private final RaportService raportService;
-    private final RaportMaszynaKilometryService raportMaszynaKilometryService;
+    private final ReportService reportService;
+    private final ReportMachineKilometersService reportMachineKilometersService;
 
     @GetMapping("/raport")
-    public List<Raport> raport(
+    public List<Report> raport(
             @RequestParam("rok") int rok,
             @RequestParam("miesiac") int miesiac){
 
         logger.info("/raport GET {}-{}", rok, miesiac);
-        return raportService.getRaport(rok, miesiac, false);
+        return reportService.getRaport(rok, miesiac, false);
 
     }
 
     @GetMapping("/getRaportKwartalny")
-    public List<Raport> getRaportKwartalny(
+    public List<Report> getRaportKwartalny(
             @RequestParam("rok") int rok,
             @RequestParam("kwartal") int kwartal){
 
         logger.info("/getRaportKwartalny GET {}-{}", rok, kwartal);
-        return raportService.getRaport(rok, kwartal, true);
+        return reportService.getRaport(rok, kwartal, true);
 
     }
 
     @GetMapping("/raportRoczny")
-    public List<RaportRoczny> raportRoczny(
+    public List<AnnualReport> raportRoczny(
             @RequestParam("rok") int rok){
 
         logger.info("/raportRoczny GET {}", rok);
-        return raportService.getRaportRoczny(rok);
+        return reportService.getRaportRoczny(rok);
 
     }
 
     @GetMapping("/getRaportMaszynaKilometry")
-    public RaportMaszynaKilometry raportMaszynaKilometry(
+    public ReportMachineKilometers raportMaszynaKilometry(
             @RequestParam("start") String dateStart,
             @RequestParam("end") String dateEnd,
             @RequestParam("maszynaId") String maszynaId){
@@ -63,7 +63,7 @@ public class RaportRestController {
 
         try {
             logger.info("/raportMaszynaKilometry GET maszynaId: {} {}-{}", maszynaId, dateStart, dateEnd);
-            return raportMaszynaKilometryService.getRaportKilometry(maszynaId, dateStart, dateEnd);
+            return reportMachineKilometersService.getRaportKilometry(maszynaId, dateStart, dateEnd);
         } catch (ParseException e) {
             logger.warn("/raportMaszynaKilometry GET maszynaId: {} {}-{}", maszynaId, dateStart, dateEnd);
             throw new BadRequestException();
