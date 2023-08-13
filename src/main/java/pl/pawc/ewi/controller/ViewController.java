@@ -23,9 +23,9 @@ import java.util.Set;
 public class ViewController {
 
     private static final Logger logger = LogManager.getLogger(ViewController.class);
-    public static final String MASZYNY = "maszyny";
-    public static final String KATEGORIE = "kategorie";
-    public static final String JEDNOSTKI = "jednostki";
+    public static final String MACHINES = "machines";
+    public static final String CATEGORIES = "categories";
+    public static final String UNITS = "units";
     private final MachineService machineService;
     private final CategoryService categoryService;
     private final UnitService unitService;
@@ -43,87 +43,87 @@ public class ViewController {
     public String raportKwartalny(
             Model model){
 
-        logger.info("/raportKwartalny");
-        return "raportKwartalny";
+        logger.info("/quarterlyReport");
+        return "quarterlyReport";
 
     }
 
-    @RequestMapping("/raport2")
+    @RequestMapping("/annualReport")
     public String raport2(
             Model model){
 
-        logger.info("/raport2");
-        return "raportRoczny";
+        logger.info("/annualReport");
+        return "annualReport";
 
     }
 
-    @RequestMapping("/raportMaszynaKilometry")
+    @RequestMapping("/machineKilometersReport")
     public String raportMaszynaKilometry(
             Model model){
 
-        model.addAttribute(MASZYNY, machineService.findAllActive());
-        logger.info("/raportMaszynaKilometry");
-        return "raportMaszynaKilometry";
+        model.addAttribute(MACHINES, machineService.findAllActive());
+        logger.info("/machineKilometersReport");
+        return "machineKilometersReport";
 
     }
 
-    @RequestMapping("/dokumenty")
+    @RequestMapping("/documents")
     public String dokumenty(
             Model model) {
 
-        logger.info("/dokumenty");
-        model.addAttribute(MASZYNY, machineService.findAllActive());
+        logger.info("/documents");
+        model.addAttribute(MACHINES, machineService.findAllActive());
 
-        return "dokumenty";
+        return "documents";
 
     }
 
-    @RequestMapping("/maszyny")
+    @RequestMapping("/machines")
     public String maszynyView(
             Model model) {
 
-        logger.info("/maszyny");
-        model.addAttribute(MASZYNY, machineService.findAll());
-        model.addAttribute(KATEGORIE, categoryService.findAll());
-        model.addAttribute(JEDNOSTKI, unitService.findAll());
+        logger.info("/machines");
+        model.addAttribute(MACHINES, machineService.findAll());
+        model.addAttribute(CATEGORIES, categoryService.findAll());
+        model.addAttribute(UNITS, unitService.findAll());
 
-        return MASZYNY;
+        return MACHINES;
 
     }
 
-    @RequestMapping("/jednostki")
+    @RequestMapping("/unitsView")
     public String jednostkiView(
             Model model) {
 
-        logger.info("/jednostki");
-        model.addAttribute(JEDNOSTKI, unitService.findAll());
+        logger.info("/unitsView");
+        model.addAttribute(UNITS, unitService.findAll());
 
-        return JEDNOSTKI;
+        return UNITS;
 
     }
 
-    @RequestMapping("/stany")
+    @RequestMapping("/initialStates")
     public String stany(Model model) {
 
-        logger.info("/stany");
-        return "stany";
+        logger.info("/initialStates");
+        return "initialStates";
 
     }
 
-    @RequestMapping("/kilometry")
+    @RequestMapping("/kilometers")
     public String kilometry(
             Model model) {
 
-        logger.info("/kilometry");
-        return "kilometry";
+        logger.info("/kilometers");
+        return "kilometers";
 
     }
 
-    @RequestMapping("/kategorie")
+    @RequestMapping("/categories")
     public String kategorieView(
             Model model) {
 
-        logger.info("/kategorie");
+        logger.info("/categories");
 
         List<Category> kategorie = Lists.newArrayList(categoryService.findAll());
 
@@ -140,9 +140,9 @@ public class ViewController {
             kategorie.add(category);
         }
 
-        model.addAttribute(KATEGORIE, kategorie);
+        model.addAttribute(CATEGORIES, kategorie);
 
-        return KATEGORIE;
+        return CATEGORIES;
 
     }
 

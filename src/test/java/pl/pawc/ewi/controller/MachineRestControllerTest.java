@@ -53,7 +53,7 @@ class MachineRestControllerTest {
     @Test
     void maszynaGetTest() throws Exception {
 
-        mockMvc.perform(get("/maszyna").param("id", "C1"))
+        mockMvc.perform(get("/machine").param("id", "C1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(result -> {
@@ -76,18 +76,18 @@ class MachineRestControllerTest {
 
         requestJson = ow.writeValueAsString(machine);
 
-        mockMvc.perform(post("/maszyna")
+        mockMvc.perform(post("/machine")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/maszyna")
+        mockMvc.perform(post("/machine")
                         .contentType(APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest());
 
         machine.setId("C1");
         requestJson = ow.writeValueAsString(machine);
-        mockMvc.perform(post("/maszyna")
+        mockMvc.perform(post("/machine")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isBadRequest());
@@ -103,18 +103,18 @@ class MachineRestControllerTest {
 
         requestJson = ow.writeValueAsString(machine);
 
-        mockMvc.perform(put("/maszyna")
+        mockMvc.perform(put("/machine")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(put("/maszyna")
+        mockMvc.perform(put("/machine")
                         .contentType(APPLICATION_JSON_UTF8))
                 .andExpect(status().isBadRequest());
 
         machine.setId("C98");
         requestJson = ow.writeValueAsString(machine);
-        mockMvc.perform(put("/maszyna")
+        mockMvc.perform(put("/machine")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isBadRequest());

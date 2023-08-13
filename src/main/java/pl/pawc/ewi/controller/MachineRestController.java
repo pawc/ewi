@@ -20,31 +20,31 @@ public class MachineRestController {
     private final MachineService machineService;
     private static final Logger logger = LogManager.getLogger(MachineRestController.class);
 
-    @GetMapping("/maszyna")
-    public Machine maszynaGet(
+    @GetMapping("/machine")
+    public Machine machineGet(
             @RequestParam("id") String id,
             @RequestParam(name = "miesiac", required = false) String miesiac){
 
-        logger.info("/maszyna GET id={}", id);
+        logger.info("/machine GET id={}", id);
         return machineService.get(id, miesiac);
 
     }
 
-    @PostMapping(value = "/maszyna")
-    public void maszynaPost(
+    @PostMapping(value = "/machine")
+    public void machinePost(
             @RequestBody Machine machine) {
 
         if(machineService.findById(machine.getId()).isEmpty()){
-            logger.info("/maszyna POST id={}", machine.getId());
+            logger.info("/machine POST id={}", machine.getId());
             machineService.post(machine);
         }
         else{
-            throw new BadRequestException("Maszyna " + machine.getId() + " already exists");
+            throw new BadRequestException("Machine " + machine.getId() + " already exists");
         }
 
     }
 
-    @PutMapping(value = "/maszyna")
+    @PutMapping(value = "/machine")
     public void maszynaPut(
             @RequestBody Machine machine) {
 
@@ -53,7 +53,7 @@ public class MachineRestController {
             machineService.put(machine);
         }
         else{
-            throw new BadRequestException("Maszyna " + machine.getId() + " does not exist");
+            throw new BadRequestException("Machine " + machine.getId() + " does not exist");
         }
 
     }

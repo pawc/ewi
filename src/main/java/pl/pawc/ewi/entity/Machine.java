@@ -1,16 +1,14 @@
 package pl.pawc.ewi.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -38,8 +36,7 @@ public class Machine {
     @Transient
     private BigDecimal sumOfKilometers;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "machines")
-    // @JoinColumn(referencedColumnName="name")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "machines", cascade = CascadeType.ALL)
     private Set<Category> categories;
 
     @Transient

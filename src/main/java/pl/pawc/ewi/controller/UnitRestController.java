@@ -19,18 +19,18 @@ public class UnitRestController {
     private static final Logger logger = LogManager.getLogger(UnitRestController.class);
     private final UnitService unitService;
 
-    @PostMapping("jednostka")
-    public void jednostka(
+    @PostMapping("unit")
+    public void unit(
             @RequestBody Unit unit) {
 
-        logger.info("POST /jednostka {}", unit);
+        logger.info("POST /unit {}", unit);
         unitService.put(unit);
     }
 
-    @GetMapping("jednostkiGet")
-    public List<Unit> jednostki(){
+    @GetMapping("units")
+    public List<Unit> units(){
 
-        logger.info("/jednostki");
+        logger.info("/units");
         return unitService.findAll();
 
     }

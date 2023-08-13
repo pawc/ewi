@@ -26,7 +26,7 @@ public class CategoryService {
                 .ifPresent(categoryRepository::delete);
     }
 
-    public boolean togglePrzenoszonaNaKolejnyOkres(Category category){
+    public boolean toggleCarriedOver(Category category){
         Optional<Category> byId = categoryRepository.findById(category.getName());
         boolean exists = byId.isPresent();
         if(exists){
@@ -39,6 +39,10 @@ public class CategoryService {
 
     public List<Category> findAll(){
         return categoryRepository.findAll();
+    }
+
+    public Category findOneByName(String name){
+        return categoryRepository.findOneByName(name);
     }
 
 }

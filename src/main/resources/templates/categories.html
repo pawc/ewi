@@ -3,7 +3,7 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 
 <head>
-    <title>Ewi - jednostki</title>
+    <title>Ewi - categories</title>
 
     <head>
 
@@ -21,7 +21,7 @@
         <script src="https://kit.fontawesome.com/4d0e5d2f0b.js" crossorigin="anonymous"></script>
         <script th:inline="javascript"> var contextRoot = /*[[@{/}]]*/ ''; </script>
         <script src="js/index.js"></script>
-        <script src="js/jednostki.js"></script>
+        <script src="js/categories.js"></script>
 
     </head>
 
@@ -33,29 +33,34 @@
 
         <div class="container">
             <div class="alert alert-success text-center" role="alert" th:if="${(param.success != null)}">
-                Dodano/zaktualizowano jednostkę <b> [[${param.success}]] </b>
+                Dodano nową kategorię
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <table class="table" id="jednostkiTable">
+            <table class="table" id="categoriesTable">
                 <thead>
                 <tr>
-                    <th> ID </th>
-                    <th> Nazwa </th>
-                    <th> Waga </th>
+                    <th> Nazwa kategorii </th>
                     <th> Przypisane maszyny </th>
-                    <th class="text-right"> <button class="btn btn-success" onclick="dodajBtn()">dodaj <i class="fas fa-plus-circle"></i></button> </th>
+                    <th class="text-center"> Czy stan końcowy norm <br>maszyn z kategorii przenoszony <br>na kolejny okres </th>
+                    <th class="text-right"> <button class="btn btn-success" onclick="addBtn()">dodaj <i class="fas fa-plus-circle"></i></button> </th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="unit : ${jednostki}">
-                    <td><span th:text="${unit.id}"> Numer </span> </td>
-                    <td><span th:text="${unit.nazwa}"> Nazwa </span></td>
-                    <td><span th:text="${unit.waga}"> Waga </span></td>
-                    <td><span th:text="${unit.nazwa}"> Przypisane maszyny  </span></td>
+                <tr th:each="category : ${categories}">
+                    <td><span th:text="${category.name}"></span></td>
+                    <td>
+                        <span th:each="machine : ${category.machines}">
+                            <span th:text="${machine.name} + ' (' + ${machine.id} + ')'"></span><br>
+                        </span>
+                    </td>
+                    <td>
+                        <input type="checkbox" th:attr="onclick=|toggleCarriedOver('${category.name}')|"
+                               th:checked="${category.isCarriedOver}"/>
+                    </td>
                     <td class="text-right">
-                        <button class="btn btn-info" th:onclick="edytujBtn([[${unit.id}]], [[${unit.nazwa}]], [[${unit.waga}]] )">edytuj <i class="fas fa-edit"></i></button>
+                        <button class="btn btn-danger" th:onclick="deleteBtn([[${category.name])">Usuń <i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
                 </tbody>
@@ -65,19 +70,8 @@
         <div id="dialog-form" title="">
 
             <form>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <label for="nazwa">Nazwa</label>
-                            <input type="text" name="nazwa" id="nazwa" style="width: 100%;" class="text ui-widget-content ui-corner-all" autocomplete="off"/>
-                        </div>
-                        <div class="col-sm-12">
-                            <label for="waga">Waga</label>
-                            <input type="number" step="0.1" name="waga" id="waga" style="width: 100%;" autocomplete="off" value="1" class="text ui-widget-content ui-corner-all">
-                        </div>
-                    </div>
-                </div>
-                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+                <label for="name">Nazwa kategorii</label>
+                <input type="text" name="name" id="name" autocomplete="off" value="" class="text ui-widget-content ui-corner-all">
             </form>
 
         </div>

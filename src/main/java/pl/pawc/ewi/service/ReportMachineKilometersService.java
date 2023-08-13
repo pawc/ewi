@@ -6,7 +6,6 @@ import pl.pawc.ewi.entity.Document;
 import pl.pawc.ewi.entity.Machine;
 import pl.pawc.ewi.model.ReportMachineKilometers;
 import pl.pawc.ewi.repository.DocumentRepository;
-import pl.pawc.ewi.repository.MachineRepository;
 
 import java.math.BigDecimal;
 import java.text.ParseException;

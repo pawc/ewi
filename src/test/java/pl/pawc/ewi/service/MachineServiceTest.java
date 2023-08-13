@@ -11,7 +11,6 @@ import jakarta.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -19,6 +18,9 @@ class MachineServiceTest {
 
 	@Autowired
 	MachineService machineService;
+
+	@Autowired
+	CategoryService categoryService;
 
 	@Test
 	@Transactional
@@ -41,7 +43,7 @@ class MachineServiceTest {
 	void testPost() throws JsonProcessingException {
 
 		ObjectMapper objectMapper = new ObjectMapper();
-		String input = "{\"id\":\"ABC123\",\"name\":\"Machine 1\",\"description\":\"test machine\",\"fuelConsumptionStandards\":[{\"value\":\"1.2\",\"unit\":\"L/H\",\"usedForHeating\":false},{\"value\":\"3.27\",\"unit\":\"ON/H\",\"usedForHeating\":true}],\"categories\":[],\"active\":true}";
+		String input = "{\"id\":\"ABC123\",\"name\":\"Machine 1\",\"description\":\"test machine\",\"fuelConsumptionStandards\":[{\"value\":\"1.2\",\"unit\":\"L/H\",\"usedForHeating\":false},{\"value\":\"3.27\",\"unit\":\"ON/H\",\"usedForHeating\":true}],\"categories\":[{\"name\": \"Ciągniki\"}],\"active\":true}";
 		Machine machine = objectMapper.readValue(input, Machine.class);
 
 		Machine m = machineService.post(machine);
@@ -49,6 +51,8 @@ class MachineServiceTest {
 		assertEquals(2, m.getFuelConsumptionStandards().size());
 		assertTrue(m.isActive());
 		m.getFuelConsumptionStandards().forEach(n -> assertEquals("ABC123", n.getMachine().getId()));
+
+		assertEquals(2, categoryService.findOneByName("Ciągniki").getMachines().size());
 
 	}
 

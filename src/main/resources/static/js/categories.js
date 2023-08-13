@@ -1,9 +1,9 @@
 $(document).ready(() => {
 
-    $('#kategorieLink').css("font-weight", "bold").css("text-decoration", "underline");
-    $('#definicjeDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#categoriesLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#definitionsDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
 
-    $('#kategorieTable').DataTable({
+    $('#categoriesTable').DataTable({
         "language": {
             "search": "Szukaj",
             "emptyTable": "Brak kategorii",
@@ -25,50 +25,50 @@ $(document).ready(() => {
 
 var dialog, form
 
-function togglePrzenoszonaNaKolejnyOkres(nazwa){
+function toggleCarriedOver(name){
     var headers = {};
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
     headers["Content-Type"] = "application/json; charset=utf-8";
     headers[header] = token;
 
-    var kategoria = {
-        nazwa: nazwa
+    var category = {
+        name: name
     }
 
    $.ajax({
-        url: contextRoot + 'togglePrzenoszonaNaKolejnyOkres',
+        url: contextRoot + 'toggleCarriedOver',
         type: 'PUT',
-        data: JSON.stringify(kategoria),
+        data: JSON.stringify(category),
         headers: headers
     })
 }
 
-function dodajBtn(){
+function addBtn(){
     $('#nazwa').val('')
     $("span.ui-dialog-title").text('Dodaj kategorię');
     dialog.dialog("open");
 }
 
-function usunBtn(nazwa){
+function deleteBtn(nazwa){
     var headers = {};
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
     headers["Content-Type"] = "application/json; charset=utf-8";
     headers[header] = token;
 
-    var kategoria = {
-        nazwa: nazwa
+    var category = {
+        name: name
     }
 
     $.ajax({
-        url: contextRoot + 'kategoria',
+        url: contextRoot + 'category',
         type: 'DELETE',
-        data: JSON.stringify(kategoria),
+        data: JSON.stringify(category),
         headers: headers
     })
     .done(() => {
-        window.location.href = contextRoot + "kategorie?delete=true"
+        window.location.href = contextRoot + "categories?delete=true"
     })
     .fail(() => {
         alert('Problem z usunięciem kategorii')
@@ -91,18 +91,18 @@ $(function() {
                 headers["Content-Type"] = "application/json; charset=utf-8";
                 headers[header] = token;
 
-                var kategoria = {
-                    nazwa: $('#nazwa').val()
+                var category = {
+                    name: $('#name').val()
                 }
 
                 $.ajax({
-                    url: contextRoot + 'kategoria',
+                    url: contextRoot + 'category',
                     type: 'POST',
-                    data: JSON.stringify(kategoria),
+                    data: JSON.stringify(category),
                     headers: headers
                 })
                 .done(() => {
-                    window.location.href = contextRoot + "kategorie?success=true"
+                    window.location.href = contextRoot + "categories?success=true"
                 })
                 .fail(() => {
                     alert('Problem z zapisem do bazy')

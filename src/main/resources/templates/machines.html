@@ -3,9 +3,7 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 
 <head>
-    <title>Ewi - maszyny</title>
-
-    <head>
+    <title>Ewi - machines</title>
 
         <meta th:name="_csrf" th:content="${_csrf.token}"/>
         <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
@@ -22,11 +20,9 @@
         <script th:inline="javascript"> var contextRoot = /*[[@{/}]]*/ ''; </script>
         <script src="js/index.js"></script>
         <script th:inline="javascript">
-            var jednostki = /*[[${jednostki}]]*/ [];
+            var units = /*[[${units}]]*/ [];
         </script>
-        <script src="js/maszyny.js"></script>
-
-    </head>
+        <script src="js/machines.js"></script>
 
 </head>
 
@@ -41,22 +37,22 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <table class="table" id="maszynyTable">
+            <table class="table" id="machinesTable">
                 <thead>
                 <tr>
                     <th> Numer </th>
                     <th> Nazwa </th>
                     <th> Opis </th>
-                    <th class="text-right"> <button class="btn btn-success" onclick="dodajBtn()">dodaj <i class="fas fa-plus-circle"></i></button> </th>
+                    <th class="text-right"> <button class="btn btn-success" onclick="addBtn()">dodaj <i class="fas fa-plus-circle"></i></button> </th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="machine : ${maszyny}">
+                <tr th:each="machine : ${machines}">
                     <td><span th:text="${machine.id}"> Numer </span> </td>
-                    <td><span th:text="${machine.nazwa}"> Nazwa </span></td>
-                    <td><span th:text="${machine.opis}"> Opis  </span></td>
+                    <td><span th:text="${machine.name}"> Nazwa </span></td>
+                    <td><span th:text="${machine.description}"> Opis  </span></td>
                     <td class="text-right">
-                        <button class="btn btn-info" th:onclick="edytujBtn([[${machine.id}]])">edytuj <i class="fas fa-edit"></i></button>
+                        <button class="btn btn-info" th:onclick="editBtn([[${machine.id}]])">edytuj <i class="fas fa-edit"></i></button>
                     </td>
                 </tr>
                 </tbody>
@@ -66,35 +62,35 @@
         <div id="dialog-form" title="">
 
             <form>
-                <label for="numer">Numer</label>
-                <input type="text" name="numer" id="numer" autocomplete="off" value="" class="text ui-widget-content ui-corner-all">
+                <label for="number">Numer</label>
+                <input type="text" name="number" id="number" autocomplete="off" value="" class="text ui-widget-content ui-corner-all">
                 <label class="text-danger" id="error">Maszyna o podanym numerze już istnieje.</label>
-                <label for="nazwa">Nazwa</label>
-                <input type="text" name="nazwa" id="nazwa" autocomplete="off" value="" class="text ui-widget-content ui-corner-all">
+                <label for="name">Nazwa</label>
+                <input type="text" name="name" id="name" autocomplete="off" value="" class="text ui-widget-content ui-corner-all">
                 <div class="row">
                     <div class="col-sm-6">
-                        <label for="normy">Normy</label>
-                        <button class="btn btn-success" id="dodajNormaBtn">dodaj</button>
+                        <label for="fuelConsumptionStandards">Normy</label>
+                        <button class="btn btn-success" id="addFuelConsumptionStandardBtn">dodaj</button>
                     </div>
                     <div class="col-sm-6">
-                        <label for="czyAktywna">Czy normy aktualne</label>
-                        <input type="checkbox" id="czyAktywna" checked/>
+                        <label for="isActive">Czy normy aktualne</label>
+                        <input type="checkbox" id="isActive" checked/>
                     </div>
                 </div>
-                <div id="normy" class="container">
-                    <table id="normyTable"></table>
+                <div id="fuelConsumptionStandards" class="container">
+                    <table id="fuelConsumptionStandardsTable"></table>
                 </div>
                 <br>
                 <div class="container">
                     <div class="row">
                         <div class="col-sm-6">
-                            <label for="opis">Opis</label>
-                            <textarea name="opis" id="opis" rows="6" style="width: 100%;" class=""></textarea>
+                            <label for="description">Opis</label>
+                            <textarea name="description" id="description" rows="6" style="width: 100%;" class=""></textarea>
                         </div>
                         <div class="col-sm-6">
                             <div class="checkbox">
-                                <ul th:each="category : ${kategorie}">
-                                    <input type="checkbox" name="kategorie" th:value="${category.nazwa}"><span th:text="${category.nazwa}"></span></input>
+                                <ul th:each="category : ${categories}">
+                                    <input type="checkbox" name="categories" th:value="${category.name}"><span th:text="${category.name}"></span></input>
                                 </ul>
                             </div>
                         </div>

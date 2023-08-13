@@ -10,5 +10,6 @@ import java.util.List;
 public interface CategoryRepository extends CrudRepository<Category, String> {
 
     List<Category> findAll();
+    Category findOneByName(String name);
 
 }

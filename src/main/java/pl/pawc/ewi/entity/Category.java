@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToMany;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -30,5 +31,10 @@ public class Category {
             joinColumns = { @JoinColumn(name = "category_name") },
             inverseJoinColumns = { @JoinColumn(name = "machine_id") })
     private Set<Machine> machines;
+
+    public void addMachine(Machine machine){
+        if(machines == null) machines = new HashSet<>();
+        machines.add(machine);
+     }
 
 }

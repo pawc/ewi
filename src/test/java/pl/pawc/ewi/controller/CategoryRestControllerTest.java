@@ -54,27 +54,27 @@ class CategoryRestControllerTest {
         category.setCarriedOver(true);
         requestJson = ow.writeValueAsString(category);
 
-        mockMvc.perform(put("/togglePrzenoszonaNaKolejnyOkres")
+        mockMvc.perform(put("/toggleCarriedOver")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(post("/kategoria")
+        mockMvc.perform(post("/category")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(post("/kategoria")
+        mockMvc.perform(post("/category")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(put("/togglePrzenoszonaNaKolejnyOkres")
+        mockMvc.perform(put("/toggleCarriedOver")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(delete("/kategoria")
+        mockMvc.perform(delete("/category")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());

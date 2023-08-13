@@ -1,11 +1,11 @@
-let jednostkaId = null
+let unitId = null
 
 $(document).ready(() => {
 
-    $('#jednostkiLink').css("font-weight", "bold").css("text-decoration", "underline");
-    $('#definicjeDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#unitsLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#definitionsDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
 
-    $('#jednostkiTable').DataTable({
+    $('#unitsTable').DataTable({
         "language": {
             "search": "Szukaj",
             "emptyTable": "Brak jednostek",
@@ -27,18 +27,18 @@ $(document).ready(() => {
 
 var dialog, form
 
-function edytujBtn(id, nazwa, waga){
+function editBtn(id, name, weightRatio){
     $("span.ui-dialog-title").text('Edytuj jednostkę');
-    jednostkaId = id
-    $('#nazwa').val(nazwa)
-    $('#waga').val(waga)
+    unitId = id
+    $('#name').val(name)
+    $('#weightRatio').val(weightRatio)
     dialog.dialog("open");
 }
 
-function dodajBtn(){
-    jednostkaId = null
-    $('#nazwa').val('')
-    $('#waga').val('')
+function addBtn(){
+    unitId = null
+    $('#name').val('')
+    $('#weightRatio').val('')
     $("span.ui-dialog-title").text('Dodaj jednostkę');
     dialog.dialog("open");
 }
@@ -53,10 +53,10 @@ $(function() {
         buttons: {
             "Zapisz": function(){
 
-               var jednostka = {
-                    id: jednostkaId,
-                    nazwa: $('#nazwa').val(),
-                    waga: $('#waga').val()
+               var unit = {
+                    id: unitId,
+                    name: $('#name').val(),
+                    weightRatio: $('#weightRatio').val()
                 }
 
                 var headers = {};
@@ -66,13 +66,13 @@ $(function() {
                 headers[header] = token;
 
                 $.ajax({
-                    url: contextRoot + 'jednostka',
+                    url: contextRoot + 'unit',
                     type: 'POST',
-                    data: JSON.stringify(jednostka),
+                    data: JSON.stringify(unit),
                     headers: headers
                 })
                 .done(() => {
-                    window.location.href = contextRoot + "jednostki?success="+jednostka.nazwa
+                    window.location.href = contextRoot + "unitsView?success="+unit.name
                 })
                 .fail(() => {
                     alert('Problem z zapisem do bazy')

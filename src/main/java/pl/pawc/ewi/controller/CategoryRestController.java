@@ -19,33 +19,33 @@ public class CategoryRestController {
     private static final Logger logger = LogManager.getLogger(CategoryRestController.class);
     private final CategoryService categoryService;
 
-    @PostMapping("/kategoria")
+    @PostMapping("/category")
     public void post(
             @RequestBody Category category){
 
         if(categoryService.post(category)) logger.info("/kategoria POST {}", category.getName());
         else {
-            logger.warn("/kategoria POST {} - category already exists", category.getName());
+            logger.warn("/category POST {} - category already exists", category.getName());
             throw new BadRequestException();
         }
 
     }
 
-    @DeleteMapping("/kategoria")
+    @DeleteMapping("/category")
     public void delete(
             @RequestBody Category category){
 
-        logger.info("/kategoria DELETE {}", category.getName());
+        logger.info("/category DELETE {}", category.getName());
         categoryService.delete(category);
 
     }
 
-    @PutMapping("/togglePrzenoszonaNaKolejnyOkres")
+    @PutMapping("/toggleCarriedOver")
     public void toggle(
             @RequestBody Category category) {
 
-        logger.info("/togglePrzenoszonaNaKolejnyOkres PUT {}", category.getName());
-        if(!categoryService.togglePrzenoszonaNaKolejnyOkres(category)) throw new BadRequestException();
+        logger.info("/toggleCarriedOver PUT {}", category.getName());
+        if(!categoryService.toggleCarriedOver(category)) throw new BadRequestException();
 
     }
 

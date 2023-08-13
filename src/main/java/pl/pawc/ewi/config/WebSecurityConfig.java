@@ -13,7 +13,7 @@ public class WebSecurityConfig {
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.authorizeHttpRequests((authorize) -> authorize
+        http.authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/login*").permitAll()
             .requestMatchers("/css/**").permitAll()
             .requestMatchers("/*").hasRole("USER")

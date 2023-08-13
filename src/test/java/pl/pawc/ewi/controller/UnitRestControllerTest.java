@@ -16,7 +16,6 @@ import org.springframework.web.context.WebApplicationContext;
 import pl.pawc.ewi.entity.Unit;
 
 import jakarta.servlet.ServletContext;
-import pl.pawc.ewi.repository.UnitRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -35,9 +34,6 @@ class UnitRestControllerTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
-
-    @Autowired
-    UnitRepository unitRepository;
 
     private MockMvc mockMvc;
 
@@ -66,7 +62,7 @@ class UnitRestControllerTest {
         unit.setWeightRatio(BigDecimal.valueOf(1.23));
         requestJson = ow.writeValueAsString(unit);
 
-        mockMvc.perform(post("/jednostka")
+        mockMvc.perform(post("/unit")
                 .contentType(APPLICATION_JSON_UTF8)
                 .content(requestJson))
             .andExpect(status().isOk());
@@ -75,14 +71,14 @@ class UnitRestControllerTest {
 
     @Test
     @Order(2)
-    void jednostkiGetTest() throws Exception {
+    void unitsGetTest() throws Exception {
 
-        mockMvc.perform(get("/jednostkiGet"))
+        mockMvc.perform(get("/units"))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(result -> {
-                List<Unit> jednostki = objectMapper.readValue(result.getResponse().getContentAsString(), List.class);
-                assertEquals(1, jednostki.size());
+                List<Unit> units = objectMapper.readValue(result.getResponse().getContentAsString(), List.class);
+                assertEquals(1, units.size());
             });
 
     }

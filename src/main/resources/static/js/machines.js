@@ -1,9 +1,9 @@
 $(document).ready(() => {
 
-    $('#maszynyLink').css("font-weight", "bold").css("text-decoration", "underline");
-    $('#definicjeDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#machinesLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#definitionsDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
 
-    $('#maszynyTable').DataTable({
+    $('#machinesTable').DataTable({
         "language": {
             "search": "Szukaj",
             "emptyTable": "Brak maszyn",
@@ -21,13 +21,13 @@ $(document).ready(() => {
         }
     });
 
-    $('#dodajNormaBtn').click(() => {
+    $('#addFuelConsumptionStandardBtn').click(() => {
 
         var row = $('<tr>').attr({
-            class: 'norma'
+            class: 'fuelConsumptionStandard'
         })
 
-        var normaWartosc = $('<input>').attr({
+        var fuelConsumptionStandardValue = $('<input>').attr({
             type: 'number',
             step: '0.01',
             class: 'form-control'
@@ -35,27 +35,27 @@ $(document).ready(() => {
         .css('width', '90px')
 
         var col1 = $('<td>')
-        normaWartosc.appendTo(col1)
+        fuelConsumptionStandardValue.appendTo(col1)
         col1.appendTo(row)
 
-        let normaJednostka = $('<select>').attr({
+        let fuelConsumptionStandardUnit = $('<select>').attr({
             class: 'form-control',
             placeholder: 'jednostka'
         })
 
-        $.each(jednostki, function(key, jednostka) {
-          normaJednostka.append($("<option></option>")
-             .attr("value", jednostka.id).text(jednostka.nazwa));
+        $.each(units, function(key, unit) {
+          fuelConsumptionStandardUnit.append($("<option></option>")
+             .attr("value", unit.id).text(unit.name));
         });
 
         var col2 = $('<td>')
-        normaJednostka.appendTo(col2)
+        fuelConsumptionStandardUnit.appendTo(col2)
         col2.appendTo(row)
 
         var col3 = $('<td>')
         .css('text-align', 'center')
 
-        var czyOgrzewanieCheck = $('<input>')
+        var isUsedForHeatingCheck = $('<input>')
         .attr({
             type: 'checkbox',
             class: 'form-check-input'
@@ -74,7 +74,7 @@ $(document).ready(() => {
         var col5 = $('<td>')
         .css('text-align', 'center')
         col5.appendTo(row)
-        var czyZaokralganieCheck = $('<input>')
+        var isRoundedCheck = $('<input>')
         .attr({
             type: 'checkbox',
             class: 'form-check-input'
@@ -100,16 +100,16 @@ $(document).ready(() => {
 
         col4.appendTo(row)
 
-        row.appendTo($('#normyTable'))
+        row.appendTo($('#fuelConsumptionStandardsTable'))
 
     })
 
-    $('.usunNormaBtn').on('click', function (){
+    $('.deleteFuelConsumptionStandardBtn').on('click', function (){
         $(this).parents('tr').first().remove();
     });
 
     $('#error').hide();
-    $('#numer').keypress(() => {
+    $('#number').keypress(() => {
         $('#error').hide();
     })
 
@@ -117,85 +117,85 @@ $(document).ready(() => {
 
 var dialog, form, currentId, type
 
-function edytujBtn(id){
+function editBtn(id){
     type = 'PUT'
-    $("#normyTable > tbody > tr").remove();
+    $("#fuelConsumptionStandardsTable > tbody > tr").remove();
     currentId = id
 
     $("span.ui-dialog-title").text('Edytuj maszynę');
 
     $.ajax({
-        url: contextRoot + 'maszyna',
+        url: contextRoot + 'machine',
         data: {
             id: id
         }
     })
-    .done(maszyna => {
-        $("#numer").prop("disabled", true);
-        $('#numer').val(maszyna.id)
-        $('#nazwa').val(maszyna.nazwa)
-        $('#opis').val(maszyna.opis)
-        $('#czyAktywna').prop('checked', maszyna.aktywna)
+    .done(machine => {
+        $("#number").prop("disabled", true);
+        $('#number').val(machine.id)
+        $('#name').val(machine.name)
+        $('#description').val(machine.description)
+        $('#isActive').prop('checked', machine.active)
 
-        $.each($('input[name=kategorie]'), (i, k) => {
+        $.each($('input[name=categories]'), (i, k) => {
             $(k).prop('checked', false)
         })
 
-        $.each(maszyna.kategorie, (i, kategoria) => {
-             $.each($('input[name=kategorie]'), (j, k) => {
-                 if(kategoria.nazwa == $(k).val()) $(k).prop('checked', true)
+        $.each(machine.categories, (i, category) => {
+             $.each($('input[name=categories]'), (j, k) => {
+                 if(category.name == $(k).val()) $(k).prop('checked', true)
              })
         })
 
-        $.each(maszyna.normy, (i, norma) => {
+        $.each(machine.fuelConsumptionStandards, (i, fuelConsumptionStandard) => {
 
             var row = $('<tr>').attr({
-                class: 'norma',
-                normaId: norma.id
+                class: 'fuelConsumptionStandard',
+                fuelConsumptionStandardId: fuelConsumptionStandard.id
             })
 
-            var normaWartosc = $('<input>').attr({
+            var fuelConsumptionStandardValue = $('<input>').attr({
                 type: 'number',
                 step: '0.01',
                 class: 'form-control'
             })
             .css('width', '90px')
-            .val(norma.wartosc)
+            .val(fuelConsumptionStandard.value)
 
             var col1 = $('<td>')
-            normaWartosc.appendTo(col1)
+            fuelConsumptionStandardValue.appendTo(col1)
             col1.appendTo(row)
 
-            var normaJednostka = $('<select>').attr({
+            var fuelConsumptionStandardUnit = $('<select>').attr({
                 class: 'form-control',
                 placeholder: 'jednostka'
             })
             .prop('disabled', true)
 
-            $.each(jednostki, function(key, jednostka) {
-              normaJednostka.append($("<option></option>")
-                 .attr("value", jednostka.id).text(jednostka.nazwa));
+            $.each(units, function(key, unit) {
+              fuelConsumptionStandardUnit.append($("<option></option>")
+                 .attr("value", unit.id).text(unit.name));
             });
 
-            if(norma.jednostkaObj != null) normaJednostka.val(norma.jednostkaObj.id)
+            if(fuelConsumptionStandard.unitObj != null) fuelConsumptionStandardUnit.val(fuelConsumptionStandard.unitObj.id)
             else {
-                normaJednostka.append($("<option></option>").attr("value", norma.jednostka).text(norma.jednostka));
-                normaJednostka.val(norma.jednostka)
+                fuelConsumptionStandardUnit.append($("<option></option>").attr("value", fuelConsumptionStandard.unit).text(fuelConsumptionStandard.unit));
+                fuelConsumptionStandardUnit.val(fuelConsumptionStandard.unit)
             }
 
             var col2 = $('<td>')
-            normaJednostka.appendTo(col2)
+            fuelConsumptionStandardUnit.appendTo(col2)
             col2.appendTo(row)
 
             var col3 = $('<td>')
             .css('text-align', 'center')
 
-            var czyOgrzewanieCheck = $('<input>')
+            var isUsedForHeating = $('<input>')
             .attr({
                 type: 'checkbox',
                 class: 'form-check-input'
             })
-            .prop('checked', norma.czyOgrzewanie)
+            .prop('checked', fuelConsumptionStandard.usedForHeating)
             .prop('disabled', true)
             .css('display', 'inline-block')
             .appendTo(col3)
@@ -211,12 +211,12 @@ function edytujBtn(id){
             var col5 = $('<td>')
             .css('text-align', 'center')
             col5.appendTo(row)
-            var czyZaokralganieCheck = $('<input>')
+            var isRoundedCheck = $('<input>')
             .attr({
                 type: 'checkbox',
                 class: 'form-check-input'
             })
-            .prop('checked', norma.czyZaokr1setna)
+            .prop('checked', fuelConsumptionStandard.rounded)
             .css('display', 'inline-block')
             .appendTo(col5)
 
@@ -226,7 +226,7 @@ function edytujBtn(id){
             .text(' zaokr. 0.01 ')
             .appendTo(col5)
 
-            row.appendTo($('#normyTable'))
+            row.appendTo($('#fuelConsumptionStandardsTable'))
 
         })
         dialog.dialog( "open" );
@@ -236,15 +236,15 @@ function edytujBtn(id){
     })
 }
 
-function dodajBtn(){
+function addBtn(){
     type = 'POST'
-    $("#normyTable > tbody > tr").remove();
+    $("#fuelConsumptionStandardsTable > tbody > tr").remove();
     currentId = 0
-    $("#numer").prop("disabled", false);
-    $("#numer").val('')
-    $('#nazwa').val('')
-    $('#opis').val('')
-    $('#czyAktywna').prop('checked', true)
+    $("#number").prop("disabled", false);
+    $("#number").val('')
+    $('#name').val('')
+    $('#description').val('')
+    $('#isActive').prop('checked', true)
     $("span.ui-dialog-title").text('Dodaj maszynę');
     dialog.dialog("open");
 }
@@ -259,52 +259,52 @@ $(function() {
         buttons: {
             "Zapisz": function(){
 
-                var normy = [];
-                $('.norma').each(function(i, tr){
-                    var normaId = $(this).attr('normaId')
-                    var wartosc = $(this).find('td:eq(0) > input').val()
-                    var jednostkaId = $(this).find('td:eq(1) > select').val()
-                    var czyOgrzewanie = $(this).find('td:eq(2) > input').prop('checked')
-                    var czyZaokr1setna = $(this).find('td:eq(3) > input').prop('checked')
+                var fuelConsumptionStandards = [];
+                $('.fuelConsumptionStandard').each(function(i, tr){
+                    var fuelConsumptionStandardId = $(this).attr('fuelConsumptionStandardId')
+                    var value = $(this).find('td:eq(0) > input').val()
+                    var unitId = $(this).find('td:eq(1) > select').val()
+                    var usedForHeating = $(this).find('td:eq(2) > input').prop('checked')
+                    var rounded = $(this).find('td:eq(3) > input').prop('checked')
 
-                    var norma = {
-                        id: normaId,
-                        wartosc: wartosc,
-                        jednostkaObj: {
-                            id: jednostkaId
+                    var fuelConsumptionStandard = {
+                        id: fuelConsumptionStandardId,
+                        value: value,
+                        unitObj: {
+                            id: unitId
                         },
-                        czyOgrzewanie: czyOgrzewanie,
-                        czyZaokr1setna: czyZaokr1setna
+                        usedForHeating: usedForHeating,
+                        rounded: rounded
                     }
 
-                    if(jednostkaId && wartosc){
+                    if(unitId && value){
 
                         // unikalność jednostki
                         var test = true
-                        $.each(normy, (i, n) => {
-                            if(jednostkaId == n.jednostkaObj.id) test = false
+                        $.each(fuelConsumptionStandards, (i, n) => {
+                            if(unitId == n.unitObj.id) test = false
                         })
-                        if(test) normy.push(norma);
+                        if(test) fuelConsumptionStandards.push(fuelConsumptionStandard);
 
                     }
                 })
 
-                var kategorie = []
-                $('input[name=kategorie]').each((i, kategoria) => {
-                    if($(kategoria).is(':checked')){
-                        kategorie.push({
-                            nazwa: $(kategoria).val()
+                var categories = []
+                $('input[name=categories]').each((i, category) => {
+                    if($(category).is(':checked')){
+                        categories.push({
+                            name: $(category).val()
                         })
                     }
                 })
 
-                var maszyna = {
-                    id: $("#numer").val(),
-                    nazwa: $('#nazwa').val(),
-                    opis: $('#opis').val(),
-                    normy: normy,
-                    kategorie: kategorie,
-                    aktywna: $('#czyAktywna').prop('checked')
+                var machine = {
+                    id: $("#number").val(),
+                    name: $('#name').val(),
+                    description: $('#description').val(),
+                    fuelConsumptionStandards: fuelConsumptionStandards,
+                    categories: categories,
+                    active: $('#isActive').prop('checked')
                 }
 
                 var headers = {};
@@ -317,9 +317,9 @@ $(function() {
                 if(type == 'POST'){
                     preCalls = [
                         $.ajax({
-                            url: contextRoot + 'maszyna',
+                            url: contextRoot + 'machine',
                             data: {
-                                id: maszyna.id
+                                id: machine.id
                             },
                             headers: headers
                         })
@@ -334,17 +334,17 @@ $(function() {
 
                 $.when.apply($, preCalls).then(() => {
                     $.ajax({
-                        url: contextRoot + 'maszyna',
+                        url: contextRoot + 'machine',
                         type: type,
-                        data: JSON.stringify(maszyna),
+                        data: JSON.stringify(machine),
                         headers: headers
                     })
                     .done(() => {
                         if(type == 'POST'){
-                            window.location.href = contextRoot + "maszyny?success="+maszyna.id
+                            window.location.href = contextRoot + "machines?success="+machine.id
                         }
                         else{
-                            window.location.href = contextRoot + "maszyny"
+                            window.location.href = contextRoot + "machines"
                         }
                     })
                     .fail(() => {
