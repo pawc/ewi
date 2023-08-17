@@ -24,22 +24,22 @@ public class KilometersRestController {
     private final KilometersService kilometersService;
     private final ReportService reportService;
 
-    @PostMapping("kilometry")
-    public void kilometry(
+    @PostMapping("kilometers")
+    public void kilometersPost(
             @RequestBody Kilometers kilometers) {
 
-        if(kilometersService.post(kilometers)) logger.info("/kilometry POST dodano {}", kilometers);
-        else logger.info("/kilometry POST zaktualizowano {}", kilometers);
+        if(kilometersService.post(kilometers)) logger.info("/kilometers POST added {}", kilometers);
+        else logger.info("/kilometers POST updated {}", kilometers);
 
     }
 
-    @GetMapping("kilometryGet")
+    @GetMapping("kilometers")
     public List<KilometersReport> kilometryGet(
-            @RequestParam("rok") int rok,
-            @RequestParam("miesiac") int miesiac){
+            @RequestParam("year") int year,
+            @RequestParam("month") int month){
 
-        logger.info("/kilometryGet {}-{}", rok, miesiac);
-        return reportService.getKilometryRaport(rok, miesiac);
+        logger.info("/KilometersReport {}-{}", year, month);
+        return reportService.getKilometersReport(year, month);
 
     }
 

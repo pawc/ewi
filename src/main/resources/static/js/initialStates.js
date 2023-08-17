@@ -1,18 +1,18 @@
 var t;
 $(document).ready(function() {
 
-    $('#stanyLink').css("font-weight", "bold").css("text-decoration", "underline");
-    $('#stanyDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#initialStatesLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#initialStatesDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
 
     var month = new Date().getMonth()+1
     if(month < 10) month = '0' + month
 
     var year = new Date().getFullYear()
-    $('#miesiac').val(year + '-' + month)
+    $('#month').val(year + '-' + month)
 
-    $('#dataSpan').text($('#miesiac').val())
+    $('#dataSpan').text($('#month').val())
 
-    t = $('#stanyTable').DataTable({
+    t = $('#initialStatesTable').DataTable({
         "language": {
             "search": "Szukaj",
             "emptyTable": "Brak pozycji",
@@ -32,8 +32,8 @@ $(document).ready(function() {
 
     updateTable();
 
-    $('#miesiac').change(() => {
-        $('#dataSpan').text($('#miesiac').val())
+    $('#month').change(() => {
+        $('#dataSpan').text($('#month').val())
         updateTable();
     })
 
@@ -41,24 +41,24 @@ $(document).ready(function() {
 
 function updateTable(){
    t.clear().draw();
-    var rok = $('#miesiac').val().split('-')[0]
-    var miesiac = $('#miesiac').val().split('-')[1]
+    var year = $('#month').val().split('-')[0]
+    var month = $('#month').val().split('-')[1]
     $.ajax({
-        url: contextRoot + 'stanyGet',
+        url: contextRoot + 'fuelInitialStateReport',
         data: {
-            rok: rok,
-            miesiac: miesiac
+            year: year,
+            month: month
         }
     })
-    .done(stany => {
-        $.each(stany, (i, stan) => {
+    .done(fuelInitialStateReport => {
+        $.each(fuelInitialStateReport, (i, record) => {
             t.row.add([
-                `${stan.maszynanazwa} (${stan.maszynaid})`,
-                stan.jednostka,
-                `<input class="form-control text-center stan" id="${stan.normaid}" type="number" step="0.01" value="${stan.stanpoczatkowy}" style="width: 110px;"></input>`,
-                `<button class="btn btn-info" normaid="${stan.normaid}" rok="${rok}" miesiac="${miesiac}" onclick="saveStan(this)">zapisz</button>\
-                <b><span id="success-${stan.normaid}" class="text-success" style="font-size: 12px;"></span></b>\
-                <b><span id="danger-${stan.normaid}" class="text-danger" style="font-size: 12px;"></span></b>`
+                `${record.machineName} (${record.machineId})`,
+                record.unit,
+                `<input class="form-control text-center stan" id="${record.fuelConsumptionStandardId}" type="number" step="0.01" value="${record.fuelInitialState}" style="width: 110px;"></input>`,
+                `<button class="btn btn-info" fuelConsumptionStandardId="${record.fuelConsumptionStandardId}" year="${year}" month="${month}" onclick="saveInitialState(this)">zapisz</button>\
+                <b><span id="success-${record.fuelConsumptionStandardId}" class="text-success" style="font-size: 12px;"></span></b>\
+                <b><span id="danger-${record.fuelConsumptionStandardId}" class="text-danger" style="font-size: 12px;"></span></b>`
             ]).draw(false);
         })
     })
@@ -67,19 +67,19 @@ function updateTable(){
     })
 }
 
-function saveStan(btn){
-    var normaId = $(btn).attr('normaid');
-    var rok = $(btn).attr('rok');
-    var miesiac = $(btn).attr('miesiac');
-    var wartosc = $(`#${normaId}`).val();
+function saveInitialState(btn){
+    var fuelConsumptionStandardId = $(btn).attr('fuelConsumptionStandardId');
+    var year = $(btn).attr('year');
+    var month = $(btn).attr('month');
+    var value = $(`#${fuelConsumptionStandardId}`).val();
 
-    var stan = {
-        wartosc: wartosc,
-        norma: {
-            id: normaId
+    var fuelInitialState = {
+        value: value,
+        fuelConsumptionStandard: {
+            id: fuelConsumptionStandardId
         },
-        rok : rok,
-        miesiac : miesiac
+        year : year,
+        month : month
     }
 
     var headers = {};
@@ -88,18 +88,18 @@ function saveStan(btn){
     var token = $("meta[name='_csrf']").attr("content");
     headers[header] = token
     var properties = {
-        url: contextRoot + 'stan',
-        data: JSON.stringify(stan),
+        url: contextRoot + 'fuelInitialState',
+        data: JSON.stringify(fuelInitialState),
         type: 'PUT',
         headers: headers
     }
 
     $.ajax(properties)
     .done(() => {
-        $(`#success-${normaId}`).text('zapisano')
+        $(`#success-${fuelConsumptionStandardId}`).text('zapisano')
     })
     .fail(() => {
-        $(`#danger-${normaId}`).text('problem z zapisem')
+        $(`#danger-${fuelConsumptionStandardId}`).text('problem z zapisem')
     })
 
 }

@@ -25,10 +25,10 @@ class ReportServiceTest {
 	@Transactional
 	void testGetKilometryRaport() {
 
-		List<KilometersReport> kilometryRaport = reportService.getKilometryRaport(2022, 4);
+		List<KilometersReport> kilometryRaport = reportService.getKilometersReport(2022, 4);
 		assertEquals(2, kilometryRaport.size());
 
-		kilometryRaport = reportService.getKilometryRaport(2022, 5);
+		kilometryRaport = reportService.getKilometersReport(2022, 5);
 		assertEquals(2, kilometryRaport.size());
 
 		for (KilometersReport r : kilometryRaport) {

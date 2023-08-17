@@ -70,7 +70,7 @@ class FuelInitialStateRestControllerTest {
 
         requestJson = ow.writeValueAsString(fuelInitialState);
 
-        mockMvc.perform(put("/stan")
+        mockMvc.perform(put("/fuelInitialState")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());
@@ -78,7 +78,7 @@ class FuelInitialStateRestControllerTest {
         List<FuelInitialState> stany = List.of(fuelInitialState);
         requestJson = ow.writeValueAsString(stany);
 
-        mockMvc.perform(post("/stany")
+        mockMvc.perform(post("/fuelInitialStates")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());
@@ -88,9 +88,9 @@ class FuelInitialStateRestControllerTest {
     @Test
     void stanyGetTest() throws Exception {
 
-        mockMvc.perform(get("/stanyGet")
-                .param("rok", "2022")
-                .param("miesiac", "4"))
+        mockMvc.perform(get("/fuelInitialStateReport")
+                .param("year", "2022")
+                .param("month", "4"))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(result -> {

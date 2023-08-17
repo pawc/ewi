@@ -22,31 +22,35 @@ public class FuelInitialStateRestController {
     private static final Logger logger = LogManager.getLogger(FuelInitialStateRestController.class);
     private final FuelInitialStateService fuelInitialStateService;
 
-    @PutMapping("stan")
-    public void stanPut(
+    @PutMapping("fuelInitialState")
+    public void fuelInitialStatePut(
             @RequestBody FuelInitialState fuelInitialState) {
 
-        if(fuelInitialStateService.post(fuelInitialState)) logger.info("/stan dodano {} - normaID={}", fuelInitialState, fuelInitialState.getFuelConsumptionStandard().getId());
-        else logger.info("/stan zaktualizowano {} - normaID={}", fuelInitialState, fuelInitialState.getFuelConsumptionStandard().getId());
+        if(fuelInitialStateService.post(fuelInitialState)) logger.info("/fuelInitialState added {} - fuelConsumptionStandardId={}",
+                fuelInitialState, fuelInitialState.getFuelConsumptionStandard().getId());
+        else logger.info("/fuelInitialState updated {} - fuelConsumptionStandardId={}",
+                fuelInitialState, fuelInitialState.getFuelConsumptionStandard().getId());
     }
 
-    @PostMapping("stany")
-    public void stanyPost(
-            @RequestBody List<FuelInitialState> stany) {
+    @PostMapping("fuelInitialStates")
+    public void fuelInitialStatesPost(
+            @RequestBody List<FuelInitialState> fuelInitialStates) {
 
-        fuelInitialStateService.stanyPost(stany);
-        for(FuelInitialState fuelInitialState : stany){
-            logger.info("/stany {}-{} - normaID={}", fuelInitialState.getYear(), fuelInitialState.getMonth(), fuelInitialState.getFuelConsumptionStandard().getId());
+        fuelInitialStateService.stanyPost(fuelInitialStates);
+        for(FuelInitialState fuelInitialState : fuelInitialStates){
+            logger.info("/fuelInitialStates {}-{} - fuelConsumptionStandardId={}",
+                    fuelInitialState.getYear(), fuelInitialState.getMonth(),
+                    fuelInitialState.getFuelConsumptionStandard().getId());
         }
     }
 
-    @GetMapping("stanyGet")
-    public List<FuelInitialStateReport> stanyGet(
-            @RequestParam("rok") int rok,
-            @RequestParam("miesiac") int miesiac){
+    @GetMapping("fuelInitialStateReport")
+    public List<FuelInitialStateReport> fuelInitialStateReport(
+            @RequestParam("year") int year,
+            @RequestParam("month") int month){
 
-        logger.info("/stanyGet {}-{}", rok, miesiac);
-        return fuelInitialStateService.findBy(rok, miesiac);
+        logger.info("/fuelInitialState {}-{}", year, month);
+        return fuelInitialStateService.findBy(year, month);
 
     }
 

@@ -36,7 +36,7 @@ public class ReportService {
     private final FuelConsumptionStandardRepository fuelConsumptionStandardRepository;
     private final FuelConsumptionRepository fuelConsumptionRepository;
 
-    public List<KilometersReport> getKilometryRaport(int rok, int miesiac){
+    public List<KilometersReport> getKilometersReport(int rok, int miesiac){
 
         List<Machine> allActive = machineService.findAllActive();
         List<KilometersReport> result = new ArrayList<>();

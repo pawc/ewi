@@ -102,7 +102,7 @@ public class ViewController {
 
     }
 
-    @RequestMapping("/initialStates")
+    @RequestMapping("/initialStatesView")
     public String stany(Model model) {
 
         logger.info("/initialStates");
@@ -110,7 +110,7 @@ public class ViewController {
 
     }
 
-    @RequestMapping("/kilometers")
+    @RequestMapping("/kilometersView")
     public String kilometry(
             Model model) {
 

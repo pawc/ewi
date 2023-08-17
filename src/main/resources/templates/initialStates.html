@@ -21,7 +21,7 @@
         <script th:inline="javascript"> var contextRoot = /*[[@{/}]]*/ ''; </script>
 
         <script src="js/index.js"></script>
-        <script src="js/stany.js"></script>
+        <script src="js/initialStates.js"></script>
     </head>
 
 </head>
@@ -31,9 +31,9 @@
 <body>
 
     <div class="container">
-        <label for="miesiac">Miesiąc:</label>
+        <label for="month">Miesiąc:</label>
 
-        <input type="month" id="miesiac"
+        <input type="month" id="month"
                min="2021-01" value="2021-04">
 
         <p></p>
@@ -41,7 +41,7 @@
 
     <div class="container">
 
-        <table class="table" id="stanyTable">
+        <table class="table" id="initialStatesTable">
             <thead>
                 <tr>
                     <th> Maszyna (Numer) </th>

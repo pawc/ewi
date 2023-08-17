@@ -57,9 +57,9 @@ class KilometersRestControllerTest {
     @Test
     void stanyGetTest() throws Exception {
 
-        mockMvc.perform(get("/kilometryGet")
-                        .param("rok", "2022")
-                        .param("miesiac", "4"))
+        mockMvc.perform(get("/kilometers")
+                        .param("year", "2022")
+                        .param("month", "4"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(result -> {
@@ -114,7 +114,7 @@ class KilometersRestControllerTest {
 
         requestJson = ow.writeValueAsString(kilometers);
 
-        mockMvc.perform(post("/kilometry")
+        mockMvc.perform(post("/kilometers")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());
@@ -124,7 +124,7 @@ class KilometersRestControllerTest {
         kilometers.setValue(BigDecimal.valueOf(120));
         requestJson = ow.writeValueAsString(kilometers);
 
-        mockMvc.perform(post("/kilometry")
+        mockMvc.perform(post("/kilometers")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());

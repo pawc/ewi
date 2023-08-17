@@ -1,34 +1,34 @@
 var t;
 $(document).ready(function() {
 
-    $('#kilometryLink').css("font-weight", "bold").css("text-decoration", "underline");
-    $('#stanyDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#kilometersLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#initialStatesDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
 
     var queryString = window.location.search;
     var urlParams = new URLSearchParams(queryString);
     var monthParam = urlParams.get('month');
     if(monthParam){
-        $('#miesiac').val(monthParam)
-        $('#raportLink').attr('href', $('#raportLink').attr('href') + '?month=' + monthParam)
-        $('#dokumentyLink').attr('href', $('#dokumentyLink').attr('href') + '?month=' + monthParam)
-        $('#maszynyLink').attr('href', $('#dokumentyLink').attr('href') + '?month=' + monthParam)
-        $('#stanyLink').attr('href', $('#stanyLink').attr('href') + '?month=' + monthParam)
-        $('#kilometryLink').attr('href', $('#kilometryLink').attr('href') + '?month=' + monthParam)
+        $('#month').val(monthParam)
+        $('#reportLink').attr('href', $('#raportLink').attr('href') + '?month=' + monthParam)
+        $('#documentsLink').attr('href', $('#dokumentyLink').attr('href') + '?month=' + monthParam)
+        $('#machinesLink').attr('href', $('#dokumentyLink').attr('href') + '?month=' + monthParam)
+        $('#initialStatesDropdownMenuLink').attr('href', $('#stanyLink').attr('href') + '?month=' + monthParam)
+        $('#kilometersLink').attr('href', $('#kilometryLink').attr('href') + '?month=' + monthParam)
     }
     else{
         var month = new Date().getMonth()+1
         if(month < 10) month = '0' + month
 
         var year = new Date().getFullYear()
-        $('#miesiac').val(year + '-' + month)
+        $('#month').val(year + '-' + month)
     }
 
     var year = new Date().getFullYear()
-    $('#miesiac').val(year + '-' + month)
+    $('#month').val(year + '-' + month)
 
-    $('#dataSpan').text($('#miesiac').val())
+    $('#dataSpan').text($('#month').val())
 
-    t = $('#kilometryTable').DataTable({
+    t = $('#kilometersTable').DataTable({
         "language": {
             "search": "Szukaj",
             "emptyTable": "Brak pozycji",
@@ -48,15 +48,15 @@ $(document).ready(function() {
 
     updateTable();
 
-    $('#miesiac').change(() => {
+    $('#month').change(() => {
         if(!monthParam){
-            $('#raportLink').attr('href', $('#raportLink').attr('href') + '?month=' + $('#miesiac').val())
-            $('#dokumentyLink').attr('href', $('#dokumentyLink').attr('href') + '?month=' + $('#miesiac').val())
-            $('#maszynyLink').attr('href', $('#maszynyLink').attr('href') + '?month=' + $('#miesiac').val())
-            $('#stanyLink').attr('href', $('#stanyLink').attr('href') + '?month=' + $('#miesiac').val())
-            $('#kilometryLink').attr('href', $('#kilometryLink').attr('href') + '?month=' + $('#miesiac').val())
+            $('#reportLink').attr('href', $('#raportLink').attr('href') + '?month=' + $('#miesiac').val())
+            $('#documentsLink').attr('href', $('#dokumentyLink').attr('href') + '?month=' + $('#miesiac').val())
+            $('#machinesLink').attr('href', $('#maszynyLink').attr('href') + '?month=' + $('#miesiac').val())
+            $('#initialStatesDropdownMenuLink').attr('href', $('#stanyLink').attr('href') + '?month=' + $('#miesiac').val())
+            $('#kilometersLink').attr('href', $('#kilometryLink').attr('href') + '?month=' + $('#miesiac').val())
         }
-        $('#dataSpan').text($('#miesiac').val())
+        $('#dataSpan').text($('#month').val())
         updateTable();
     })
 
@@ -64,23 +64,23 @@ $(document).ready(function() {
 
 function updateTable(){
    t.clear().draw();
-    var rok = $('#miesiac').val().split('-')[0]
-    var miesiac = $('#miesiac').val().split('-')[1]
+    var year = $('#month').val().split('-')[0]
+    var month = $('#month').val().split('-')[1]
     $.ajax({
-        url: contextRoot + 'kilometryGet',
+        url: contextRoot + 'kilometers',
         data: {
-            rok: rok,
-            miesiac: miesiac
+            year: year,
+            month: month
         }
     })
     .done(kilometry => {
         $.each(kilometry, (i, k) => {
             t.row.add([
-                `${k.maszynanazwa} (${k.maszynaid})`,
-                `<input class="form-control text-center maszyna" type="number" step="0.01" value="${k.stanpoczatkowy}" style="width: 110px;"></input>`,
-                `<button class="btn btn-info" rok="${rok}" miesiac="${miesiac}" maszynaid="${k.maszynaid}" onclick="saveKilometry(this)">zapisz</button>\
-                <b><span id="success-${k.maszynaid}" class="text-success" style="font-size: 12px;"></span></b>\
-                <b><span id="danger-${k.maszynaid}" class="text-danger" style="font-size: 12px;"></span></b>`
+                `${k.machineName} (${k.machineId})`,
+                `<input class="form-control text-center maszyna" type="number" step="0.01" value="${k.initialState}" style="width: 110px;"></input>`,
+                `<button class="btn btn-info" year="${year}" month="${month}" machineid="${k.machineId}" onclick="saveKilometers(this)">zapisz</button>\
+                <b><span id="success-${k.machineId}" class="text-success" style="font-size: 12px;"></span></b>\
+                <b><span id="danger-${k.machineId}" class="text-danger" style="font-size: 12px;"></span></b>`
             ]).draw(false);
         })
     })
@@ -89,19 +89,19 @@ function updateTable(){
     })
 }
 
-function saveKilometry(btn){
-    var maszynaid = $(btn).attr('maszynaid');
-    var rok = $(btn).attr('rok');
-    var miesiac = $(btn).attr('miesiac');
-    var wartosc = $(btn).parent().parent().find('input').val()
+function saveKilometers(btn){
+    var machineId = $(btn).attr('machineid');
+    var year = $(btn).attr('year');
+    var month = $(btn).attr('month');
+    var value = $(btn).parent().parent().find('input').val()
 
-    var kilometry = {
-        wartosc: wartosc,
-        maszyna: {
-            id: maszynaid
+    var kilometers = {
+        value: value,
+        machine: {
+            id: machineId
         },
-        rok : rok,
-        miesiac : miesiac
+        year : year,
+        month : month
     }
 
     var headers = {};
@@ -110,8 +110,8 @@ function saveKilometry(btn){
     var token = $("meta[name='_csrf']").attr("content");
     headers[header] = token
     var properties = {
-        url: contextRoot + 'kilometry',
-        data: JSON.stringify(kilometry),
+        url: contextRoot + 'kilometers',
+        data: JSON.stringify(kilometers),
         type: 'POST',
         headers: headers
     }
