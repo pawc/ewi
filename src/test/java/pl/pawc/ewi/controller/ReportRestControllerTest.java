@@ -28,50 +28,50 @@ class ReportRestControllerTest {
         ServletContext servletContext = webApplicationContext.getServletContext();
 
         assertNotNull(servletContext);
-        assertNotNull(webApplicationContext.getBean("raportRestController"));
+        assertNotNull(webApplicationContext.getBean("reportRestController"));
     }
 
     @Test
-    void raportTest() throws Exception {
+    void reportTest() throws Exception {
 
-        mockMvc.perform(get("/raport")
-                .param("rok", "2022")
-                .param("miesiac", "4"))
+        mockMvc.perform(get("/report")
+                .param("year", "2022")
+                .param("month", "4"))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/raport"))
+        mockMvc.perform(get("/report"))
                 .andExpect(status().isBadRequest());
 
     }
 
     @Test
-    void raportRocznyTest() throws Exception {
+    void reportAnnualTest() throws Exception {
 
-        mockMvc.perform(get("/raportRoczny")
-                        .param("rok", "2022"))
+        mockMvc.perform(get("/reportAnnual")
+                        .param("year", "2022"))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/raportRoczny"))
+        mockMvc.perform(get("/reportAnnual"))
                 .andExpect(status().isBadRequest());
 
     }
 
     @Test
-    void raportMaszynaKilometryTest() throws Exception {
+    void reportMachineKilometersTest() throws Exception {
 
-        mockMvc.perform(get("/getRaportMaszynaKilometry")
+        mockMvc.perform(get("/getReportMachineKilometers")
                         .param("start", "2022-01-01")
                         .param("end", "2022-12-31")
-                        .param("maszynaId", "C1"))
+                        .param("machineId", "C1"))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/getRaportMaszynaKilometry")
+        mockMvc.perform(get("/getReportMachineKilometers")
                         .param("start", "2022-01-01")
                         .param("end", "test")
-                        .param("maszynaId", "C1"))
+                        .param("machineId", "C1"))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/getRaportMaszynaKilometry"))
+        mockMvc.perform(get("/getReportMachineKilometers"))
                 .andExpect(status().isBadRequest());
 
     }

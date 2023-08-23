@@ -8,16 +8,16 @@ import java.math.RoundingMode;
 @Component
 public class UtilService {
 
-    public BigDecimal[] calc(BigDecimal before, BigDecimal norma, BigDecimal normaVal,
-                 BigDecimal ogrzewanie, BigDecimal tankowanie, boolean czyZaokr1setna){
+    public BigDecimal[] calc(BigDecimal before, BigDecimal fuelConsumptionStandard, BigDecimal fuelConsumptionStandardVal,
+                 BigDecimal heating, BigDecimal refueled, boolean isRounded){
 
-        int scale = czyZaokr1setna ? 2 : 1;
+        int scale = isRounded ? 2 : 1;
 
-        BigDecimal zuzycie = norma.multiply(normaVal).setScale(scale, RoundingMode.HALF_UP);
+        BigDecimal fuelConsumption = fuelConsumptionStandard.multiply(fuelConsumptionStandardVal).setScale(scale, RoundingMode.HALF_UP);
 
         return new BigDecimal[]{
-                before.subtract(zuzycie).subtract(ogrzewanie).add(tankowanie).setScale(scale, RoundingMode.HALF_UP),
-                zuzycie
+                before.subtract(fuelConsumption).subtract(heating).add(refueled).setScale(scale, RoundingMode.HALF_UP),
+                fuelConsumption
         };
 
     }

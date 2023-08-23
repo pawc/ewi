@@ -1,15 +1,11 @@
 $(document).ready(function(){
 
     var myNavBar = {
-
         flagAdd: true,
-
         elements: [],
-
         init: function (elements) {
             this.elements = elements;
         }
-
     };
 
     myNavBar.init(  [
@@ -19,10 +15,8 @@ $(document).ready(function(){
     ]);
 
     function offSetManager(){
-
         var yOffset = 0;
         var currYOffSet = window.pageYOffset;
-
         if(yOffset < currYOffSet) {
         }
 

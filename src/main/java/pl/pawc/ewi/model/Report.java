@@ -11,20 +11,20 @@ import java.math.BigDecimal;
 @ToString
 public class Report {
 
-    private String maszynaidnormaid;
-    private String maszyna;
-    private String maszynaid;
-    private BigDecimal stankilometry;
-    private BigDecimal kilometry;
-    private BigDecimal kilometryprzyczepa;
-    private String jednostka;
-    private BigDecimal suma;
-    private BigDecimal zatankowano;
-    private BigDecimal ogrzewanie;
-    private long normaId;
-    private BigDecimal stanPoprz;
-    private BigDecimal sumagodzin;
+    private String machineIdFuelConsumptionStandardId;
+    private String machine;
+    private String machineId;
+    private BigDecimal kilometersInitialState;
+    private BigDecimal kilometers;
+    private BigDecimal kilometersTrailer;
+    private String unit;
+    private BigDecimal sum;
+    private BigDecimal refueled;
+    private BigDecimal heating;
+    private long fuelConsumptionStandardId;
+    private BigDecimal initialState;
+    private BigDecimal sumHours;
     private BigDecimal endState;
-    private BigDecimal endStateKilometry;
+    private BigDecimal endStateKilometers;
 
 }

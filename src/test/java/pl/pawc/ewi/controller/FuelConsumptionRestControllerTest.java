@@ -37,8 +37,8 @@ class FuelConsumptionRestControllerTest {
 
         mockMvc.perform(get("/calc")
                     .param("before", "1")
-                    .param("norma", "2")
-                    .param("normaVal", "3"))
+                    .param("fuelConsumptionStandard", "2")
+                    .param("fuelConsumptionStandardVal", "3"))
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(result -> {

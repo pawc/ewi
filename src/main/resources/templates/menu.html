@@ -7,10 +7,10 @@
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="raportyDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="reportsDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-chart-pie"></i> Raporty
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="raportyDropdownMenuLink" style="width: 250px;">
+                    <div class="dropdown-menu" aria-labelledby="reportsDropdownMenuLink" style="width: 250px;">
                         <p style="margin: 10px;"><a th:href="@{/}" id="reportLink"><i class="fas fa-chart-pie"></i> Raport miesięczny</a></p>
                         <p style="margin: 10px;"><a th:href="@{/quarterlyReport}" id="quarterlyReportLink"><i class="fas fa-chart-pie"></i> Raport kwartalny</a></p>
                         <p style="margin: 10px;"><a th:href="@{/annualReport}" id="annualReportLink"><i class="fas fa-chart-pie"></i> Raport roczny (kategorie)</a></p>
@@ -18,7 +18,7 @@
                     </div>
                 </li>
 
-                <li><a th:href="@{/documents}" id="documentsLink"><i class="far fa-file-alt"></i> Dokumenty</a></li>
+                <li><a th:href="@{/documentsView}" id="documentsLink"><i class="far fa-file-alt"></i> Dokumenty</a></li>
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="definitionsDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

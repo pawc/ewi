@@ -20,9 +20,9 @@ public class ReportMachineKilometersService {
     private final DocumentRepository documentRepository;
     private final MachineService machineService;
 
-    public ReportMachineKilometers getRaportKilometry(String maszynaId, String dateStartS, String dateEndS) throws ParseException {
+    public ReportMachineKilometers getReportKilometers(String machineId, String dateStartS, String dateEndS) throws ParseException {
 
-        Machine machine = machineService.findById(maszynaId).orElse(null);
+        Machine machine = machineService.findById(machineId).orElse(null);
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date dateStart = formatter.parse(dateStartS);
@@ -30,16 +30,16 @@ public class ReportMachineKilometersService {
 
         List<Document> documentsByDataBetween = documentRepository.findByMachineAndDateBetween(machine, dateStart, dateEnd);
 
-        BigDecimal sumaKilometry = documentsByDataBetween.stream().map(Document::getKilometers).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal sumaKilometryPrzyczepa = documentsByDataBetween.stream().map(Document::getKilometersTrailer).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumKilometers = documentsByDataBetween.stream().map(Document::getKilometers).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumKilometersTrailer = documentsByDataBetween.stream().map(Document::getKilometersTrailer).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         ReportMachineKilometers reportMachineKilometers = new ReportMachineKilometers();
         reportMachineKilometers.setMachine(machine);
         reportMachineKilometers.setDataStart(dateStart);
         reportMachineKilometers.setDataEnd(dateEnd);
         reportMachineKilometers.setDocuments(documentsByDataBetween);
-        reportMachineKilometers.setSumKilometers(sumaKilometry);
-        reportMachineKilometers.setSumKilometersTrailer(sumaKilometryPrzyczepa);
+        reportMachineKilometers.setSumKilometers(sumKilometers);
+        reportMachineKilometers.setSumKilometersTrailer(sumKilometersTrailer);
 
         return reportMachineKilometers;
 

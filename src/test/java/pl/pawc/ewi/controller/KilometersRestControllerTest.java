@@ -84,7 +84,7 @@ class KilometersRestControllerTest {
 
         requestJson = ow.writeValueAsString(List.of(kilometers));
 
-        mockMvc.perform(post("/kilometryList")
+        mockMvc.perform(post("/kilometersList")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());
@@ -94,7 +94,7 @@ class KilometersRestControllerTest {
         kilometers.setValue(BigDecimal.valueOf(120));
         requestJson = ow.writeValueAsString(List.of(kilometers));
 
-        mockMvc.perform(post("/kilometryList")
+        mockMvc.perform(post("/kilometersList")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());

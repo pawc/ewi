@@ -55,7 +55,7 @@ public class ReportService {
 
     }
 
-    public List<AnnualReport> getRaportRoczny(int year){
+    public List<AnnualReport> getReportAnnual(int year){
         List<AnnualReport> result = getMaszynaNormaUngrouped(year);
         Map<String, List<AnnualReport>> collect = result.stream().collect(groupingBy(AnnualReport::getCategory_unit));
         List<AnnualReport> groupBy = new ArrayList<>();
@@ -111,7 +111,7 @@ public class ReportService {
         result.add(annualReport);
     }
 
-    public List<Report> getRaport(int year, int month, boolean isQuarterly) {
+    public List<Report> getReport(int year, int month, boolean isQuarterly) {
         Calendar cal = Calendar.getInstance();
 
         if(isQuarterly) month = getFirstMonthOfQuarter(month);
@@ -163,20 +163,20 @@ public class ReportService {
             BigDecimal endStateKilometry = stanKilometry.add(sumaKilometry);
 
             Report report = new Report();
-            report.setMaszynaidnormaid(fuelConsumptionStandard.getMachine().getId()+"-"+ fuelConsumptionStandard.getId());
-            report.setMaszyna(fuelConsumptionStandard.getMachine().getName() + "(" + fuelConsumptionStandard.getMachine().getId() + ")");
-            report.setMaszynaid(fuelConsumptionStandard.getMachine().getId());
-            report.setStankilometry(stanKilometry);
-            report.setKilometry(sumaKilometry);
-            report.setEndStateKilometry(endStateKilometry);
-            report.setKilometryprzyczepa(sumaKilometryPrzyczepa);
-            report.setJednostka(fuelConsumptionStandard.getUnitObj() == null ? fuelConsumptionStandard.getUnit() : fuelConsumptionStandard.getUnitObj().getName());
-            report.setSuma(sumaWartosc);
-            report.setSumagodzin(sumaGodzin);
-            report.setZatankowano(sumaTankowanie);
-            report.setOgrzewanie(sumaOgrzewanie);
-            report.setNormaId(fuelConsumptionStandard.getId());
-            report.setStanPoprz(stanPoprz);
+            report.setMachineIdFuelConsumptionStandardId(fuelConsumptionStandard.getMachine().getId()+"-"+ fuelConsumptionStandard.getId());
+            report.setMachine(fuelConsumptionStandard.getMachine().getName() + "(" + fuelConsumptionStandard.getMachine().getId() + ")");
+            report.setMachineId(fuelConsumptionStandard.getMachine().getId());
+            report.setKilometersInitialState(stanKilometry);
+            report.setKilometers(sumaKilometry);
+            report.setEndStateKilometers(endStateKilometry);
+            report.setKilometersTrailer(sumaKilometryPrzyczepa);
+            report.setUnit(fuelConsumptionStandard.getUnitObj() == null ? fuelConsumptionStandard.getUnit() : fuelConsumptionStandard.getUnitObj().getName());
+            report.setSum(sumaWartosc);
+            report.setSumHours(sumaGodzin);
+            report.setRefueled(sumaTankowanie);
+            report.setHeating(sumaOgrzewanie);
+            report.setFuelConsumptionStandardId(fuelConsumptionStandard.getId());
+            report.setInitialState(stanPoprz);
             report.setEndState(endState);
             results.add(report);
 

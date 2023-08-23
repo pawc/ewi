@@ -1,16 +1,16 @@
 var t;
 $(document).ready(function() {
 
-    $('#raportLink').css("font-weight", "bold").css("text-decoration", "underline");
-    $('#raportyDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#reportLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#reportsDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
 
     var month = new Date().getMonth()+1
     if(month < 10) month = '0' + month
 
     var year = new Date().getFullYear()
-    $('#miesiac').val(year + '-' + month)
+    $('#month').val(year + '-' + month)
 
-    t = $('#raportTable').DataTable({
+    t = $('#reportTable').DataTable({
         dom: 'Blfrtip',
         buttons: [
             'print',
@@ -37,16 +37,16 @@ $(document).ready(function() {
         }
     });
 
-    $('#raportTable_wrapper > div.dt-buttons > button > span').text('Drukuj raport')
-    $('#raportTable_wrapper > div.dt-buttons > button').addClass('btn btn-info')
-    $('#raportTable_wrapper > div.dt-buttons').css('text-align', 'right')
-    $('#raportTable_wrapper > div.dt-buttons').css('margin-right', '50px')
-    $('#raportTable_filter').css('margin-right', '50px')
+    $('#reportTable_wrapper > div.dt-buttons > button > span').text('Drukuj raport')
+    $('#reportTable_wrapper > div.dt-buttons > button').addClass('btn btn-info')
+    $('#reportTable_wrapper > div.dt-buttons').css('text-align', 'right')
+    $('#reportTable_wrapper > div.dt-buttons').css('margin-right', '50px')
+    $('#reportTable_wrapper').css('margin-right', '50px')
     $('#raportTable_length').css('margin-left', '5%')
 
     updateTable();
 
-    $('#miesiac').change(() => {
+    $('#month').change(() => {
         updateTable();
     })
 });
@@ -55,35 +55,35 @@ function updateTable(){
     $('#loadingDiv').show()
     $('#tableDiv').hide()
    t.clear().draw();
-    var rok = $('#miesiac').val().split('-')[0]
-    var miesiac = $('#miesiac').val().split('-')[1]
+    var year = $('#month').val().split('-')[0]
+    var month = $('#month').val().split('-')[1]
     $.ajax({
-        url: contextRoot + 'raport',
+        url: contextRoot + 'report',
         data: {
-            rok: rok,
-            miesiac: miesiac
+            year: year,
+            month: month
         }
     })
-    .done(pozycje => {
+    .done(elements => {
         var nextMonthVal = nextMonth()
-        $.each(pozycje, (i, pozycja) => {
+        $.each(elements, (i, p) => {
             t.row.add( [
-                pozycja.maszyna,
-                pozycja.stankilometry,
-                pozycja.kilometry,
-                pozycja.endStateKilometry,
-                pozycja.kilometryprzyczepa,
-                pozycja.jednostka,
-                pozycja.stanPoprz,
-                pozycja.suma,
-                pozycja.zatankowano,
-                pozycja.ogrzewanie,
-                pozycja.endState,
-                pozycja.sumagodzin,
-                pozycja.normaId,
+                p.machine,
+                p.kilometersInitialState,
+                p.kilometers,
+                p.endStateKilometers,
+                p.kilometersTrailer,
+                p.unit,
+                p.initialState,
+                p.sum,
+                p.refueled,
+                p.heating,
+                p.endState,
+                p.sumHours,
+                p.fuelConsumptionStandardId,
                 nextMonthVal[0],
                 nextMonthVal[1],
-                pozycja.maszynaid
+                p.machineId
             ]).draw(false);
         })
         $('#loadingDiv').hide()
@@ -96,8 +96,8 @@ function updateTable(){
 }
 
 function nextMonth(){
-    var year = parseInt($('#miesiac').val().split('-')[0])
-    var month = parseInt($('#miesiac').val().split('-')[1]) + 1
+    var year = parseInt($('#month').val().split('-')[0])
+    var month = parseInt($('#month').val().split('-')[1]) + 1
 
     if(month > 12){
         month = 1
@@ -128,44 +128,44 @@ function saveAll(){
     var token = $("meta[name='_csrf']").attr("content");
     headers[header] = token
 
-    var stany = []
-    var rows = $('#raportTable').DataTable().rows().data()
+    var initialStates = []
+    var rows = $('#reportTable').DataTable().rows().data()
     $.each(rows, (i, row) => {
-        var stan = {
-            rok : row[13],
-            miesiac : row[14],
-            norma : {
+        var initialState = {
+            year : row[13],
+            month : row[14],
+            fuelConsumptionStandard : {
                 id : row[12]
             },
-            wartosc : row[10]
+            value : row[10]
         }
-        stany.push(stan)
+        initialStates.push(state)
     })
 
-    var propertiesStany = {
-        url: contextRoot + 'stany',
-        data: JSON.stringify(stany),
+    var propertiesInitialStates = {
+        url: contextRoot + 'fuelInitialStates',
+        data: JSON.stringify(initialStates),
         type: 'POST',
         headers: headers
     }
 
-    var kilometry = []
-    var rows = $('#raportTable').DataTable().rows().data()
+    var kilometers = []
+    var rows = $('#reportTable').DataTable().rows().data()
 
     $.each(rows, (i, row) => {
         var km = {
-            rok : row[13],
-            miesiac : row[14],
-            maszyna : {
+            year : row[13],
+            month : row[14],
+            machine : {
                 id : row[15]
             },
-            wartosc : row[3]
+            value : row[3]
         }
-        kilometry.push(km)
+        kilometers.push(km)
     })
 
     var propertiesKm = {
-        url: contextRoot + 'kilometryList',
+        url: contextRoot + 'kilometersList',
         data: JSON.stringify(kilometry),
         type: 'POST',
         headers: headers
@@ -173,13 +173,13 @@ function saveAll(){
 
     $.when(
         $.ajax(propertiesKm),
-        $.ajax(propertiesStany)
+        $.ajax(propertiesInitialStates)
     )
     .done(() => {
-        window.location.href = contextRoot + "?zapisSuccess=true"
+        window.location.href = contextRoot + "?saveSuccess=true"
     })
     .fail(() => {
-        window.location.href = contextRoot + "?zapisSuccess=false"
+        window.location.href = contextRoot + "?saveSuccess=false"
     })
 
 }

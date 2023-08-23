@@ -1,10 +1,10 @@
 var type = ''
-var dialog, dialogUsun, t
-var currentNumer, formatter
+var dialog, dialogDelete, t
+var currentNumber, formatter
 
 $(document).ready(() => {
-    $('#dokumentyLink').css("font-weight", "bold");
-    $('#dokumentyLink').css("text-decoration", "underline");
+    $('#documentsLink').css("font-weight", "bold");
+    $('#documentsLink').css("text-decoration", "underline");
 
     formatter = new Intl.NumberFormat('pl-PL', {
        minimumFractionDigits: 2,
@@ -15,17 +15,17 @@ $(document).ready(() => {
     var urlParams = new URLSearchParams(queryString);
     var monthParam = urlParams.get('month');
     if(monthParam){
-        $('#miesiac').val(monthParam)
+        $('#month').val(monthParam)
     }
     else{
         var month = new Date().getMonth()+1
         if(month < 10) month = '0' + month
 
         var year = new Date().getFullYear()
-        $('#miesiac').val(year + '-' + month)
+        $('#month').val(year + '-' + month)
     }
 
-    t = $('#dokumentyTable').DataTable({
+    t = $('#documentsTable').DataTable({
         "language": {
             "search": "Szukaj",
             "emptyTable": "Brak dokumentów",
@@ -45,138 +45,136 @@ $(document).ready(() => {
 
     updateTable();
 
-    $('#miesiac').change(() => {
+    $('#month').change(() => {
         updateTable();
     })
 
-    const maszynaSelect = (type) => {
+    const machineSelect = (type) => {
 
-        var maszynaId;
+        var machineId;
         if(type){
-            maszynaId = $('#maszyna option:selected').val();
+            machineId = $('#machine option:selected').val();
             $('#tags').val('')
         }
-        else maszynaId = $('#tags').val().match(/\((.*?)\)/)[1];
-
-
+        else machineId = $('#tags').val().match(/\((.*?)\)/)[1];
 
         var maxRelDoc = 0;
-        var rows = $('#dokumentyTable').DataTable().rows().data()
+        var rows = $('#documentsTable').DataTable().rows().data()
         $.each(rows, (i, row) => {
-            if(row[0].split('/')[3] === maszynaId){
+            if(row[0].split('/')[3] === machineId){
                 maxRelDoc = Math.max(parseInt(row[0].split('/')[0]), maxRelDoc)
             }
         })
 
-        var docMonth = $('#data').val().substr(5,2);
-        var docYear = $('#data').val().substr(0,4);
-        $('#numer').val((maxRelDoc+1) + '/' + docMonth + '/' + docYear + '/' + maszynaId)
+        var docMonth = $('#date').val().substr(5,2);
+        var docYear = $('#date').val().substr(0,4);
+        $('#number').val((maxRelDoc+1) + '/' + docMonth + '/' + docYear + '/' + machineId)
 
-        $("#zuzycieTable > tbody > tr").remove();
+        $("#consumptionTable > tbody > tr").remove();
 
         $.ajax({
-            url: contextRoot + 'maszyna',
+            url: contextRoot + 'machine',
             data: {
-                id: maszynaId,
-                miesiac: $('#miesiac').val()
+                id: machineId,
+                month: $('#month').val()
             }
         })
-        .done(maszyna => {
+        .done(machine => {
 
-            if(maszyna.opis){
-                $('#opisMaszyny').text(maszyna.opis)
+            if(machine.description){
+                $('#machineDescription').text(machine.opis)
             }
             else{
-                $('#opisMaszyny').text('')
+                $('#machineDescription').text('')
             }
-            var czyOgrzewanie = false;
-            $.each(maszyna.normy, (i, norma) => {
-                czyOgrzewanie = czyOgrzewanie || norma.czyOgrzewanie
+            var usedForHeating = false;
+            $.each(machine.fuelConsumptionStandards, (i, fuelConsumptionStandard) => {
+                usedForHeating = usedForHeating || fuelConsumptionStandard.usedForHeating
             })
 
-            if(czyOgrzewanie){
-                $('#zuzycieTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">ogrzewanie<br>/przepał [L]</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
+            if(usedForHeating){
+                $('#consumptionTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">ogrzewanie<br>/przepał [L]</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
             }
             else{
-                $('#zuzycieTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
+                $('#consumptionTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
             }
 
-            $('#kmPrzed').html(maszyna.sumaKilometry)
+            $('#kmBefore').html(machine.sumOfKilometers)
 
-            $.each(maszyna.normy, (i, norma) => {
-                var normaSuma = (norma.suma == null) ? 0 : norma.suma
+            $.each(machine.fuelConsumptionStandards, (i, fuelConsumptionStandard) => {
+                var fuelConsumptionStandardSum = (fuelConsumptionStandard.sum == null) ? 0 : fuelConsumptionStandard.sum
 
                 var tr = $('<tr>').attr({
-                    class: 'zuzycie'
-                }).appendTo($('#zuzycieTable'))
+                    class: 'fuelConsumption'
+                }).appendTo($('#consumptionTable'))
 
-                var td1 = $('<td>').html(normaSuma)
+                var td1 = $('<td>').html(fuelConsumptionStandardSum)
                 td1.appendTo(tr)
 
                 var td2 = $('<td>')
                 td2.appendTo(tr)
 
-                var inputZuzycie = $('<input>').attr({
+                var inputConsumption = $('<input>').attr({
                     type: 'number',
                     step: '0.01',
-                    normaId: norma.id,
-                    class: 'form-control zuzycie-val',
+                    fuelConsumptionStandardId: fuelConsumptionStandard.id,
+                    class: 'form-control fuelConsumption-val',
                     value : '0'
                 }).appendTo(td2)
 
                 var td3 = $('<td>')
                 td3.appendTo(tr)
 
-                var inputZuzycieEcho = $('<span>').html(0).appendTo(td3)
-                td3.append(` * ${norma.wartosc} [${norma.jednostkaObj == null ? norma.jednostka : norma.jednostkaObj.nazwa}] = `)
+                var inputFuelConsumptionEcho = $('<span>').html(0).appendTo(td3)
+                td3.append(` * ${fuelConsumptionStandard.value} [${fuelConsumptionStandard.unitObj == null ? fuelConsumptionStandard.unit : fuelConsumptionStandard.unitObj.name}] = `)
 
-                var wynik = $('<span>').html(0).appendTo(td3)
+                var result = $('<span>').html(0).appendTo(td3)
 
-                inputZuzycie.keyup(() => {
-                    inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : inputOgrzewanie.val()
-                    calc(td5, wynik, inputZuzycieEcho, normaSuma, norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val(), norma.czyZaokr1setna)
+                inputConsumption.keyup(() => {
+                    inputHeatingVal = (inputHeating == null) ? 0 : inputHeating.val()
+                    calc(td5, result, inputFuelConsumptionEcho, fuelConsumptionStandardSum, fuelConsumptionStandard.value, inputConsumption.val(), inputHeatingVal, inputRefueled.val(), fuelConsumptionStandard.rounded)
                 })
 
-                var inputOgrzewanie = null
+                var inputHeating = null
 
-                if(czyOgrzewanie){
-                    var tdOgrzewanie = $('<td>')
+                if(usedForHeating){
+                    var tdHeating = $('<td>')
 
-                    if(norma.czyOgrzewanie){
-                        inputOgrzewanie = $('<input>').attr({
+                    if(fuelConsumptionStandard.usedForHeating){
+                        inputHeating = $('<input>').attr({
                             type: 'number',
                             step: '0.01',
-                            normaId: norma.id,
-                            class: 'form-control ogrzewanie-val',
+                            fuelConsumptionStandardId: fuelConsumptionStandard.id,
+                            class: 'form-control heating-val',
                             value : '0'
-                        }).appendTo(tdOgrzewanie)
+                        }).appendTo(tdHeating)
                     }
-                    tdOgrzewanie.appendTo(tr)
+                    tdHeating.appendTo(tr)
                 }
 
                 var td4 = $('<td>')
                 td4.appendTo(tr)
 
-                var inputTankowanie = $('<input>').attr({
+                var inputRefueled = $('<input>').attr({
                     type: 'number',
                     step: '0.01',
-                    normaId: norma.id,
-                    class: 'form-control tankowanie-val',
+                    fuelConsumptionStandardId: fuelConsumptionStandard.id,
+                    class: 'form-control refueled-val',
                     value : '0'
                 }).appendTo(td4)
 
                 var td5 = $('<td>')
                 td5.appendTo(tr)
 
-                if(norma.czyOgrzewanie){
-                    inputOgrzewanie.keyup(() => {
-                        calc(td5, wynik, inputZuzycieEcho, normaSuma ,norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val(), norma.czyZaokr1setna)
+                if(fuelConsumptionStandard.usedForHeating){
+                    inputHeating.keyup(() => {
+                        calc(td5, result, inputFuelConsumptionEcho, fuelConsumptionStandardSum ,fuelConsumptionStandard.value, inputConsumption.val(), inputHeating.val(), inputRefueled.val(), fuelConsumptionStandard.rounded)
                     })
                 }
 
-                inputTankowanie.keyup(() => {
-                    inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : inputOgrzewanie.val()
-                    calc(td5, wynik, inputZuzycieEcho, normaSuma, norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val(), norma.czyZaokr1setna)
+                inputRefueled.keyup(() => {
+                    inputHeatingVal = (inputHeating == null) ? 0 : inputHeating.val()
+                    calc(td5, result, inputFuelConsumptionEcho, fuelConsumptionStandardSum, fuelConsumptionStandard.value, inputConsumption.val(), inputHeatingVal, inputRefueled.val(), fuelConsumptionStandard.rounded)
                 })
 
             })
@@ -184,41 +182,41 @@ $(document).ready(() => {
     }
 
     $('#error').hide();
-    $('#numer').keypress(() => {
+    $('#number').keypress(() => {
         $('#error').hide();
     })
 
-    $('#maszyna').change(() => maszynaSelect(true))
+    $('#machine').change(() => machineSelect(true))
 
     $( function() {
         $("#tags").autocomplete({
-            source: maszynyX.map(m => m.nazwa + '(' + m.id + ')'),
+            source: machinesX.map(m => m.name + '(' + m.id + ')'),
             select: function(event, ui) {
                 $(this).val(ui.item.value);
-                maszynaSelect(false)
+                machineSelect(false)
             }
         });
     });
 
 })
 
-function calc(el1, el2, el3, before, norma, normaVal, ogrzewanie, tankowanie, czyZaokr1setna){
+function calc(el1, el2, el3, before, fuelConsumptionStandard, fuelConsumptionStandardVal, heating, refueled, isRounded){
 
-     if(isNaN(ogrzewanie) || ogrzewanie === '') ogrzewanie = 0;
-     if(isNaN(tankowanie) || tankowanie === '') tankowanie = 0;
-     if(isNaN(normaVal) || normaVal === '') normaVal = 0;
+     if(isNaN(heating) || heating === '') heating = 0;
+     if(isNaN(heating) || heating === '') heating = 0;
+     if(isNaN(fuelConsumptionStandardVal) || fuelConsumptionStandardVal === '') fuelConsumptionStandardVal = 0;
 
-     el3.html(normaVal)
+     el3.html(fuelConsumptionStandardVal)
 
      $.ajax({
         url: contextRoot + 'calc',
         data: {
             before: parseFloat(before),
-            norma: parseFloat(norma),
-            normaVal: parseFloat(normaVal),
-            ogrzewanie: parseFloat(ogrzewanie),
-            tankowanie: parseFloat(tankowanie),
-            czyZaokr1setna: czyZaokr1setna
+            fuelConsumptionStandard: parseFloat(fuelConsumptionStandard),
+            fuelConsumptionStandardVal: parseFloat(fuelConsumptionStandardVal),
+            heating: parseFloat(heating),
+            refueled: parseFloat(refueled),
+            isRounded: isRounded
         }
     })
     .done(result => {
@@ -230,21 +228,21 @@ function calc(el1, el2, el3, before, norma, normaVal, ogrzewanie, tankowanie, cz
 function updateTable(){
 
     $.ajax({
-        url: contextRoot + 'dokumentyGet',
+        url: contextRoot + 'documents',
         data: {
-            rok: $('#miesiac').val().split('-')[0],
-            miesiac: $('#miesiac').val().split('-')[1]
+            year: $('#month').val().split('-')[0],
+            month: $('#month').val().split('-')[1]
         }
     })
-    .done(dokumenty => {
+    .done(documents => {
         t.clear().draw();
-        $.each(dokumenty, (i, dokument) => {
+        $.each(documents, (i, document) => {
             t.row.add([
-                dokument.numer,
-                dokument.data,
-                dokument.maszyna.nazwa + ' (' + dokument.maszyna.id + ')',
-                `<button class="btn btn-info" onclick="edytujBtn('${dokument.numer}')">edytuj <i class="fas fa-edit"></i></button>`,
-                `<button class="btn btn-warning" onclick="usunBtn('${dokument.numer}')">usuń <i class="fas fa-trash-alt"></i></button>`
+                document.number,
+                document.date,
+                document.machine.name + ' (' + document.machine.id + ')',
+                `<button class="btn btn-info" onclick="editBtn('${document.number}')">edytuj <i class="fas fa-edit"></i></button>`,
+                `<button class="btn btn-warning" onclick="deleteBtn('${document.number}')">usuń <i class="fas fa-trash-alt"></i></button>`
             ]).draw(false);
         })
     })
@@ -252,7 +250,7 @@ function updateTable(){
     t.order([1, 'desc']).draw()
 }
 
-function edytujBtn(numer){
+function editBtn(number){
     $("span.ui-dialog-title").text('Edytuj dokument');
     type = 'PUT'
 
@@ -262,157 +260,159 @@ function edytujBtn(numer){
     headers["Content-Type"] = "application/json; charset=utf-8";
 
     $.ajax({
-        url: contextRoot + 'dokument',
+        url: contextRoot + 'document',
         data: {
-            'numer': numer,
-            miesiac: $('#miesiac').val()
+            'number': number,
+            month: $('#month').val()
         },
         headers: headers
     })
-    .done(dokument => {
-        $("#zuzycieTable > tr").remove();
-        $("#numer").prop("disabled", true);
-        $('#maszyna').prop("disabled", true);
-        $('#numer').val(dokument.numer)
-        $('#kilometryPrzyczepa').val(dokument.kilometryPrzyczepa)
-        $('#kilometry').val(dokument.kilometry)
+    .done(document => {
+        $("#consumptionTable > tr").remove();
+        $("#number").prop("disabled", true);
+        $('#machine').prop("disabled", true);
+        $('#number').val(document.number)
+        $('#kilometersTrailer').val(document.kilometersTrailer)
+        $('#kilometers').val(document.kilometers)
         .keyup(() => {
-            $('#kmPo').html(parseFloat(dokument.kilometryBefore) + parseFloat($('#kilometry').val()))
+            $('#kmAfter').html(parseFloat(document.kilometersBefore) + parseFloat($('#kilometers').val()))
         })
-        $('#kmPrzed').html(dokument.kilometryBefore)
-        $('#kmPo').html(dokument.kilometryBefore + dokument.kilometry)
-        $('#data').val(dokument.data)
-        $("#maszyna option[value='"+dokument.maszyna.id.toString()+"']").attr("selected", "selected");
-        $("#zuzycieTable > tbody > tr").remove();
+        $('#kmBefore').html(document.kilometersBefore)
+        $('#kmAfter').html(document.kilometersBefore + document.kilometers)
+        $('#date').val(document.date)
+        $("#machine option[value='"+document.machine.id.toString()+"']").attr("selected", "selected");
+        $("#consumptionTable > tbody > tr").remove();
 
-       var czyOgrzewanie = false;
-       $.each(dokument.zuzycie, (i, z) => {
-           czyOgrzewanie = czyOgrzewanie || z.norma.czyOgrzewanie
+       var usedForHeating = false;
+       $.each(document.fuelConsumption, (i, z) => {
+           usedForHeating = usedForHeating || z.fuelConsumptionStandard.usedForHeating
        })
 
-       if(czyOgrzewanie){
-           $('#zuzycieTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">ogrzewanie<br>/przepał [L]</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
+       if(usedForHeating){
+           $('#consumptionTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">ogrzewanie<br>/przepał [L]</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
        }
        else{
-           $('#zuzycieTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
+           $('#consumptionTable').append('<tr><th width="60px;">suma przed</th><th width="60px;">zużycie</th><th width="200px;">zużycie * norma</th><th width="60px;">tankowanie [L]</th><th width="60px;">suma po</th></tr>')
        }
 
-        $.each(dokument.zuzycie, (i, zuzycie) => {
+        $.each(document.fuelConsumption, (i, z) => {
             var tr = $('<tr>').attr({
-               class: 'zuzycie'
-            }).appendTo($('#zuzycieTable'))
+               class: 'fuelConsumption'
+            }).appendTo($('#consumptionTable'))
 
-            var sumaBefore = zuzycie.norma.sumaBefore == null ? 0 : zuzycie.norma.sumaBefore
-            sumaBefore = (sumaBefore == 0 ? zuzycie.norma.stan : sumaBefore)
-            var td1 = $('<td>').html(sumaBefore)
+            var sumBefore = z.fuelConsumptionStandard.sumBefore == null ? 0 : z.fuelConsumptionStandard.sumBefore
+            sumBefore = (sumBefore == 0 ? z.fuelConsumptionStandard.initialState : sumBefore)
+            var td1 = $('<td>').html(sumBefore)
             td1.appendTo(tr)
 
             var td2 = $('<td>')
             td2.appendTo(tr)
 
-            var inputZuzycie = $('<input>').attr({
+            var inputConsumption = $('<input>').attr({
                type: 'number',
                step: '0.01',
-               normaId: zuzycie.norma.id,
-               zuzycieId: zuzycie.id,
-               class: 'form-control zuzycie-val',
+               fuelConsumptionStandardId: z.fuelConsumptionStandard.id,
+               fuelConsumptionId: z.id,
+               class: 'form-control fuelConsumption-val',
                value : '0'
             }).appendTo(td2)
-            .val(zuzycie.wartosc)
+            .val(z.value)
 
             var td3 = $('<td>')
             td3.appendTo(tr)
 
-            var inputZuzycieEcho = $('<span>').html(zuzycie.wartosc).appendTo(td3)
-            td3.append(` * ${zuzycie.norma.wartosc} [${zuzycie.norma.jednostkaObj == null ? zuzycie.norma.jednostka : zuzycie.norma.jednostkaObj.nazwa}] = `)
+            var inputFuelConsumptionEcho = $('<span>').html(z.value).appendTo(td3)
+            td3.append(` * ${z.fuelConsumptionStandard.value} [${z.fuelConsumptionStandard.unitObj == null
+                ? z.fuelConsumptionStandard.unit : z.fuelConsumptionStandard.unitObj.name}] = `)
 
-            var wynikVal = zuzycie.wartosc * zuzycie.norma.wartosc
-            var wynik = $('<span>').html(Math.round((wynikVal + 0.00001) * 10)/10).appendTo(td3)
+            var resultVal = z.value * z.fuelConsumptionStandard.value
+            var result = $('<span>').html(Math.round((resultVal + 0.00001) * 10)/10).appendTo(td3)
 
-            var inputOgrzewanie = null
-            if(czyOgrzewanie){
-               var tdOgrzewanie = $('<td>')
+            var inputHeating = null
+            if(usedForHeating){
+               var tdHeating = $('<td>')
 
-               if(zuzycie.norma.czyOgrzewanie){
-                   var inputOgrzewanie = $('<input>').attr({
+               if(z.fuelConsumptionStandard.usedForHeating){
+                   var inputHeating = $('<input>').attr({
                        type: 'number',
                        step: '0.01',
-                       normaId: zuzycie.norma.id,
-                       class: 'form-control ogrzewanie-val',
+                       fuelConsumptionStandardId: z.fuelConsumptionStandard.id,
+                       class: 'form-control heating-val',
                        value : '0'
-                   }).appendTo(tdOgrzewanie)
-                   .val(zuzycie.ogrzewanie)
+                   }).appendTo(tdHeating)
+                   .val(z.heating)
                }
-               tdOgrzewanie.appendTo(tr)
+               tdHeating.appendTo(tr)
             }
 
             var td4 = $('<td>')
             td4.appendTo(tr)
 
-            var inputTankowanie = $('<input>').attr({
+            var inputRefueled = $('<input>').attr({
                type: 'number',
                step: '0.01',
-               normaId: zuzycie.norma.id,
-               class: 'form-control tankowanie-val',
+               fuelConsumptionStandardId: z.fuelConsumptionStandard.id,
+               class: 'form-control refueled-val',
                value : '0'
             }).appendTo(td4)
-            .val(zuzycie.zatankowano)
+            .val(z.refueled)
 
             var td5 = $('<td>').appendTo(tr)
 
-            if(zuzycie.norma.czyOgrzewanie){
-                inputOgrzewanie.keyup(() => {
-                   calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanie.val(), inputTankowanie.val(), zuzycie.norma.czyZaokr1setna)
+            if(z.fuelConsumptionStandard.usedForHeating){
+                inputHeating.keyup(() => {
+                   calc(td5, result, inputFuelConsumptionEcho, sumBefore, z.fuelConsumptionStandard.value, inputConsumption.val(),
+                        inputHeating.val(), inputRefueled.val(), z.fuelConsumptionStandard.rounded)
                 })
             }
 
-            calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, zuzycie.wartosc, zuzycie.ogrzewanie, zuzycie.zatankowano, zuzycie.norma.czyZaokr1setna)
+            calc(td5, result, inputFuelConsumptionEcho, sumBefore, z.fuelConsumptionStandard.value, z.value, z.heating, z.refueled, z.fuelConsumptionStandard.rounded)
 
-            inputZuzycie.keyup(() => {
-                inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : inputOgrzewanie.val()
-                calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val(), zuzycie.norma.czyZaokr1setna)
+            inputConsumption.keyup(() => {
+                inputHeatingVal = (inputHeating == null) ? 0 : inputHeating.val()
+                calc(td5, result, inputFuelConsumptionEcho, sumBefore, z.fuelConsumptionStandard.value, inputConsumption.val(), inputHeatingVal, inputRefueled.val(), z.fuelConsumptionStandard.rounded)
             })
 
-            inputTankowanie.keyup(() => {
-            inputOgrzewanieVal = (inputOgrzewanie == null) ? 0 : inputOgrzewanie.val()
-               calc(td5, wynik, inputZuzycieEcho, sumaBefore, zuzycie.norma.wartosc, inputZuzycie.val(), inputOgrzewanieVal, inputTankowanie.val(), zuzycie.norma.czyZaokr1setna)
+            inputRefueled.keyup(() => {
+                inputHeatingVal = (inputHeating == null) ? 0 : inputHeating.val()
+                calc(td5, result, inputFuelConsumptionEcho, sumBefore, z.fuelConsumptionStandard.value, inputConsumption.val(), inputHeatingVal, inputRefueled.val(), z.fuelConsumptionStandard.rounded)
            })
         })
         dialog.dialog( "open" );
     })
     .fail(() => {
-        alert('Bład podczas pobrania danych dokumentu ' + numer)
+        alert('Bład podczas pobrania danych dokumentu ' + number)
     })
 }
 
-function usunBtn(numer){
-    currentNumer = numer
+function deleteBtn(number){
+    currentNumber = number
     $("span.ui-dialog-title").text('Usuń dokument');
-    $('#dialog-confirm-p').text('Czy na pewno usunąć dokument o numerze ' + numer + ' ?');
-    dialogUsun.dialog("open");
+    $('#dialog-confirm-p').text('Czy na pewno usunąć dokument o numerze ' + number + ' ?');
+    dialogDelete.dialog("open");
 }
 
-function dodajBtn(){
-    $("#zuzycieTable > tr").remove();
+function addBtn(){
+    $("#consumptionTable > tr").remove();
     $("span.ui-dialog-title").text('Dodaj dokument');
-    $('#maszyna').prop("disabled", false);
-    $('#numer').prop("disabled", false);
+    $('#machine').prop("disabled", false);
+    $('#number').prop("disabled", false);
     $('#tags').val('').prop("disabled", false);
 
     var today = new Date().getDate();
     var todayS = (today > 9) ? today : '0' + today
-    $('#data').val($('#miesiac').val()+'-'+todayS)
-    $('#kilometry').val(0)
+    $('#date').val($('#month').val()+'-'+todayS)
+    $('#kilometers').val(0)
     .keyup(() => {
-        var przed = parseFloat($('#kmPrzed').html())
-        var km = parseFloat($('#kilometry').val())
-        var po = przed + km
-        $('#kmPo').html(formatter.format(po))
+        var before = parseFloat($('#kmBefore').html())
+        var km = parseFloat($('#kilometers').val())
+        var after = before + km
+        $('#kmAfter').html(formatter.format(after))
     })
 
-    $("#zuzycieTable > tbody > tr").remove();
-    $('#maszyna').val(-1);
-    $('#kilometryPrzyczepa').val(0);
+    $("#consumptionTable > tbody > tr").remove();
+    $('#machine').val(-1);
+    $('#kilometersTrailer').val(0);
     type = 'POST';
     dialog.dialog("open");
 }
@@ -448,7 +448,7 @@ $(function() {
                 $.ajax({
                     url: contextRoot + 'dokument',
                     data: {
-                        numer: currentNumer
+                        number: currentNumber
                     },
                     type: 'DELETE',
                     headers: headers
@@ -474,40 +474,40 @@ $(function() {
         buttons: {
             "Zapisz": function(){
 
-                 var zuzycie = []
-                 $('.zuzycie').each(function(i, tr){
-                    var wartosc = $(this).find('td > input.zuzycie-val').val()
-                    var zatankowano =  $(this).find('td > input.tankowanie-val').val()
-                    var ogrzewanie = $(this).find('td > input.ogrzewanie-val').val()
-                    if(!ogrzewanie) ogrzewanie = '0'
-                    var zuzycieId = $(this).find('td > input.zuzycie-val').attr('zuzycieId')
-                    var normaId = $(this).find('td > input.zuzycie-val').attr('normaId')
+                 var fuelConsumption = []
+                 $('.fuelConsumption').each(function(i, tr){
+                    var value = $(this).find('td > input.fuelConsumption-val').val()
+                    var refueled =  $(this).find('td > input.refueled-val').val()
+                    var heating = $(this).find('td > input.heating-val').val()
+                    if(!heating) heating = '0'
+                    var fuelConsumptionId = $(this).find('td > input.fuelConsumption-val').attr('fuelConsumptionId')
+                    var fuelConsumptionStandardId = $(this).find('td > input.fuelConsumption-val').attr('fuelConsumptionStandardId')
                     var z = {
-                        wartosc: wartosc,
-                        id: zuzycieId,
-                        norma: {
-                            id: normaId
+                        value: value,
+                        id: fuelConsumptionId,
+                        fuelConsumptionStandard: {
+                            id: fuelConsumptionStandardId
                         },
-                        zatankowano: zatankowano === '' ? 0 : zatankowano,
-                        ogrzewanie: ogrzewanie === '' ? 0 : ogrzewanie
+                        refueled: refueled === '' ? 0 : refueled,
+                        heating: heating === '' ? 0 : heating
 
                     }
-                    zuzycie.push(z)
+                    fuelConsumption.push(z)
                 })
 
-                var maszynaId
-                if($('#tags').val()) maszynaId = $('#tags').val().match(/\((.*?)\)/)[1]
-                else maszynaId = $('#maszyna option:selected').val()
+                var machineId
+                if($('#tags').val()) machineId = $('#tags').val().match(/\((.*?)\)/)[1]
+                else machineId = $('#machine option:selected').val()
 
-                var dokument = {
-                    numer: $('#numer').val(),
-                    data: $('#data').val(),
-                    kilometry: $('#kilometry').val(),
-                    kilometryPrzyczepa: $('#kilometryPrzyczepa').val(),
-                    maszyna: {
-                        id: maszynaId
+                var document = {
+                    number: $('#number').val(),
+                    date: $('#date').val(),
+                    kilometers: $('#kilometers').val(),
+                    kilometersTrailer: $('#kilometersTrailer').val(),
+                    machine: {
+                        id: machineId
                     },
-                    zuzycie: zuzycie
+                    fuelConsumption: fuelConsumption
                 }
 
                 var headers = {};
@@ -520,14 +520,14 @@ $(function() {
                 if(type == 'POST'){
                     preCalls = [
                         $.ajax({
-                            url: contextRoot + 'dokument',
+                            url: contextRoot + 'document',
                             data: {
-                                numer: dokument.numer
+                                number: document.number
                             },
                             headers: headers
                         })
                         .done((response) => {
-                            if(response.numer != null){
+                            if(response.number != null){
                                 $('#error').show();
                                 throw new Error('Dokument o podanym numerze już istnieje')
                             }
@@ -536,17 +536,17 @@ $(function() {
                 }
                 $.when.apply($, preCalls).then(() => {
                     $.ajax({
-                        url: contextRoot + 'dokument',
+                        url: contextRoot + 'document',
                         type: type,
-                        data: JSON.stringify(dokument),
+                        data: JSON.stringify(document),
                         headers: headers
                     })
                     .done(() => {
                         if(type == 'POST'){
-                            window.location.href = contextRoot + "dokumenty?success="+dokument.numer+'&month='+$('#miesiac').val();
+                            window.location.href = contextRoot + "documentsView?success="+document.number+'&month='+$('#month').val();
                         }
                         else{
-                            window.location.href = contextRoot + "dokumenty?month="+$('#miesiac').val()
+                            window.location.href = contextRoot + "documentsView?month="+$('#month').val()
                         }
                     })
                     .fail(() => {

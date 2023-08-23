@@ -5,26 +5,23 @@
 <head>
     <title>Ewi</title>
 
-    <head>
+    <meta th:name="_csrf" th:content="${_csrf.token}"/>
+    <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
 
-        <meta th:name="_csrf" th:content="${_csrf.token}"/>
-        <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="css/index.css" rel="stylesheet">
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://kit.fontawesome.com/4d0e5d2f0b.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
 
-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet">
-        <link href="css/index.css" rel="stylesheet">
-        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-        <script src="https://kit.fontawesome.com/4d0e5d2f0b.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
+    <script th:inline="javascript"> var contextRoot = /*[[@{/}]]*/ ''; </script>
 
-        <script th:inline="javascript"> var contextRoot = /*[[@{/}]]*/ ''; </script>
-
-        <script src="js/index.js"></script>
-        <script src="js/report.js"></script>
-    </head>
+    <script src="js/index.js"></script>
+    <script src="js/report.js"></script>
 
 </head>
 
@@ -35,8 +32,8 @@
 <div class="container-fluid" style="margin-bottom: 10px;">
     <div class="row">
         <div class="col-sm-6">
-            <label for="miesiac" style="margin-left: 10%;">Miesiąc:</label>
-            <input type="month" id="miesiac" min="2021-01" style="margin-left: 10%;"></div>
+            <label for="month" style="margin-left: 10%;">Miesiąc:</label>
+            <input type="month" id="month" min="2021-01" style="margin-left: 10%;"></div>
         <div class="col-sm-6" id="saveButtonDiv">
             <button class="btn btn-warning" onclick="saveAll()">Zapisz wszystkie stany końcowe <br> jako początkowe na kolejny miesiąc </button>
         </div>
@@ -45,14 +42,14 @@
 
     <div class="container">
 
-        <div class="alert alert-success text-center" role="alert" th:if="${(param.zapisSuccess != null AND param.zapisSuccess[0] == 'true')}">
+        <div class="alert alert-success text-center" role="alert" th:if="${(param.saveSuccess != null AND param.saveSuccess[0] == 'true')}">
             Zapisano
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
 
-        <div class="alert alert-danger text-center" role="alert" th:if="${(param.zapisSuccess != null AND param.zapisSuccess[0] == 'false')}">
+        <div class="alert alert-danger text-center" role="alert" th:if="${(param.saveSuccess != null AND param.saveSuccess[0] == 'false')}">
             Problem z zapisem
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -75,7 +72,7 @@
     </div>
 
     <div class="container-fluid" id="tableDiv">
-        <table class="table" id="raportTable" style="width:100%">
+        <table class="table" id="reportTable" style="width:100%">
             <thead>
             <tr>
                 <th> Maszyna (Numer) </th>

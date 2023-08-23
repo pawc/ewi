@@ -17,16 +17,16 @@ public class FuelConsumptionRestController {
     @RequestMapping("/calc")
     public BigDecimal[] calc(
             @RequestParam("before") BigDecimal before,
-            @RequestParam("norma") BigDecimal norma,
-            @RequestParam("normaVal") BigDecimal normaVal,
-            @RequestParam(name = "ogrzewanie", required = false) BigDecimal ogrzewanie,
-            @RequestParam(name = "tankowanie", required = false) BigDecimal tankowanie,
-            @RequestParam(name = "czyZaokr1setna", required = false) boolean czyZaokr1setna){
+            @RequestParam("fuelConsumptionStandard") BigDecimal fuelConsumptionStandard,
+            @RequestParam("fuelConsumptionStandardVal") BigDecimal fuelConsumptionStandardVal,
+            @RequestParam(name = "heating", required = false) BigDecimal heating,
+            @RequestParam(name = "refueled", required = false) BigDecimal refueled,
+            @RequestParam(name = "isRounded", required = false) boolean isRounded){
 
-        if(ogrzewanie == null) ogrzewanie = BigDecimal.ZERO;
-        if(tankowanie == null) tankowanie = BigDecimal.ZERO;
+        if(heating == null) heating = BigDecimal.ZERO;
+        if(refueled == null) refueled = BigDecimal.ZERO;
 
-        return utilService.calc(before, norma, normaVal, ogrzewanie, tankowanie, czyZaokr1setna);
+        return utilService.calc(before, fuelConsumptionStandard, fuelConsumptionStandardVal, heating, refueled, isRounded);
 
     }
 

@@ -3,31 +3,26 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 
 <head>
-    <title>Ewi - dokumenty</title>
+    <title>Ewi - documents</title>
+    <meta th:name="_csrf" th:content="${_csrf.token}"/>
+    <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
 
-    <head>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="css/index.css" rel="stylesheet">
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://kit.fontawesome.com/4d0e5d2f0b.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-        <meta th:name="_csrf" th:content="${_csrf.token}"/>
-        <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
-
-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <link href="css/index.css" rel="stylesheet">
-        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-        <script src="https://kit.fontawesome.com/4d0e5d2f0b.js" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-        <script th:inline="javascript">
-            var contextRoot = /*[[@{/}]]*/ '';
-            var maszynyX = /*[[${maszyny}]]*/ [];
-        </script>
-        <script src="js/index.js"></script>
-        <script src="js/dokumenty.js"></script>
-
-    </head>
+    <script th:inline="javascript">
+        var contextRoot = /*[[@{/}]]*/ '';
+        var machinesX = /*[[${machines}]]*/ [];
+    </script>
+    <script src="js/index.js"></script>
+    <script src="js/documents.js"></script>
 
 </head>
 
@@ -38,11 +33,11 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                    <label for="miesiac">Miesiąc:</label>
-                    <input type="month" id="miesiac" min="2021-01" value="2021-04">
+                    <label for="month">Miesiąc:</label>
+                    <input type="month" id="month" min="2021-01" value="2021-04">
                 </div>
                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-right">
-                    <button class="btn btn-success" onclick="dodajBtn()">dodaj document <i class="fas fa-plus-circle"></i></button>
+                    <button class="btn btn-success" onclick="addBtn()">dodaj document <i class="fas fa-plus-circle"></i></button>
                 </div>
             </div>
             <p></p>
@@ -55,7 +50,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <table class="table" id="dokumentyTable">
+            <table class="table" id="documentsTable">
                 <thead>
                 <tr>
                     <th> Numer </th>
@@ -74,17 +69,17 @@
 
             <div class="row">
                 <div class="col-lg-4" style="vertical-align: text-top;">
-                    <label for="numer">Numer</label>
-                    <input type="text" name="numer" id="numer" autocomplete="off" value="" class="text ui-widget-content ui-corner-all">
+                    <label for="number">Numer</label>
+                    <input type="text" name="number" id="number" autocomplete="off" value="" class="text ui-widget-content ui-corner-all">
                     <label class="text-danger" id="error">Dokument o podanym numerze już istnieje.</label>
                 </div>
                 <div class="col-lg-2" style="vertical-align: text-top;">
-                    <label for="data">Data</label>
-                    <input type="date" name="data" id="data" value="" class="text ui-widget-content ui-corner-all">
+                    <label for="date">Data</label>
+                    <input type="date" name="date" id="date" value="" class="text ui-widget-content ui-corner-all">
                 </div>
                 <div class="col-lg-2" style="vertical-align: text-top;">
-                    <label for="kilometryPrzyczepa">Kilometry z przyczepą</label>
-                    <input type="number" step="0.1" name="kilometryPrzyczepa" id="kilometryPrzyczepa" autocomplete="off" value="0" class="text ui-widget-content ui-corner-all">
+                    <label for="kilometersTrailer">Kilometry z przyczepą</label>
+                    <input type="number" step="0.1" name="kilometersTrailer" id="kilometersTrailer" autocomplete="off" value="0" class="text ui-widget-content ui-corner-all">
                 </div>
                 <div class="col-lg-2" style="vertical-align: text-top;">
                     <label for="kilometers">Kilometry/olej</label>
@@ -94,11 +89,11 @@
                     <table style="float: left; margin-top: 10px;">
                         <tr>
                             <td>przed:</td>
-                            <td id="kmPrzed"></td>
+                            <td id="kmBefore"></td>
                         </tr>
                         <tr>
                             <td>po:</td>
-                            <td id="kmPo"></td>
+                            <td id="kmAfter"></td>
                         </tr>
                     </table>
                 </div>
@@ -109,14 +104,14 @@
                     <label for="machine">Maszyna</label>
                     <input id="tags" placeholder="szukajka maszyn" style="width: 100%; margin-bottom: 20px;">
                     <select name="machine" id="machine" size="15">
-                        <option th:each="machine : ${maszyny}" th:value="${machine.id}">
-                            <span th:text="${machine.nazwa}"></span> (<span th:text="${machine.id}"></span>)
+                        <option th:each="machine : ${machines}" th:value="${machine.id}">
+                            <span th:text="${machine.name}"></span> (<span th:text="${machine.id}"></span>)
                         </option>
                     </select>
                 </div>
                 <div class="col-lg-9">
-                    <table class="table" id="zuzycieTable"></table>
-                    <p id="opisMaszyny"></p>
+                    <table class="table" id="consumptionTable"></table>
+                    <p id="machineDescription"></p>
                 </div>
             </div>
 

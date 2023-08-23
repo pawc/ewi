@@ -5,26 +5,23 @@
 <head>
     <title>Ewi</title>
 
-    <head>
+    <meta th:name="_csrf" th:content="${_csrf.token}"/>
+    <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
 
-        <meta th:name="_csrf" th:content="${_csrf.token}"/>
-        <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="css/index.css" rel="stylesheet">
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://kit.fontawesome.com/4d0e5d2f0b.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
 
-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet">
-        <link href="css/index.css" rel="stylesheet">
-        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-        <script src="https://kit.fontawesome.com/4d0e5d2f0b.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
+    <script th:inline="javascript"> var contextRoot = /*[[@{/}]]*/ ''; </script>
 
-        <script th:inline="javascript"> var contextRoot = /*[[@{/}]]*/ ''; </script>
-
-        <script src="js/index.js"></script>
-        <script src="js/raportKwartalny.js"></script>
-    </head>
+    <script src="js/index.js"></script>
+    <script src="js/quarterlyReport.js"></script>
 
 </head>
 
@@ -32,49 +29,49 @@
 
 <body>
 
-<div class="container-fluid" style="margin-bottom: 10px;">
-    <div class="row">
-        <div class="col-sm-6">
-            <label for="kwartal" style="margin-left: 10%;">Kwartał:</label>
-            <input type="text" id="kwartal" style="margin-left: 10%;"></div>
+    <div class="container-fluid" style="margin-bottom: 10px;">
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="quarter" style="margin-left: 10%;">Kwartał:</label>
+                <input type="text" id="quarter" style="margin-left: 10%;"></div>
+        </div>
     </div>
-</div>
 
-<div class="container" id="loadingDiv">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="loader">
-                <p><b>Obliczanie</b></p>
-                <div class="loader-inner"></div>
-                <div class="loader-inner"></div>
-                <div class="loader-inner"></div>
+    <div class="container" id="loadingDiv">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="loader">
+                    <p><b>Obliczanie</b></p>
+                    <div class="loader-inner"></div>
+                    <div class="loader-inner"></div>
+                    <div class="loader-inner"></div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="container-fluid" id="tableDiv">
-    <table class="table" id="raportTable" style="width:100%">
-        <thead>
-        <tr>
-            <th> Maszyna (Numer) </th>
-            <th class="text-center"> Stan początkowy <br>kilometrów <br>w kwartale </th>
-            <th class="text-center"> Suma kilometrów/oleju <br>w kwartale </th>
-            <th class="text-center"> Stan końcowy <br> kilometrów/oleju <br>w kwartale </th>
-            <th class="text-center"> Suma kilometrów <br>z przyczepą<br>w kwartale </th>
-            <th> Jednostka </th>
-            <th class="text-center"> Stan pocztkowy <br>litrów w kwartale </th>
-            <th class="text-center"> Suma zużytych <br>litrów w kwartale </th>
-            <th class="text-center"> Suma zatankowanych <br>litrów w kwartale </th>
-            <th class="text-center"> Suma <br>litrów na ogrzewanie<br>/przepał<br> w kwartale </th>
-            <th class="text-center"> Stan końcowy na kwartał </th>
-            <th class="text-center"> Suma godzin w kwartale</th>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-</div>
+    <div class="container-fluid" id="tableDiv">
+        <table class="table" id="reportTable" style="width:100%">
+            <thead>
+            <tr>
+                <th> Maszyna (Numer) </th>
+                <th class="text-center"> Stan początkowy <br>kilometrów <br>w kwartale </th>
+                <th class="text-center"> Suma kilometrów/oleju <br>w kwartale </th>
+                <th class="text-center"> Stan końcowy <br> kilometrów/oleju <br>w kwartale </th>
+                <th class="text-center"> Suma kilometrów <br>z przyczepą<br>w kwartale </th>
+                <th> Jednostka </th>
+                <th class="text-center"> Stan pocztkowy <br>litrów w kwartale </th>
+                <th class="text-center"> Suma zużytych <br>litrów w kwartale </th>
+                <th class="text-center"> Suma zatankowanych <br>litrów w kwartale </th>
+                <th class="text-center"> Suma <br>litrów na ogrzewanie<br>/przepał<br> w kwartale </th>
+                <th class="text-center"> Stan końcowy na kwartał </th>
+                <th class="text-center"> Suma godzin w kwartale</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 
 </body>
 

@@ -39,8 +39,8 @@ public class ViewController {
 
     }
 
-    @RequestMapping("/raportKwartalny")
-    public String raportKwartalny(
+    @RequestMapping("/quarterlyReport")
+    public String quarterlyReport(
             Model model){
 
         logger.info("/quarterlyReport");
@@ -49,7 +49,7 @@ public class ViewController {
     }
 
     @RequestMapping("/annualReport")
-    public String raport2(
+    public String annualReport(
             Model model){
 
         logger.info("/annualReport");
@@ -58,7 +58,7 @@ public class ViewController {
     }
 
     @RequestMapping("/machineKilometersReport")
-    public String raportMaszynaKilometry(
+    public String machineKilometersReport(
             Model model){
 
         model.addAttribute(MACHINES, machineService.findAllActive());
@@ -67,11 +67,11 @@ public class ViewController {
 
     }
 
-    @RequestMapping("/documents")
-    public String dokumenty(
+    @RequestMapping("/documentsView")
+    public String documentsView(
             Model model) {
 
-        logger.info("/documents");
+        logger.info("/documentsView");
         model.addAttribute(MACHINES, machineService.findAllActive());
 
         return "documents";
@@ -79,7 +79,7 @@ public class ViewController {
     }
 
     @RequestMapping("/machines")
-    public String maszynyView(
+    public String machines(
             Model model) {
 
         logger.info("/machines");
@@ -92,7 +92,7 @@ public class ViewController {
     }
 
     @RequestMapping("/unitsView")
-    public String jednostkiView(
+    public String unitsView(
             Model model) {
 
         logger.info("/unitsView");
@@ -103,7 +103,7 @@ public class ViewController {
     }
 
     @RequestMapping("/initialStatesView")
-    public String stany(Model model) {
+    public String initialStatesView(Model model) {
 
         logger.info("/initialStates");
         return "initialStates";
@@ -111,7 +111,7 @@ public class ViewController {
     }
 
     @RequestMapping("/kilometersView")
-    public String kilometry(
+    public String kilometersView(
             Model model) {
 
         logger.info("/kilometers");
@@ -120,7 +120,7 @@ public class ViewController {
     }
 
     @RequestMapping("/categories")
-    public String kategorieView(
+    public String categories(
             Model model) {
 
         logger.info("/categories");

@@ -23,10 +23,10 @@ public class MachineRestController {
     @GetMapping("/machine")
     public Machine machineGet(
             @RequestParam("id") String id,
-            @RequestParam(name = "miesiac", required = false) String miesiac){
+            @RequestParam(name = "month", required = false) String month){
 
         logger.info("/machine GET id={}", id);
-        return machineService.get(id, miesiac);
+        return machineService.get(id, month);
 
     }
 
@@ -49,7 +49,7 @@ public class MachineRestController {
             @RequestBody Machine machine) {
 
         if(machineService.findById(machine.getId()).isPresent()){
-            logger.info("/maszyna PUT id={}", machine.getId());
+            logger.info("/machine PUT id={}", machine.getId());
             machineService.put(machine);
         }
         else{

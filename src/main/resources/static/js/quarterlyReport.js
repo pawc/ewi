@@ -1,15 +1,15 @@
 var t;
 $(document).ready(function() {
 
-    $('#raportKwartalnyLink').css("font-weight", "bold").css("text-decoration", "underline");
-    $('#raportyDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#quarterlyReportLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#reportsDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
 
     var quarter = '0' + Math.floor((new Date().getMonth() + 3) / 3);
 
     var year = new Date().getFullYear()
-    $('#kwartal').val(year + '-' + quarter)
+    $('#quarter').val(year + '-' + quarter)
 
-    t = $('#raportTable').DataTable({
+    t = $('#reportTable').DataTable({
         dom: 'Blfrtip',
         buttons: [
             'print',
@@ -36,16 +36,16 @@ $(document).ready(function() {
         }
     });
 
-    $('#raportTable_wrapper > div.dt-buttons > button > span').text('Drukuj raport')
-    $('#raportTable_wrapper > div.dt-buttons > button').addClass('btn btn-info')
-    $('#raportTable_wrapper > div.dt-buttons').css('text-align', 'right')
-    $('#raportTable_wrapper > div.dt-buttons').css('margin-right', '50px')
+    $('#reportTable_wrapper > div.dt-buttons > button > span').text('Drukuj raport')
+    $('#reportTable_wrapper > div.dt-buttons > button').addClass('btn btn-info')
+    $('#reportTable_wrapper > div.dt-buttons').css('text-align', 'right')
+    $('#reportTable_wrapper > div.dt-buttons').css('margin-right', '50px')
     $('#raportTable_filter').css('margin-right', '50px')
-    $('#raportTable_length').css('margin-left', '5%')
+    $('#reportTable_length').css('margin-left', '5%')
 
     updateTable();
 
-    $('#kwartal').change(() => {
+    $('#quarter').change(() => {
         updateTable();
     })
 });
@@ -54,34 +54,34 @@ function updateTable(){
     $('#loadingDiv').show()
     $('#tableDiv').hide()
    t.clear().draw();
-    var rok = $('#kwartal').val().split('-')[0]
-    var kwartal = $('#kwartal').val().split('-')[1]
+    var year = $('#quarter').val().split('-')[0]
+    var quarter = $('#quarter').val().split('-')[1]
     $.ajax({
-        url: contextRoot + 'getRaportKwartalny',
+        url: contextRoot + 'getReportQuarterly',
         data: {
-            rok: rok,
-            kwartal: kwartal
+            year: year,
+            quarter: quarter
         }
     })
-    .done(pozycje => {
-        $.each(pozycje, (i, pozycja) => {
+    .done(records => {
+        $.each(records, (i, p) => {
             t.row.add( [
-                pozycja.maszyna,
-                pozycja.stankilometry,
-                pozycja.kilometry,
-                pozycja.endStateKilometry,
-                pozycja.kilometryprzyczepa,
-                pozycja.jednostka,
-                pozycja.stanPoprz,
-                pozycja.suma,
-                pozycja.zatankowano,
-                pozycja.ogrzewanie,
-                pozycja.endState,
-                pozycja.sumagodzin,
-                pozycja.normaId,
+     p.machine,
+                p.kilometersInitialState,
+                p.kilometers,
+                p.endStateKilometers,
+                p.kilometersTrailer,
+                p.unit,
+                p.initialState,
+                p.sum,
+                p.refueled,
+                p.heating,
+                p.endState,
+                p.sumHours,
+                p.fuelConsumptionStandardId,
                 '0',
                 '0',
-                pozycja.maszynaid
+                p.machineId
             ]).draw(false);
         })
         $('#loadingDiv').hide()

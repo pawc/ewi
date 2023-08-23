@@ -63,10 +63,10 @@ class DocumentRestControllerTest {
 
     @Test
     @Order(1)
-    void dokumentGetTest() throws Exception {
+    void documentGetTest() throws Exception {
 
-        mockMvc.perform(get("/dokument")
-                        .param("numer", "1/04/2022/C1"))
+        mockMvc.perform(get("/document")
+                        .param("number", "1/04/2022/C1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(result -> {
@@ -79,15 +79,14 @@ class DocumentRestControllerTest {
                     assertEquals(new BigDecimal("10.0"), document.getKilometersTrailer());
                 });
 
-        mockMvc.perform(get("/dokument")
-                        .param("numer", "99/04/2022/C1"))
+        mockMvc.perform(get("/document")
+                        .param("number", "99/04/2022/C1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(result -> {
                     Document document = objectMapper.readValue(result.getResponse().getContentAsString(), Document.class);
                     assertNotNull(document);
                     assertNull(document.getNumber());
-                    assertNull(document.getMachine());
                     assertNull(document.getMachine());
                     assertNull(document.getKilometers());
                     assertNull(document.getKilometersTrailer());
@@ -97,24 +96,24 @@ class DocumentRestControllerTest {
 
     @Test
     @Order(2)
-    void dokumentyGetTest() throws Exception {
+    void documentyGetTest() throws Exception {
 
-        mockMvc.perform(get("/dokumentyGet")
-                        .param("rok", "2022")
-                        .param("miesiac", "4")
+        mockMvc.perform(get("/documents")
+                        .param("year", "2022")
+                        .param("month", "4")
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(result -> {
-                    List<Document> dokumenty = objectMapper.readValue(result.getResponse().getContentAsString(), List.class);
-                    assertEquals(17, dokumenty.size());
+                    List<Document> documenty = objectMapper.readValue(result.getResponse().getContentAsString(), List.class);
+                    assertEquals(17, documenty.size());
                 });
 
     }
 
     @Test
     @Order(3)
-    void dokumentPostTest() throws Exception {
+    void documentPostTest() throws Exception {
 
         Machine machine = new Machine();
         machine.setId("C1");
@@ -136,7 +135,7 @@ class DocumentRestControllerTest {
 
         requestJson = ow.writeValueAsString(document);
 
-        mockMvc.perform(post("/dokument")
+        mockMvc.perform(post("/document")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());
@@ -144,7 +143,7 @@ class DocumentRestControllerTest {
     }
     @Test
     @Order(4)
-    void dokumentPutTest() throws Exception {
+    void documentPutTest() throws Exception {
 
         Machine machine = new Machine();
         machine.setId("C1");
@@ -167,7 +166,7 @@ class DocumentRestControllerTest {
         document.setNumber("81/09/2022/C1");
         requestJson = ow.writeValueAsString(document);
 
-        mockMvc.perform(put("/dokument")
+        mockMvc.perform(put("/document")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isBadRequest());
@@ -175,7 +174,7 @@ class DocumentRestControllerTest {
         document.setNumber("80/09/2022/C1");
         requestJson = ow.writeValueAsString(document);
 
-        mockMvc.perform(put("/dokument")
+        mockMvc.perform(put("/document")
                         .contentType(APPLICATION_JSON_UTF8)
                         .content(requestJson))
                 .andExpect(status().isOk());
@@ -184,14 +183,14 @@ class DocumentRestControllerTest {
 
     @Test
     @Order(5)
-    void dokumentDeleteTest() throws Exception {
+    void documentDeleteTest() throws Exception {
 
-/*        mockMvc.perform(delete("/dokument")
-                        .param("numer", "80/04/2022/C1"))
+/*        mockMvc.perform(delete("/document")
+                        .param("number", "80/04/2022/C1"))
                 .andExpect(status().isBadRequest());*/
 
-        mockMvc.perform(delete("/dokument")
-                        .param("numer", "80/09/2022/C1"))
+        mockMvc.perform(delete("/document")
+                        .param("number", "80/09/2022/C1"))
                 .andExpect(status().isOk());
 
     }

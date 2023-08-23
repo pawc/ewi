@@ -25,33 +25,33 @@ public class DocumentRestController {
     private static final Logger logger = LogManager.getLogger(DocumentRestController.class);
     private final DocumentService documentService;
 
-    @RequestMapping("/dokument")
-    public Document dokumentGet(
-            @RequestParam("numer") String numer) {
+    @RequestMapping("/document")
+    public Document document(
+            @RequestParam("number") String number) {
 
-        logger.info("/dokument GET numer={} ", numer);
-        Document document = documentService.get(numer);
+        logger.info("/document GET number={} ", number);
+        Document document = documentService.get(number);
         return document == null ? new Document() : document;
 
     }
 
-    @RequestMapping("/dokumentyGet")
-    public List<Document> dokumentyGet(
-            @RequestParam("rok") int rok,
-            @RequestParam("miesiac") int miesiac){
+    @RequestMapping("/documents")
+    public List<Document> documents(
+            @RequestParam("year") int year,
+            @RequestParam("month") int month){
 
-        logger.info("/dokumentyGet {}-{} ", rok, miesiac);
-        List<Document> dokumenty = documentService.getDokumenty(rok, miesiac);
+        logger.info("/documents GET {}-{} ", year, month);
+        List<Document> dokumenty = documentService.getDokumenty(year, month);
         dokumenty.forEach(d -> d.setFuelConsumption(null));
         return dokumenty;
 
     }
 
-    @PostMapping("/dokument")
-    public void dokumentPost(
+    @PostMapping("/document")
+    public void documentPost(
             @RequestBody Document document) {
 
-        logger.info("/dokument POST numer={}", document.getNumber());
+        logger.info("/document POST number={}", document.getNumber());
         if(StringUtils.isEmpty(document.getNumber()) ||
                 document.getMachine().getId() == null) throw new BadRequestException("No document details");
 
@@ -60,28 +60,27 @@ public class DocumentRestController {
 
     }
 
-    @PutMapping("/dokument")
-    public void dokumentPut(
+    @PutMapping("/document")
+    public void documentPut(
             @RequestBody Document document) {
 
         try {
             documentService.put(document);
-            logger.info("/dokument PUT numer={}", document.getNumber());
+            logger.info("/document PUT number={}", document.getNumber());
         }
         catch (DocumentNotFoundException e) {
-            logger.warn("/dokument PUT - DocumentNotFoundException");
+            logger.warn("/document PUT - DocumentNotFoundException");
             throw new BadRequestException();
         }
 
     }
 
-    @DeleteMapping("/dokument")
-    public void dokumentDelete(
-            @RequestParam("numer") String numer) {
+    @DeleteMapping("/document")
+    public void documentDelete(
+            @RequestParam("number") String number) {
 
-        logger.info("/dokument DELETE numer={}", numer);
-        documentService.delete(numer);
-
+        logger.info("/document DELETE number={}", number);
+        documentService.delete(number);
 
     }
 

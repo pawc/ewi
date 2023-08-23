@@ -43,8 +43,8 @@ public class KilometersRestController {
 
     }
 
-    @PostMapping("kilometryList")
-    public void kilometryList(
+    @PostMapping("kilometersList")
+    public void kilometersList(
             @RequestBody List<Kilometers> kilometers) {
 
         kilometersService.post(kilometers);
