@@ -23,7 +23,7 @@
     <script th:inline="javascript"> var contextRoot = /*[[@{/}]]*/ ''; </script>
 
     <script src="js/index.js"></script>
-    <script src="js/reportMachineKilometers.js"></script>
+    <script src="js/machineKilometersReport.js"></script>
 </head>
 
     <div th:insert="~{menu.html :: nav}"> </div>
@@ -36,16 +36,16 @@
                 <label for="machine">Maszyna</label>
                 <select id="machine" class="text ui-widget-content ui-corner-all" style="height: 35px;">
                     <option value="0">Wybierz</option>
-                    <option th:each="machine : ${maszyny}" th:value="${machine.id}" th:text="${machine.nazwa + ' (' + machine.id +')'}"></option>
+                    <option th:each="machine : ${machines}" th:value="${machine.id}" th:text="${machine.name + ' (' + machine.id +')'}"></option>
                 </select>
             </div>
             <div class="col-sm-2" style="vertical-align: text-top;">
-                <label for="dataStart">Data od:</label>
-                <input type="date" name="data" id="dataStart" value="" class="text ui-widget-content ui-corner-all">
+                <label for="dateStart">Data od:</label>
+                <input type="date" name="date" id="dateStart" value="" class="text ui-widget-content ui-corner-all">
             </div>
             <div class="col-sm-2" style="vertical-align: text-top;">
-                <label for="dataEnd">Data do:</label>
-                <input type="date" name="data" id="dataEnd" value="" class="text ui-widget-content ui-corner-all">
+                <label for="dateEnd">Data do:</label>
+                <input type="date" name="date" id="dateEnd" value="" class="text ui-widget-content ui-corner-all">
             </div>
             <div class="col-sm-2" style="vertical-align: text-top;">
                 <label>Kilometry</label>
@@ -53,7 +53,7 @@
             </div>
             <div class="col-sm-2" style="vertical-align: text-top;">
                 <label>Kilometry z przyczepą</label>
-                <p id="kilometryPrzyczepa">-</p>
+                <p id="kilometersTrailer">-</p>
             </div>
         </div>
     </div>
@@ -72,7 +72,7 @@
     </div>
 
     <div class="container" id="tableDiv">
-        <table class="table" id="reportMachineKilometers" style="width:100% !important">
+        <table class="table" id="reportMachineKilometersTable" style="width:100% !important">
             <thead>
             <tr>
                 <th class="text-center"> Dokument data </th>

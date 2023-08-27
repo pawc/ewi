@@ -203,7 +203,7 @@ $(document).ready(() => {
 function calc(el1, el2, el3, before, fuelConsumptionStandard, fuelConsumptionStandardVal, heating, refueled, isRounded){
 
      if(isNaN(heating) || heating === '') heating = 0;
-     if(isNaN(heating) || heating === '') heating = 0;
+     if(isNaN(refueled) || refueled === '') refueled = 0;
      if(isNaN(fuelConsumptionStandardVal) || fuelConsumptionStandardVal === '') fuelConsumptionStandardVal = 0;
 
      el3.html(fuelConsumptionStandardVal)
@@ -433,7 +433,7 @@ function formatDate(date) {
 
 $(function() {
 
-    dialogUsun = $("#dialog-confirm").dialog({
+    dialogDelete = $("#dialog-confirm").dialog({
         autoOpen: false,
         resizable: false,
         height: "auto",
@@ -446,7 +446,7 @@ $(function() {
                 var token = $("meta[name='_csrf']").attr("content");
                 headers[header] = token;
                 $.ajax({
-                    url: contextRoot + 'dokument',
+                    url: contextRoot + 'document',
                     data: {
                         number: currentNumber
                     },

@@ -139,7 +139,7 @@ function saveAll(){
             },
             value : row[10]
         }
-        initialStates.push(state)
+        initialStates.push(initialState)
     })
 
     var propertiesInitialStates = {
@@ -166,7 +166,7 @@ function saveAll(){
 
     var propertiesKm = {
         url: contextRoot + 'kilometersList',
-        data: JSON.stringify(kilometry),
+        data: JSON.stringify(kilometers),
         type: 'POST',
         headers: headers
     }

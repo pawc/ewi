@@ -27,7 +27,12 @@ public class MachineService {
     private final CategoryService categoryService;
 
     public List<Machine> findAllActive(){
-        return machineRepository.findByIsActiveTrue();
+        List<Machine> activeMachines = machineRepository.findByIsActiveTrue();
+        for (Machine m : activeMachines)
+            if (!m.getCategories().isEmpty()) m.getCategories().forEach(c -> c.setMachines(null));
+
+        return activeMachines;
+
     }
 
     public List<Machine> findAll(){

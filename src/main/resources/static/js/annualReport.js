@@ -1,23 +1,23 @@
 var t;
 $(document).ready(function() {
 
-    $('#raportRocznyLink').css("font-weight", "bold").css("text-decoration", "underline");
-    $('#raportyDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#annualReportLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#reportsDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
 
-    $("#rok").datepicker({
+    $("#year").datepicker({
         changeMonth: false,
         changeYear: true,
         dateFormat: 'yy'
     });
 
-    $('#rok').on('click', function() {
+    $('#year').on('click', function() {
         $('.ui-datepicker-calendar').hide();
     });
 
     var year = new Date().getFullYear()
-    $('#rok').val(year)
+    $('#year').val(year)
 
-    t = $('#raportRocznyTable').DataTable({
+    t = $('#annualReportTable').DataTable({
         dom: 'Blfrtip',
         buttons: [
             'print',
@@ -44,16 +44,16 @@ $(document).ready(function() {
         }
     });
 
-    $('#raportRocznyTable_wrapper > div.dt-buttons > button > span').text('Drukuj raport')
-    $('#raportRocznyTable_wrapper > div.dt-buttons > button').addClass('btn btn-info')
-    $('#raportRocznyTable_wrapper > div.dt-buttons').css('text-align', 'right')
-    $('#raportRocznyTable_wrapper > div.dt-buttons').css('margin-right', '50px')
-    $('#raportRocznyTable_filter').css('margin-right', '50px')
-    $('#raportRocznyTable_length').css('margin-left', '5%')
+    $('#annualReportTable_wrapper > div.dt-buttons > button > span').text('Drukuj raport')
+    $('#annualReportTable_wrapper > div.dt-buttons > button').addClass('btn btn-info')
+    $('#annualReportTable_wrapper > div.dt-buttons').css('text-align', 'right')
+    $('#annualReportTable_wrapper > div.dt-buttons').css('margin-right', '50px')
+    $('#annualReportTable_filter').css('margin-right', '50px')
+    $('#annualReportTable_length').css('margin-left', '5%')
 
     updateTable();
 
-    $('#rok').change(() => {
+    $('#year').change(() => {
         updateTable();
     })
 });
@@ -62,21 +62,21 @@ function updateTable(){
     $('#tableDiv').hide()
     $('#loadingDiv').show()
     t.clear().draw();
-    var rok = $('#rok').val()
+    var year = $('#year').val()
     $.ajax({
-        url: contextRoot + 'raportRoczny',
+        url: contextRoot + 'reportAnnual',
         data: {
-            rok: rok
+            year: year
         }
     })
-    .done(pozycje => {
-        $.each(pozycje, (i, pozycja) => {
+    .done(records => {
+        $.each(records, (i, p) => {
             t.row.add( [
-                pozycja.kategoria,
-                pozycja.jednostka,
-                pozycja.waga,
-                pozycja.suma,
-                pozycja.sumaRazyWaga
+                p.category,
+                p.unit,
+                p.weight,
+                p.sum,
+                p.sumMultipliedByWeight
             ]).draw(false);
         })
         $('#loadingDiv').hide()

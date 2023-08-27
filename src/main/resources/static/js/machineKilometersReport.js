@@ -1,11 +1,11 @@
 var t;
 $(document).ready(function() {
 
-    $('#raportMaszynaKilometryLink').css("font-weight", "bold").css("text-decoration", "underline");
-    $('#raportyDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#machineKilometersReportLink').css("font-weight", "bold").css("text-decoration", "underline");
+    $('#reportsDropdownMenuLink').css("font-weight", "bold").css("text-decoration", "underline");
     $('#loadingDiv').hide()
 
-    t = $('#raportMaszynaKilometry').DataTable({
+    t = $('#reportMachineKilometersTable').DataTable({
         "pageLength": 10,
         lengthMenu: [
             [ 5, 10, 25, 50, -1 ],
@@ -28,15 +28,15 @@ $(document).ready(function() {
         }
     });
 
-    $('#maszyna').change(() => {
+    $('#machine').change(() => {
         updateTable();
     })
 
-     $('#dataStart').change(() => {
+     $('#dateStart').change(() => {
         updateTable();
     })
 
-     $('#dataEnd').change(() => {
+     $('#dateEnd').change(() => {
         updateTable();
     })
 
@@ -44,28 +44,28 @@ $(document).ready(function() {
 
 function updateTable(){
 
-    if(!$('#maszyna').val() || !$('#dataStart').val() || !$('#dataEnd').val()) return
+    if(!$('#machine').val() || !$('#dateStart').val() || !$('#dateEnd').val()) return
 
     $('#tableDiv').hide()
     $('#loadingDiv').show()
     t.clear().draw();
     $.ajax({
-        url: contextRoot + 'getRaportMaszynaKilometry',
+        url: contextRoot + 'getReportMachineKilometers',
         data: {
-            maszynaId: $('#maszyna').val(),
-            start: $('#dataStart').val(),
-            end: $('#dataEnd').val()
+            machineId: $('#machine').val(),
+            start: $('#dateStart').val(),
+            end: $('#dateEnd').val()
         }
     })
-    .done(maszynaKilometry => {
-        $('#kilometry').html(maszynaKilometry.sumaKilometry)
-        $('#kilometryPrzyczepa').html(maszynaKilometry.sumaKilometryPrzyczepa)
-        $.each(maszynaKilometry.dokumenty, (i, dokument) => {
+    .done(machineKilometers => {
+        $('#kilometers').html(machineKilometers.sumKilometers)
+        $('#kilometersTrailer').html(machineKilometers.sumKilometersTrailer)
+        $.each(machineKilometers.documents, (i, document) => {
             t.row.add( [
-                dokument.numer,
-                dokument.data,
-                dokument.kilometry,
-                dokument.kilometryPrzyczepa
+                document.number,
+                document.date,
+                document.kilometers,
+                document.kilometersTrailer
             ]).draw(false);
         })
         $('#loadingDiv').hide()

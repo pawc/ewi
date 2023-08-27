@@ -21,7 +21,7 @@ class ReportMachineKilometersServiceTest {
 
 	@Test
 	@Transactional
-	void testRaportMaszynaKilometry() throws ParseException {
+	void testReportMachineKilometers() throws ParseException {
 
 		ReportMachineKilometers reportMachineKilometers = raportKilometryService.getReportKilometers("C1", "2022-04-01", "2022-04-30");
 		assertEquals(new BigDecimal("102.9"), reportMachineKilometers.getSumKilometers());
