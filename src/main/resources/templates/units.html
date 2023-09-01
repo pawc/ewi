@@ -40,7 +40,6 @@
                     <th> ID </th>
                     <th> Nazwa </th>
                     <th> Waga </th>
-                    <th> Przypisane maszyny </th>
                     <th class="text-right"> <button class="btn btn-success" onclick="addBtn()">dodaj <i class="fas fa-plus-circle"></i></button> </th>
                 </tr>
                 </thead>
@@ -49,7 +48,6 @@
                     <td><span th:text="${unit.id}"> Numer </span> </td>
                     <td><span th:text="${unit.name}"> Nazwa </span></td>
                     <td><span th:text="${unit.weightRatio}"> Waga </span></td>
-                    <td><span> Przypisane maszyny  </span></td>
                     <td class="text-right">
                         <button class="btn btn-info" th:onclick="editBtn([[${unit.id}]], [[${unit.name}]], [[${unit.weightRatio}]] )">edytuj <i class="fas fa-edit"></i></button>
                     </td>
