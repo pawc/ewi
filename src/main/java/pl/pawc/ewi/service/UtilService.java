@@ -8,8 +8,8 @@ import java.math.RoundingMode;
 @Component
 public class UtilService {
 
-    public BigDecimal[] calc(BigDecimal before, BigDecimal fuelConsumptionStandard, BigDecimal fuelConsumptionStandardVal,
-                 BigDecimal heating, BigDecimal refueled, boolean isRounded){
+    public BigDecimal[] calculate(BigDecimal before, BigDecimal fuelConsumptionStandard, BigDecimal fuelConsumptionStandardVal,
+                                  BigDecimal heating, BigDecimal refueled, boolean isRounded){
 
         int scale = isRounded ? 2 : 1;
 

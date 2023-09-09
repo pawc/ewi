@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -56,7 +57,7 @@ public class ReportService {
     }
 
     public List<AnnualReport> getReportAnnual(int year){
-        List<AnnualReport> result = getMaszynaNormaUngrouped(year);
+        List<AnnualReport> result = getMachineFuelConsumptionStandardUngrouped(year);
         Map<String, List<AnnualReport>> collect = result.stream().collect(groupingBy(AnnualReport::getCategory_unit));
         List<AnnualReport> groupBy = new ArrayList<>();
 
@@ -81,18 +82,18 @@ public class ReportService {
         return groupBy;
     }
 
-    private List<AnnualReport> getMaszynaNormaUngrouped(int year) {
+    private List<AnnualReport> getMachineFuelConsumptionStandardUngrouped(int year) {
         List<AnnualReport> result = new ArrayList<>();
 
         for (Category k : categoryService.findAll()) {
             for (Machine m : k.getMachines()) {
-                fuelConsumptionStandardRepository.findByMachine(m).forEach(n -> getRaportRocznyNormaByMaszyna(year, result, k, n));
+                fuelConsumptionStandardRepository.findByMachine(m).forEach(n -> getAnnualReportFuelConsumptionStandardByMachine(year, result, k, n));
             }
         }
         return result;
     }
 
-    private void getRaportRocznyNormaByMaszyna(int year, List<AnnualReport> result, Category k, FuelConsumptionStandard n) {
+    private void getAnnualReportFuelConsumptionStandardByMachine(int year, List<AnnualReport> result, Category k, FuelConsumptionStandard n) {
         AnnualReport annualReport = new AnnualReport();
 
         String jednostka = n.getUnitObj() == null ? n.getUnit() : n.getUnitObj().getName();
@@ -105,7 +106,7 @@ public class ReportService {
         annualReport.setUnit(jednostka);
         annualReport.setWeight(waga);
 
-        BigDecimal sumaYear = fuelConsumptionService.getSumaYear(n.getId(), year);
+        BigDecimal sumaYear = fuelConsumptionService.getSumYear(n.getId(), year);
         annualReport.setSum(sumaYear);
 
         result.add(annualReport);
@@ -143,8 +144,12 @@ public class ReportService {
             BigDecimal sumaGodzin = BigDecimal.ZERO;
 
             for (Document d : documentList) {
-                FuelConsumption fuelConsumption = fuelConsumptionRepository.findByDocument(d).stream().filter(z -> z.getFuelConsumptionStandard().equals(fuelConsumptionStandard)).findFirst().orElse(null);
-                if(fuelConsumption == null) continue;
+                Optional<FuelConsumption> fuelConsumptionOptional =
+                        fuelConsumptionRepository.findByDocument(d).stream()
+                        .filter(z -> z.getFuelConsumptionStandard().equals(fuelConsumptionStandard))
+                        .findFirst();
+                if(fuelConsumptionOptional.isEmpty()) continue;
+                FuelConsumption fuelConsumption = fuelConsumptionOptional.get();
                 sumaWartosc = sumaWartosc.add(fuelConsumption.getValue().multiply(fuelConsumptionStandard.getValue()).setScale(scale, RoundingMode.HALF_UP));
                 sumaOgrzewanie = sumaOgrzewanie.add(fuelConsumption.getHeating()).setScale(scale, RoundingMode.HALF_UP);
                 sumaTankowanie = sumaTankowanie.add(fuelConsumption.getRefueled()).setScale(scale, RoundingMode.HALF_UP);

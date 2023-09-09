@@ -26,7 +26,7 @@ public class FuelConsumptionRestController {
         if(heating == null) heating = BigDecimal.ZERO;
         if(refueled == null) refueled = BigDecimal.ZERO;
 
-        return utilService.calc(before, fuelConsumptionStandard, fuelConsumptionStandardVal, heating, refueled, isRounded);
+        return utilService.calculate(before, fuelConsumptionStandard, fuelConsumptionStandardVal, heating, refueled, isRounded);
 
     }
 

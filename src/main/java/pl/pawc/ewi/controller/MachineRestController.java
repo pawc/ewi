@@ -45,7 +45,7 @@ public class MachineRestController {
     }
 
     @PutMapping(value = "/machine")
-    public void maszynaPut(
+    public void machinePut(
             @RequestBody Machine machine) {
 
         if(machineService.findById(machine.getId()).isPresent()){

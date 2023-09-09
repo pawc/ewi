@@ -36,7 +36,7 @@ public class FuelInitialStateRestController {
     public void fuelInitialStatesPost(
             @RequestBody List<FuelInitialState> fuelInitialStates) {
 
-        fuelInitialStateService.stanyPost(fuelInitialStates);
+        fuelInitialStateService.postFuelInitialStates(fuelInitialStates);
         for(FuelInitialState fuelInitialState : fuelInitialStates){
             logger.info("/fuelInitialStates {}-{} - fuelConsumptionStandardId={}",
                     fuelInitialState.getYear(), fuelInitialState.getMonth(),

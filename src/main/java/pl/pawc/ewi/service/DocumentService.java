@@ -32,7 +32,7 @@ public class DocumentService {
     private final FuelInitialStateRepository fuelInitialStateRepository;
     private final FuelConsumptionService fuelConsumptionService;
 
-    public List<Document> getDokumenty(int year, int month){
+    public List<Document> getDocuments(int year, int month){
         List<Document> documents = documentRepository.getDocuments(year, month);
         Set<Machine> collect = documents.stream().map(Document::getMachine).collect(Collectors.toSet());
         for(Machine m : collect){
@@ -45,7 +45,7 @@ public class DocumentService {
         return documentRepository.findById(numer);
     }
 
-    public BigDecimal getSumaKilometry(String maszynaId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException {
+    public BigDecimal getSumKilometers(String maszynaId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException {
 
         final Document document;
         Calendar calD = Calendar.getInstance();
@@ -100,8 +100,8 @@ public class DocumentService {
                 BigDecimal sumaBefore = null;
                 fuelConsumption.setDocument(document);
                 try {
-                    suma = fuelConsumptionService.getSuma(fuelConsumption.getFuelConsumptionStandard().getId(), year, month, null);
-                    sumaBefore = fuelConsumptionService.getSuma(fuelConsumption.getFuelConsumptionStandard().getId(), year, month, document.getNumber());
+                    suma = fuelConsumptionService.getSum(fuelConsumption.getFuelConsumptionStandard().getId(), year, month, null);
+                    sumaBefore = fuelConsumptionService.getSum(fuelConsumption.getFuelConsumptionStandard().getId(), year, month, document.getNumber());
 
                 } catch (DocumentNotFoundException | FuelConsumptionStandardNotFoundException e) {
                     e.printStackTrace();
@@ -121,7 +121,7 @@ public class DocumentService {
 
             BigDecimal kilometryBefore = null;
             try {
-                kilometryBefore = getSumaKilometry(document.getMachine().getId(), year, month, document.getNumber());
+                kilometryBefore = getSumKilometers(document.getMachine().getId(), year, month, document.getNumber());
             } catch (DocumentNotFoundException e) {
                 e.printStackTrace();
             }
@@ -161,8 +161,9 @@ public class DocumentService {
         documentRepository.save(documentDB);
 
         for(FuelConsumption fuelConsumption : document.getFuelConsumption()) {
-            FuelConsumption fuelConsumptionDB = fuelConsumptionRepository.findById(fuelConsumption.getId()).orElse(null);
-            if(fuelConsumptionDB == null) continue;
+            Optional<FuelConsumption> fuelConsumptionOptional = fuelConsumptionRepository.findById(fuelConsumption.getId());
+            if(fuelConsumptionOptional.isEmpty()) continue;
+            FuelConsumption fuelConsumptionDB = fuelConsumptionOptional.get();
             if(fuelConsumption.getValue() == null) fuelConsumption.setValue(BigDecimal.ZERO);
             if(fuelConsumption.getRefueled() == null) fuelConsumption.setRefueled(BigDecimal.ZERO);
             if(fuelConsumption.getHeating() == null) fuelConsumption.setHeating(BigDecimal.ZERO);

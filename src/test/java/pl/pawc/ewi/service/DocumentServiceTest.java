@@ -24,7 +24,7 @@ class DocumentServiceTest {
 	@Transactional
 	void testGetSumaKilometry() throws DocumentNotFoundException {
 
-		assertEquals(BigDecimal.ZERO, documentService.getSumaKilometry("C11", 2022, 4, null));
+		assertEquals(BigDecimal.ZERO, documentService.getSumKilometers("C11", 2022, 4, null));
 
 	}
 
@@ -33,22 +33,22 @@ class DocumentServiceTest {
 	void testGetSumaKilometryBeforeDate() {
 
 		try {
-			assertEquals(new BigDecimal("120.0"), documentService.getSumaKilometry("C1", 2022, 4,"1/04/2022/C1"));
-			assertEquals(new BigDecimal("130.0"), documentService.getSumaKilometry("C1", 2022, 4,"2/04/2022/C1"));
-			assertEquals(new BigDecimal("141.0"), documentService.getSumaKilometry("C1", 2022, 4,"3/04/2022/C1"));
-			assertEquals(new BigDecimal("141.0"), documentService.getSumaKilometry("C1", 2022, 4,"4/04/2022/C1"));
-			assertEquals(new BigDecimal("146.0"), documentService.getSumaKilometry("C1", 2022, 4,"5/04/2022/C1"));
-			assertEquals(new BigDecimal("147.4"), documentService.getSumaKilometry("C1", 2022, 4,"6/04/2022/C1"));
-			assertEquals(new BigDecimal("154.4"), documentService.getSumaKilometry("C1", 2022, 4,"7/04/2022/C1"));
-			assertEquals(new BigDecimal("172.9"), documentService.getSumaKilometry("C1", 2022, 4,"8/04/2022/C1"));
-			assertEquals(new BigDecimal("190.9"), documentService.getSumaKilometry("C1", 2022, 4,"9/04/2022/C1"));
-			assertEquals(new BigDecimal("209.9"), documentService.getSumaKilometry("C1", 2022, 4,"10/04/2022/C1"));
+			assertEquals(new BigDecimal("120.0"), documentService.getSumKilometers("C1", 2022, 4,"1/04/2022/C1"));
+			assertEquals(new BigDecimal("130.0"), documentService.getSumKilometers("C1", 2022, 4,"2/04/2022/C1"));
+			assertEquals(new BigDecimal("141.0"), documentService.getSumKilometers("C1", 2022, 4,"3/04/2022/C1"));
+			assertEquals(new BigDecimal("141.0"), documentService.getSumKilometers("C1", 2022, 4,"4/04/2022/C1"));
+			assertEquals(new BigDecimal("146.0"), documentService.getSumKilometers("C1", 2022, 4,"5/04/2022/C1"));
+			assertEquals(new BigDecimal("147.4"), documentService.getSumKilometers("C1", 2022, 4,"6/04/2022/C1"));
+			assertEquals(new BigDecimal("154.4"), documentService.getSumKilometers("C1", 2022, 4,"7/04/2022/C1"));
+			assertEquals(new BigDecimal("172.9"), documentService.getSumKilometers("C1", 2022, 4,"8/04/2022/C1"));
+			assertEquals(new BigDecimal("190.9"), documentService.getSumKilometers("C1", 2022, 4,"9/04/2022/C1"));
+			assertEquals(new BigDecimal("209.9"), documentService.getSumKilometers("C1", 2022, 4,"10/04/2022/C1"));
 		} catch (DocumentNotFoundException e) {
 			fail();
 		}
 
 		assertThrows(DocumentNotFoundException.class,
-				() -> documentService.getSumaKilometry("C1", 2022, 4,"11/04/2022/C1"));
+				() -> documentService.getSumKilometers("C1", 2022, 4,"11/04/2022/C1"));
 
 	}
 

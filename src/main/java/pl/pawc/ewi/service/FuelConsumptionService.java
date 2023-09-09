@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class FuelConsumptionService {
     private final DocumentRepository documentRepository;
     private final FuelConsumptionStandardRepository fuelConsumptionStandardRepository;
 
-    public BigDecimal getSuma(long normaId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException, FuelConsumptionStandardNotFoundException {
+    public BigDecimal getSum(long normaId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException, FuelConsumptionStandardNotFoundException {
 
         Document document;
 
@@ -40,8 +41,10 @@ public class FuelConsumptionService {
             document = null;
         }
 
-        FuelConsumptionStandard fuelConsumptionStandard = fuelConsumptionStandardRepository.findById(normaId).orElse(null);
-        if(fuelConsumptionStandard == null) throw new FuelConsumptionStandardNotFoundException(normaId);
+        Optional<FuelConsumptionStandard> fuelConsumptionStandardById = fuelConsumptionStandardRepository.findById(normaId);
+        if(fuelConsumptionStandardById.isEmpty()) throw new FuelConsumptionStandardNotFoundException(normaId);
+        FuelConsumptionStandard fuelConsumptionStandard = fuelConsumptionStandardById.get();
+
         Calendar cal = Calendar.getInstance();
 
         List<FuelConsumption> collect = fuelConsumptionRepository.findByFuelConsumptionStandard(fuelConsumptionStandard).stream()
@@ -72,7 +75,7 @@ public class FuelConsumptionService {
 
     }
 
-    public BigDecimal getSumaYear(long normaId, int year){
+    public BigDecimal getSumYear(long normaId, int year){
 
         FuelConsumptionStandard fuelConsumptionStandard = new FuelConsumptionStandard();
         fuelConsumptionStandard.setId(normaId);

@@ -63,9 +63,9 @@ public class FuelInitialStateService {
         }
     }
 
-    public void stanyPost(List<FuelInitialState> stany){
+    public void postFuelInitialStates(List<FuelInitialState> initialStates){
         FuelInitialState fuelInitialStateDB;
-        for(FuelInitialState fuelInitialState : stany){
+        for(FuelInitialState fuelInitialState : initialStates){
 
             Optional<FuelConsumptionStandard> byId = fuelConsumptionStandardRepository.findById(fuelInitialState.getFuelConsumptionStandard().getId());
             if(byId.isPresent() && !byId.get().getMachine().isCarriedOver()) continue;

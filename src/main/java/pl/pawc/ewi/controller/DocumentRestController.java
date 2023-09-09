@@ -41,7 +41,7 @@ public class DocumentRestController {
             @RequestParam("month") int month){
 
         logger.info("/documents GET {}-{} ", year, month);
-        List<Document> dokumenty = documentService.getDokumenty(year, month);
+        List<Document> dokumenty = documentService.getDocuments(year, month);
         dokumenty.forEach(d -> d.setFuelConsumption(null));
         return dokumenty;
 

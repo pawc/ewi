@@ -18,8 +18,8 @@ public class UnitService {
     }
 
     public void put(Unit unit){
-        Unit j = unitRepository.findById(unit.getId()).orElse(null);
-        if (j == null)  j = new Unit();
+        Unit j = unitRepository.findById(unit.getId())
+                .orElse(new Unit());
         j.setName(unit.getName());
         j.setWeightRatio(unit.getWeightRatio());
         unitRepository.save(j);

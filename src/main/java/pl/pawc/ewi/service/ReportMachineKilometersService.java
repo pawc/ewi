@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -22,7 +23,9 @@ public class ReportMachineKilometersService {
 
     public ReportMachineKilometers getReportKilometers(String machineId, String dateStartS, String dateEndS) throws ParseException {
 
-        Machine machine = machineService.findById(machineId).orElse(null);
+        Optional<Machine> machineById = machineService.findById(machineId);
+        if(machineById.isEmpty()) return null;
+        Machine machine = machineById.get();
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date dateStart = formatter.parse(dateStartS);

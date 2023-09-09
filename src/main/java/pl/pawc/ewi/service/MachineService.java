@@ -67,11 +67,11 @@ public class MachineService {
                     int year = Integer.parseInt(miesiac.split("-")[0]);
                     int month = Integer.parseInt(miesiac.split("-")[1]);
 
-                    BigDecimal sumaKilometry = documentService.getSumaKilometry(machine.getId(), year, month, null);
+                    BigDecimal sumaKilometry = documentService.getSumKilometers(machine.getId(), year, month, null);
                     machine.setSumOfKilometers(sumaKilometry);
 
                     for(FuelConsumptionStandard fuelConsumptionStandard : normy){
-                        BigDecimal suma = fuelConsumptionService.getSuma(fuelConsumptionStandard.getId(), year, month, null);
+                        BigDecimal suma = fuelConsumptionService.getSum(fuelConsumptionStandard.getId(), year, month, null);
                         fuelConsumptionStandard.setSum(suma);
                     }
                 }
