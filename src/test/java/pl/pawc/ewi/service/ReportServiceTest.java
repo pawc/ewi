@@ -23,15 +23,15 @@ class ReportServiceTest {
 
 	@Test
 	@Transactional
-	void testGetKilometryRaport() {
+	void testGetKilometersReport() {
 
-		List<KilometersReport> kilometryRaport = reportService.getKilometersReport(2022, 4);
-		assertEquals(2, kilometryRaport.size());
+		List<KilometersReport> kilometersReport = reportService.getKilometersReport(2022, 4);
+		assertEquals(2, kilometersReport.size());
 
-		kilometryRaport = reportService.getKilometersReport(2022, 5);
-		assertEquals(2, kilometryRaport.size());
+		kilometersReport = reportService.getKilometersReport(2022, 5);
+		assertEquals(2, kilometersReport.size());
 
-		for (KilometersReport r : kilometryRaport) {
+		for (KilometersReport r : kilometersReport) {
 			assertEquals(BigDecimal.ZERO, r.getInitialState());
 			assertNotNull(r.getMachineId());
 			assertNotNull(r.getMachineName());
@@ -42,7 +42,7 @@ class ReportServiceTest {
 
 	@Test
 	@Transactional
-	void testGetRaportRoczny() {
+	void testGetAnnualReport() {
 
 		List<AnnualReport> annualReport = reportService.getReportAnnual(2022);
 		assertEquals(2, annualReport.size());
@@ -60,7 +60,7 @@ class ReportServiceTest {
 
 	@Test
 	@Transactional
-	void testGetRaport() {
+	void testGetReport() {
 
 		List<Report> monthlyReport202204 = reportService.getReport(2022, 4, false);
 		assertEquals(4, monthlyReport202204.size());

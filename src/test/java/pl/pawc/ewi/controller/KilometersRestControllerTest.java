@@ -55,7 +55,7 @@ class KilometersRestControllerTest {
     }
 
     @Test
-    void stanyGetTest() throws Exception {
+    void initialStatesGetTest() throws Exception {
 
         mockMvc.perform(get("/kilometers")
                         .param("year", "2022")
@@ -63,17 +63,17 @@ class KilometersRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(result -> {
-                    List<KilometersReport> kilometry = objectMapper.readValue(result.getResponse().getContentAsString(), List.class);
-                    assertNotNull(kilometry);
-                    assertFalse(kilometry.isEmpty());
-                    assertEquals(2, kilometry.size());
+                    List<KilometersReport> kilometersReport = objectMapper.readValue(result.getResponse().getContentAsString(), List.class);
+                    assertNotNull(kilometersReport);
+                    assertFalse(kilometersReport.isEmpty());
+                    assertEquals(2, kilometersReport.size());
                 });
 
     }
 
     @Test
     @Transactional
-    void kilometryListTest() throws Exception {
+    void kilometersListTest() throws Exception {
         Kilometers kilometers = new Kilometers();
         kilometers.setYear(2023);
         kilometers.setMonth(2);
@@ -103,7 +103,7 @@ class KilometersRestControllerTest {
 
     @Test
     @Transactional
-    void kilometryTest() throws Exception {
+    void kilometersTest() throws Exception {
         Kilometers kilometers = new Kilometers();
         kilometers.setYear(2023);
         kilometers.setMonth(2);

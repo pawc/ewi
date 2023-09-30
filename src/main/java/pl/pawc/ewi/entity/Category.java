@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer","maszyny"})
+@JsonIgnoreProperties({"hibernateLazyInitializer","machines"})
 @Getter
 @Setter
 public class Category {

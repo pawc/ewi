@@ -45,7 +45,7 @@ public class DocumentService {
         return documentRepository.findById(numer);
     }
 
-    public BigDecimal getSumKilometers(String maszynaId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException {
+    public BigDecimal getSumKilometers(String machineId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException {
 
         final Document document;
         Calendar calD = Calendar.getInstance();
@@ -58,7 +58,7 @@ public class DocumentService {
         }
 
         Machine machine = new Machine();
-        machine.setId(maszynaId);
+        machine.setId(machineId);
 
         Calendar cal = Calendar.getInstance();
 
@@ -91,10 +91,10 @@ public class DocumentService {
             int year = cal.get(Calendar.YEAR);
             int month = cal.get(Calendar.MONTH) + 1;
 
-            List<FuelConsumption> zuzycia = fuelConsumptionRepository.findByDocument(document);
-            document.setFuelConsumption(zuzycia);
+            List<FuelConsumption> fuelConsumptions = fuelConsumptionRepository.findByDocument(document);
+            document.setFuelConsumption(fuelConsumptions);
 
-            for(FuelConsumption fuelConsumption : zuzycia){
+            for(FuelConsumption fuelConsumption : fuelConsumptions){
 
                 BigDecimal suma = null;
                 BigDecimal sumaBefore = null;
@@ -119,13 +119,13 @@ public class DocumentService {
 
             }
 
-            BigDecimal kilometryBefore = null;
+            BigDecimal kilometersBefore = null;
             try {
-                kilometryBefore = getSumKilometers(document.getMachine().getId(), year, month, document.getNumber());
+                kilometersBefore = getSumKilometers(document.getMachine().getId(), year, month, document.getNumber());
             } catch (DocumentNotFoundException e) {
                 e.printStackTrace();
             }
-            document.setKilometersBefore(kilometryBefore);
+            document.setKilometersBefore(kilometersBefore);
             Set<Category> categories = document.getMachine().getCategories();
             if(categories != null) categories.forEach(c -> c.setMachines(null));
         }

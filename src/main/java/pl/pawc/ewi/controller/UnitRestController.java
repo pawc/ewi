@@ -30,7 +30,7 @@ public class UnitRestController {
     @GetMapping("units")
     public List<Unit> units(){
 
-        logger.info("/units");
+        logger.debug("/units");
         return unitService.findAll();
 
     }

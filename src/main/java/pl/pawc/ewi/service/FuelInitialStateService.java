@@ -31,8 +31,8 @@ public class FuelInitialStateService {
             FuelInitialStateReport fuelInitialStateReport = new FuelInitialStateReport();
             fuelInitialStateReport.setMachineName(n.getMachine().getName());
             fuelInitialStateReport.setMachineId(n.getMachine().getId());
-            String jednostka = n.getUnitObj() == null ? n.getUnit() : n.getUnitObj().getName();
-            fuelInitialStateReport.setUnit(jednostka);
+            String unit = n.getUnitObj() == null ? n.getUnit() : n.getUnitObj().getName();
+            fuelInitialStateReport.setUnit(unit);
             fuelInitialStateReport.setFuelConsumptionStandardId(n.getId());
             FuelInitialState fuelInitialState = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(n, year, month);
             if(fuelInitialState == null) {

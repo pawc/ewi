@@ -22,7 +22,7 @@ class DocumentServiceTest {
 
 	@Test
 	@Transactional
-	void testGetSumaKilometry() throws DocumentNotFoundException {
+	void testGetSumKilometers() throws DocumentNotFoundException {
 
 		assertEquals(BigDecimal.ZERO, documentService.getSumKilometers("C11", 2022, 4, null));
 
@@ -30,7 +30,7 @@ class DocumentServiceTest {
 
 	@Test
 	@Transactional
-	void testGetSumaKilometryBeforeDate() {
+	void testGetSumKilometersBeforeDate() {
 
 		try {
 			assertEquals(new BigDecimal("120.0"), documentService.getSumKilometers("C1", 2022, 4,"1/04/2022/C1"));
@@ -54,7 +54,7 @@ class DocumentServiceTest {
 
 	@Test
 	@Transactional
-	void testPostGetPutDeleteDokument() throws JsonProcessingException {
+	void testPostGetPutDeleteDocument() throws JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String input = "{\"number\":\"15/04/2022/C1\",\"date\":\"2022-04-17\",\"kilometers\":\"25\",\"kilometersTrailer\":\"25\",\"machine\":{\"id\":\"C1\"},\"fuelConsumption\":[{\"value\":\"2.5\",\"fuelConsumptionStandard\":{\"id\":\"1\",\"value\":\"1\"},\"refueled\":\"2.5\",\"heating\":\"2.5\"},{\"value\":\"3.5\",\"fuelConsumptionStandard\":{\"id\":\"2\",\"value\":\"2\"},\"refueled\":\"3.5\",\"heating\":\"3.5\"}]}";
 		Document document = objectMapper.readValue(input, Document.class);

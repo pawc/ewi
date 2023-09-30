@@ -55,7 +55,7 @@ class UnitRestControllerTest {
 
     @Test
     @Order(1)
-    void jednostkaPostTest() throws Exception {
+    void unitPostTest() throws Exception {
 
         Unit unit = new Unit("L/H");
         unit.setName("ET/H");

@@ -29,7 +29,7 @@ public class DocumentRestController {
     public Document document(
             @RequestParam("number") String number) {
 
-        logger.info("/document GET number={} ", number);
+        logger.debug("/document GET number={} ", number);
         Document document = documentService.get(number);
         return document == null ? new Document() : document;
 
@@ -40,10 +40,10 @@ public class DocumentRestController {
             @RequestParam("year") int year,
             @RequestParam("month") int month){
 
-        logger.info("/documents GET {}-{} ", year, month);
-        List<Document> dokumenty = documentService.getDocuments(year, month);
-        dokumenty.forEach(d -> d.setFuelConsumption(null));
-        return dokumenty;
+        logger.debug("/documents GET {}-{} ", year, month);
+        List<Document> documents = documentService.getDocuments(year, month);
+        documents.forEach(d -> d.setFuelConsumption(null));
+        return documents;
 
     }
 

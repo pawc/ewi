@@ -17,13 +17,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class ReportMachineKilometersServiceTest {
 
 	@Autowired
-	ReportMachineKilometersService raportKilometryService;
+	ReportMachineKilometersService reportMachineKilometersService;
 
 	@Test
 	@Transactional
 	void testReportMachineKilometers() throws ParseException {
 
-		ReportMachineKilometers reportMachineKilometers = raportKilometryService.getReportKilometers("C1", "2022-04-01", "2022-04-30");
+		ReportMachineKilometers reportMachineKilometers = reportMachineKilometersService.getReportKilometers("C1", "2022-04-01", "2022-04-30");
 		assertEquals(new BigDecimal("102.9"), reportMachineKilometers.getSumKilometers());
 		assertEquals(new BigDecimal("121.2"), reportMachineKilometers.getSumKilometersTrailer());
 		assertEquals(10, reportMachineKilometers.getDocuments().size());

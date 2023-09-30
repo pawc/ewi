@@ -54,12 +54,12 @@ public class Machine {
 
     @Override
     public String toString() {
-        return "Maszyna{" +
+        return "Machine{" +
                 "id='" + id + '\'' +
-                ", nazwa='" + name + '\'' +
-                ", opis='" + description + '\'' +
-                ", aktywna=" + isActive +
-                ", sumaKilometry=" + sumOfKilometers +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", isActive=" + isActive +
+                ", sumOfKilometers=" + sumOfKilometers +
                 '}';
     }
 

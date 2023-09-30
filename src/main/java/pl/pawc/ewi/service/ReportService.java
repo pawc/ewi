@@ -46,9 +46,9 @@ public class ReportService {
             KilometersReport kilometersReport = new KilometersReport();
             kilometersReport.setMachineId(m.getId());
             kilometersReport.setMachineName(m.getName());
-            Kilometers oneByMaszynaAndRokAndMiesiac = kilometersRepository.findOneByMachineAndYearAndMonth(m, rok, miesiac);
-            if (oneByMaszynaAndRokAndMiesiac == null) kilometersReport.setInitialState(BigDecimal.ZERO);
-            else kilometersReport.setInitialState(oneByMaszynaAndRokAndMiesiac.getValue());
+            Kilometers oneByMachineAndYearAndMonth = kilometersRepository.findOneByMachineAndYearAndMonth(m, rok, miesiac);
+            if (oneByMachineAndYearAndMonth == null) kilometersReport.setInitialState(BigDecimal.ZERO);
+            else kilometersReport.setInitialState(oneByMachineAndYearAndMonth.getValue());
             result.add(kilometersReport);
         });
 
@@ -96,14 +96,14 @@ public class ReportService {
     private void getAnnualReportFuelConsumptionStandardByMachine(int year, List<AnnualReport> result, Category k, FuelConsumptionStandard n) {
         AnnualReport annualReport = new AnnualReport();
 
-        String jednostka = n.getUnitObj() == null ? n.getUnit() : n.getUnitObj().getName();
+        String unit = n.getUnitObj() == null ? n.getUnit() : n.getUnitObj().getName();
         BigDecimal waga = n.getUnitObj() == null ? BigDecimal.ONE : n.getUnitObj().getWeightRatio();
 
-        String kategoriaJednostka = new StringBuilder(k.getName()).append("-").append(jednostka).toString();
-        annualReport.setCategory_unit(kategoriaJednostka.toUpperCase());
+        String categoryUnit = new StringBuilder(k.getName()).append("-").append(unit).toString();
+        annualReport.setCategory_unit(categoryUnit.toUpperCase());
 
         annualReport.setCategory(k.getName());
-        annualReport.setUnit(jednostka);
+        annualReport.setUnit(unit);
         annualReport.setWeight(waga);
 
         BigDecimal sumaYear = fuelConsumptionService.getSumYear(n.getId(), year);
@@ -123,25 +123,25 @@ public class ReportService {
         cal.add(Calendar.DAY_OF_MONTH, -1);
         Date lastDayOfMonth = cal.getTime();
 
-        List<Document> dokumentsByDataBetween = documentRepository.findByDateBetween(firstDayOfMonth, lastDayOfMonth);
+        List<Document> documentsByDataBetween = documentRepository.findByDateBetween(firstDayOfMonth, lastDayOfMonth);
 
-        Iterable<FuelConsumptionStandard> normy = fuelConsumptionStandardRepository.findAll();
+        Iterable<FuelConsumptionStandard> fuelConsumptionStandards = fuelConsumptionStandardRepository.findAll();
 
         List<Report> results = new ArrayList<>();
 
-        for (FuelConsumptionStandard fuelConsumptionStandard : normy) {
+        for (FuelConsumptionStandard fuelConsumptionStandard : fuelConsumptionStandards) {
 
-            List<Document> documentList = dokumentsByDataBetween.stream().filter(d -> d.getMachine().equals(fuelConsumptionStandard.getMachine())).toList();
+            List<Document> documentList = documentsByDataBetween.stream().filter(d -> d.getMachine().equals(fuelConsumptionStandard.getMachine())).toList();
             if(documentList.isEmpty()) continue;
 
             int scale = fuelConsumptionStandard.isRounded() ? 2 : 1;
 
-            BigDecimal sumaWartosc = BigDecimal.ZERO;
-            BigDecimal sumaOgrzewanie = BigDecimal.ZERO;
-            BigDecimal sumaTankowanie = BigDecimal.ZERO;
-            BigDecimal sumaKilometry = BigDecimal.ZERO;
-            BigDecimal sumaKilometryPrzyczepa = BigDecimal.ZERO;
-            BigDecimal sumaGodzin = BigDecimal.ZERO;
+            BigDecimal sumValue = BigDecimal.ZERO;
+            BigDecimal sumHeating = BigDecimal.ZERO;
+            BigDecimal sumRefueling = BigDecimal.ZERO;
+            BigDecimal sumKilometers = BigDecimal.ZERO;
+            BigDecimal sumKilometersTrailer = BigDecimal.ZERO;
+            BigDecimal sumHours = BigDecimal.ZERO;
 
             for (Document d : documentList) {
                 Optional<FuelConsumption> fuelConsumptionOptional =
@@ -150,38 +150,38 @@ public class ReportService {
                         .findFirst();
                 if(fuelConsumptionOptional.isEmpty()) continue;
                 FuelConsumption fuelConsumption = fuelConsumptionOptional.get();
-                sumaWartosc = sumaWartosc.add(fuelConsumption.getValue().multiply(fuelConsumptionStandard.getValue()).setScale(scale, RoundingMode.HALF_UP));
-                sumaOgrzewanie = sumaOgrzewanie.add(fuelConsumption.getHeating()).setScale(scale, RoundingMode.HALF_UP);
-                sumaTankowanie = sumaTankowanie.add(fuelConsumption.getRefueled()).setScale(scale, RoundingMode.HALF_UP);
-                sumaKilometry = sumaKilometry.add(d.getKilometers());
-                sumaKilometryPrzyczepa = sumaKilometryPrzyczepa.add(d.getKilometersTrailer());
-                sumaGodzin = sumaGodzin.add(fuelConsumption.getValue()).setScale(scale, RoundingMode.HALF_UP);
+                sumValue = sumValue.add(fuelConsumption.getValue().multiply(fuelConsumptionStandard.getValue()).setScale(scale, RoundingMode.HALF_UP));
+                sumHeating = sumHeating.add(fuelConsumption.getHeating()).setScale(scale, RoundingMode.HALF_UP);
+                sumRefueling = sumRefueling.add(fuelConsumption.getRefueled()).setScale(scale, RoundingMode.HALF_UP);
+                sumKilometers = sumKilometers.add(d.getKilometers());
+                sumKilometersTrailer = sumKilometersTrailer.add(d.getKilometersTrailer());
+                sumHours = sumHours.add(fuelConsumption.getValue()).setScale(scale, RoundingMode.HALF_UP);
             }
 
             FuelInitialState fuelInitialState = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(fuelConsumptionStandard, year, month);
-            BigDecimal stanPoprz = fuelInitialState == null ? BigDecimal.ZERO : fuelInitialState.getValue();
+            BigDecimal fuelInitialStateVal = fuelInitialState == null ? BigDecimal.ZERO : fuelInitialState.getValue();
 
-            BigDecimal endState = stanPoprz.subtract(sumaWartosc).subtract(sumaOgrzewanie).add(sumaTankowanie).setScale(scale, RoundingMode.HALF_UP);
+            BigDecimal endState = fuelInitialStateVal.subtract(sumValue).subtract(sumHeating).add(sumRefueling).setScale(scale, RoundingMode.HALF_UP);
 
             Kilometers kilometers = kilometersRepository.findOneByMachineAndYearAndMonth(fuelConsumptionStandard.getMachine(), year, month);
-            BigDecimal stanKilometry = kilometers != null ? kilometers.getValue() : BigDecimal.ZERO;
-            BigDecimal endStateKilometry = stanKilometry.add(sumaKilometry);
+            BigDecimal kilometersInitialState = kilometers != null ? kilometers.getValue() : BigDecimal.ZERO;
+            BigDecimal kilometersEndState = kilometersInitialState.add(sumKilometers);
 
             Report report = new Report();
             report.setMachineIdFuelConsumptionStandardId(fuelConsumptionStandard.getMachine().getId()+"-"+ fuelConsumptionStandard.getId());
             report.setMachine(fuelConsumptionStandard.getMachine().getName() + "(" + fuelConsumptionStandard.getMachine().getId() + ")");
             report.setMachineId(fuelConsumptionStandard.getMachine().getId());
-            report.setKilometersInitialState(stanKilometry);
-            report.setKilometers(sumaKilometry);
-            report.setEndStateKilometers(endStateKilometry);
-            report.setKilometersTrailer(sumaKilometryPrzyczepa);
+            report.setKilometersInitialState(kilometersInitialState);
+            report.setKilometers(sumKilometers);
+            report.setEndStateKilometers(kilometersEndState);
+            report.setKilometersTrailer(sumKilometersTrailer);
             report.setUnit(fuelConsumptionStandard.getUnitObj() == null ? fuelConsumptionStandard.getUnit() : fuelConsumptionStandard.getUnitObj().getName());
-            report.setSum(sumaWartosc);
-            report.setSumHours(sumaGodzin);
-            report.setRefueled(sumaTankowanie);
-            report.setHeating(sumaOgrzewanie);
+            report.setSum(sumValue);
+            report.setSumHours(sumHours);
+            report.setRefueled(sumRefueling);
+            report.setHeating(sumHeating);
             report.setFuelConsumptionStandardId(fuelConsumptionStandard.getId());
-            report.setInitialState(stanPoprz);
+            report.setInitialState(fuelInitialStateVal);
             report.setEndState(endState);
             results.add(report);
 

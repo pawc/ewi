@@ -40,11 +40,11 @@ public class KilometersService {
 
             Kilometers kilometersDB = kilometersRepository.findOneByMachineAndYearAndMonth(km.getMachine(), km.getYear(), km.getMonth());
             if(kilometersDB == null){
-                logger.info("/kilometryList POST dodano {}", km);
+                logger.info("/kilometersList POST added {}", km);
                 kilometersRepository.save(km);
             }
             else{
-                logger.info("/kilometryList POST zaktualizowano {}", km);
+                logger.info("/kilometersList POST updated {}", km);
                 kilometersDB.setValue(km.getValue());
                 kilometersRepository.save(kilometersDB);
             }

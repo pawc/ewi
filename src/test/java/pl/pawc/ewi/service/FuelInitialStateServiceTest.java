@@ -26,16 +26,16 @@ class FuelInitialStateServiceTest {
 	@Transactional
 	void test() {
 
-		List<FuelInitialStateReport> stany = fuelInitialStateService.findBy(2022, 4);
-		assertEquals(4, stany.size());
-		stany.forEach(s -> {
+		List<FuelInitialStateReport> initialStatesReport = fuelInitialStateService.findBy(2022, 4);
+		assertEquals(4, initialStatesReport.size());
+		initialStatesReport.forEach(s -> {
 			assertTrue(s.getFuelInitialStateId() != -1);
 			assertTrue(s.getFuelInitialState().compareTo(BigDecimal.ZERO) > 0);
 		});
 
-		stany = fuelInitialStateService.findBy(2022, 5);
-		assertEquals(4, stany.size());
-		stany.forEach(s -> {
+		initialStatesReport = fuelInitialStateService.findBy(2022, 5);
+		assertEquals(4, initialStatesReport.size());
+		initialStatesReport.forEach(s -> {
 			assertEquals(-1, s.getFuelInitialStateId());
 			assertEquals(BigDecimal.ZERO, s.getFuelInitialState());
 		});

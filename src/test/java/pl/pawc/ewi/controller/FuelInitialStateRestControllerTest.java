@@ -55,7 +55,7 @@ class FuelInitialStateRestControllerTest {
 
     @Test
     @Transactional
-    void stanPostPutTest() throws Exception {
+    void initialStatePostPutTest() throws Exception {
         FuelConsumptionStandard fuelConsumptionStandard = new FuelConsumptionStandard();
         fuelConsumptionStandard.setId(1);
         assertNotNull(fuelConsumptionStandard.toString());
@@ -75,8 +75,8 @@ class FuelInitialStateRestControllerTest {
                         .content(requestJson))
                 .andExpect(status().isOk());
 
-        List<FuelInitialState> stany = List.of(fuelInitialState);
-        requestJson = ow.writeValueAsString(stany);
+        List<FuelInitialState> initialStates = List.of(fuelInitialState);
+        requestJson = ow.writeValueAsString(initialStates);
 
         mockMvc.perform(post("/fuelInitialStates")
                         .contentType(APPLICATION_JSON_UTF8)
@@ -86,7 +86,7 @@ class FuelInitialStateRestControllerTest {
     }
 
     @Test
-    void stanyGetTest() throws Exception {
+    void initialStatesGetTest() throws Exception {
 
         mockMvc.perform(get("/fuelInitialStateReport")
                 .param("year", "2022")
@@ -94,8 +94,8 @@ class FuelInitialStateRestControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(result -> {
-                List<FuelInitialStateReport> stany = objectMapper.readValue(result.getResponse().getContentAsString(), List.class);
-                assertEquals(4, stany.size());
+                List<FuelInitialStateReport> initialStateReports = objectMapper.readValue(result.getResponse().getContentAsString(), List.class);
+                assertEquals(4, initialStateReports.size());
             });
 
     }

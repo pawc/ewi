@@ -47,7 +47,7 @@ class CategoryRestControllerTest {
     }
 
     @Test
-    void kategoriaRestControllerTest() throws Exception {
+    void categoryRestControllerTest() throws Exception {
 
         Category category = new Category();
         category.setName("Test");

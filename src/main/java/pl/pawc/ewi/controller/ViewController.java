@@ -34,7 +34,7 @@ public class ViewController {
     public String index(
             Model model){
 
-        logger.info("/");
+        logger.debug("/");
         return "index";
 
     }
@@ -43,7 +43,7 @@ public class ViewController {
     public String quarterlyReport(
             Model model){
 
-        logger.info("/quarterlyReport");
+        logger.debug("/quarterlyReport");
         return "quarterlyReport";
 
     }
@@ -52,7 +52,7 @@ public class ViewController {
     public String annualReport(
             Model model){
 
-        logger.info("/annualReport");
+        logger.debug("/annualReport");
         return "annualReport";
 
     }
@@ -62,7 +62,7 @@ public class ViewController {
             Model model){
 
         model.addAttribute(MACHINES, machineService.findAllActive());
-        logger.info("/machineKilometersReport");
+        logger.debug("/machineKilometersReport");
         return "machineKilometersReport";
 
     }
@@ -71,7 +71,7 @@ public class ViewController {
     public String documentsView(
             Model model) {
 
-        logger.info("/documentsView");
+        logger.debug("/documentsView");
         model.addAttribute(MACHINES, machineService.findAllActive());
 
         return "documents";
@@ -82,7 +82,7 @@ public class ViewController {
     public String machines(
             Model model) {
 
-        logger.info("/machines");
+        logger.debug("/machines");
         model.addAttribute(MACHINES, machineService.findAll());
         model.addAttribute(CATEGORIES, categoryService.findAll());
         model.addAttribute(UNITS, unitService.findAll());
@@ -95,7 +95,7 @@ public class ViewController {
     public String unitsView(
             Model model) {
 
-        logger.info("/unitsView");
+        logger.debug("/unitsView");
         model.addAttribute(UNITS, unitService.findAll());
 
         return UNITS;
@@ -105,7 +105,7 @@ public class ViewController {
     @RequestMapping("/initialStatesView")
     public String initialStatesView(Model model) {
 
-        logger.info("/initialStates");
+        logger.debug("/initialStates");
         return "initialStates";
 
     }
@@ -114,7 +114,7 @@ public class ViewController {
     public String kilometersView(
             Model model) {
 
-        logger.info("/kilometers");
+        logger.debug("/kilometers");
         return "kilometers";
 
     }
@@ -123,24 +123,24 @@ public class ViewController {
     public String categories(
             Model model) {
 
-        logger.info("/categories");
+        logger.debug("/categories");
 
-        List<Category> kategorie = Lists.newArrayList(categoryService.findAll());
+        List<Category> categories = Lists.newArrayList(categoryService.findAll());
 
         Iterable<Machine> allUncategorized = machineService.findAllUncategorized();
-        Set<Machine> maszyny = Sets.newHashSet(allUncategorized);
+        Set<Machine> machines = Sets.newHashSet(allUncategorized);
 
-        if(!maszyny.isEmpty()){
+        if(!machines.isEmpty()){
             Category category = new Category();
 
             category.setName("Nieprzydzielone");
-            category.setMachines(maszyny);
+            category.setMachines(machines);
             category.setCarriedOver(false);
 
-            kategorie.add(category);
+            categories.add(category);
         }
 
-        model.addAttribute(CATEGORIES, kategorie);
+        model.addAttribute(CATEGORIES, categories);
 
         return CATEGORIES;
 
@@ -149,7 +149,7 @@ public class ViewController {
     @RequestMapping("/login")
     public String login() {
 
-        logger.info("/login");
+        logger.debug("/login");
         return "login";
 
     }

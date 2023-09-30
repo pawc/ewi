@@ -58,8 +58,8 @@ public class MachineService {
         if(result.isPresent()){
 
             machine = result.get();
-            List<FuelConsumptionStandard> normy = fuelConsumptionStandardRepository.findByMachine(machine);
-            machine.setFuelConsumptionStandards(normy);
+            List<FuelConsumptionStandard> fuelConsumptionStandardsByMachine = fuelConsumptionStandardRepository.findByMachine(machine);
+            machine.setFuelConsumptionStandards(fuelConsumptionStandardsByMachine);
             machine.getCategories().forEach(c -> c.setMachines(null));
 
             if(miesiac != null){
@@ -67,10 +67,10 @@ public class MachineService {
                     int year = Integer.parseInt(miesiac.split("-")[0]);
                     int month = Integer.parseInt(miesiac.split("-")[1]);
 
-                    BigDecimal sumaKilometry = documentService.getSumKilometers(machine.getId(), year, month, null);
-                    machine.setSumOfKilometers(sumaKilometry);
+                    BigDecimal sumKilometers = documentService.getSumKilometers(machine.getId(), year, month, null);
+                    machine.setSumOfKilometers(sumKilometers);
 
-                    for(FuelConsumptionStandard fuelConsumptionStandard : normy){
+                    for(FuelConsumptionStandard fuelConsumptionStandard : fuelConsumptionStandardsByMachine){
                         BigDecimal suma = fuelConsumptionService.getSum(fuelConsumptionStandard.getId(), year, month, null);
                         fuelConsumptionStandard.setSum(suma);
                     }
@@ -129,11 +129,11 @@ public class MachineService {
             }
             machineDB.setCategories(categories);
 
-            List<FuelConsumptionStandard> normyDB = fuelConsumptionStandardRepository.findByMachine(machineDB);
+            List<FuelConsumptionStandard> fuelConsumptionStandardsDB = fuelConsumptionStandardRepository.findByMachine(machineDB);
 
             machine.getFuelConsumptionStandards().forEach(nNew -> {
 
-                normyDB.stream()
+                fuelConsumptionStandardsDB.stream()
                         .filter(nNew::equals).findFirst()
                         .ifPresent(nOld -> {
                             nOld.setValue(nNew.getValue());
@@ -143,7 +143,7 @@ public class MachineService {
                             fuelConsumptionStandardRepository.save(nOld);
                         });
 
-                if(!normyDB.contains(nNew)){
+                if(!fuelConsumptionStandardsDB.contains(nNew)){
                     nNew.setMachine(machineDB);
                     fuelConsumptionStandardRepository.save(nNew);
                 }

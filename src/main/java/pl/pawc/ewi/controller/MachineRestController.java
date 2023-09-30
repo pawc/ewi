@@ -25,7 +25,7 @@ public class MachineRestController {
             @RequestParam("id") String id,
             @RequestParam(name = "month", required = false) String month){
 
-        logger.info("/machine GET id={}", id);
+        logger.debug("/machine GET id={}", id);
         return machineService.get(id, month);
 
     }

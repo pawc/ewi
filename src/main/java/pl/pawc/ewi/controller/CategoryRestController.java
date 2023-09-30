@@ -23,7 +23,7 @@ public class CategoryRestController {
     public void post(
             @RequestBody Category category){
 
-        if(categoryService.post(category)) logger.info("/kategoria POST {}", category.getName());
+        if(categoryService.post(category)) logger.info("/category POST {}", category.getName());
         else {
             logger.warn("/category POST {} - category already exists", category.getName());
             throw new BadRequestException();

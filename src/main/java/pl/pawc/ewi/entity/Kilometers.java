@@ -35,12 +35,12 @@ public class Kilometers {
 
     @Override
     public String toString() {
-        return "Kilometry{" +
+        return "Kilometers{" +
                 "id=" + id +
-                ", miesiac=" + month +
-                ", rok=" + year +
-                ", maszyna=" + machine.getId() +
-                ", wartosc=" + value +
+                ", month=" + month +
+                ", year=" + year +
+                ", machine=" + machine.getId() +
+                ", value=" + value +
                 '}';
     }
 

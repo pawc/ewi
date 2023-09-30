@@ -34,11 +34,11 @@ public class KilometersRestController {
     }
 
     @GetMapping("kilometers")
-    public List<KilometersReport> kilometryGet(
+    public List<KilometersReport> kilometersGet(
             @RequestParam("year") int year,
             @RequestParam("month") int month){
 
-        logger.info("/KilometersReport {}-{}", year, month);
+        logger.debug("/KilometersReport {}-{}", year, month);
         return reportService.getKilometersReport(year, month);
 
     }

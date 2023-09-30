@@ -40,11 +40,11 @@ class UtilServiceTest {
 	}
 
 	@Test
-	void testJsonParseMaszyna(){
-		String maszynaJson = "{\"id\":\"maszyna_id\",\"name\":\"maszyna nazwa\",\"description\":\"\",\"fuelConsumptionStandards\":[{\"value\":\"1\",\"unitObj\":{\"id\":\"3270\"},\"usedForHeating\":false,\"rounded\":false}],\"categories\":[],\"active\":true}";
+	void testJsonParseMachine(){
+		String machineJson = "{\"id\":\"machine_id\",\"name\":\"machine nazwa\",\"description\":\"\",\"fuelConsumptionStandards\":[{\"value\":\"1\",\"unitObj\":{\"id\":\"3270\"},\"usedForHeating\":false,\"rounded\":false}],\"categories\":[],\"active\":true}";
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			Machine machine = mapper.readValue(maszynaJson, Machine.class);
+			Machine machine = mapper.readValue(machineJson, Machine.class);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			fail();

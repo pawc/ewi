@@ -51,7 +51,7 @@ class MachineRestControllerTest {
     }
 
     @Test
-    void maszynaGetTest() throws Exception {
+    void machineGetTest() throws Exception {
 
         mockMvc.perform(get("/machine").param("id", "C1"))
                 .andExpect(status().isOk())
@@ -66,7 +66,7 @@ class MachineRestControllerTest {
     }
 
     @Test
-    void maszynaPost() throws Exception {
+    void machinePost() throws Exception {
 
         Machine machine = new Machine();
         machine.setId("C99");
@@ -94,7 +94,7 @@ class MachineRestControllerTest {
     }
 
     @Test
-    void maszynaPut() throws Exception {
+    void machinePut() throws Exception {
 
         Machine machine = new Machine();
         machine.setId("C1");

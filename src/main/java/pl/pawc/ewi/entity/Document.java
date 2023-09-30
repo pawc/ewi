@@ -44,7 +44,7 @@ public class Document {
 
     @Override
     public String toString() {
-        return "Dokument{" +
+        return "Document{" +
                 "number='" + number + '\'' +
                 ", date=" + date +
                 ", kilometers=" + kilometers +

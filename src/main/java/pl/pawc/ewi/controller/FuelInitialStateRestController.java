@@ -49,7 +49,7 @@ public class FuelInitialStateRestController {
             @RequestParam("year") int year,
             @RequestParam("month") int month){
 
-        logger.info("/fuelInitialState {}-{}", year, month);
+        logger.debug("/fuelInitialState {}-{}", year, month);
         return fuelInitialStateService.findBy(year, month);
 
     }
