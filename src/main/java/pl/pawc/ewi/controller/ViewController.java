@@ -13,7 +13,6 @@ import pl.pawc.ewi.entity.Machine;
 import pl.pawc.ewi.service.UnitService;
 import pl.pawc.ewi.service.CategoryService;
 import pl.pawc.ewi.service.MachineService;
-
 import java.util.List;
 import java.util.Set;
 
@@ -79,7 +78,7 @@ public class ViewController {
     }
 
     @RequestMapping("/machines")
-    public String machines(
+    public String getMachines(
             Model model) {
 
         logger.debug("/machines");
@@ -120,7 +119,7 @@ public class ViewController {
     }
 
     @RequestMapping("/categories")
-    public String categories(
+    public String getCategories(
             Model model) {
 
         logger.debug("/categories");

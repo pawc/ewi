@@ -8,13 +8,11 @@ import pl.pawc.ewi.entity.FuelConsumptionStandard;
 import pl.pawc.ewi.entity.Machine;
 import pl.pawc.ewi.repository.MachineRepository;
 import pl.pawc.ewi.repository.FuelConsumptionStandardRepository;
-
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -42,7 +40,7 @@ public class MachineService {
     public List<Machine> findAllUncategorized(){
         return machineRepository.findAll().stream().
                 filter(m -> m.getCategories().isEmpty())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public Optional<Machine> findById(String id){

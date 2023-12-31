@@ -2,8 +2,13 @@ package pl.pawc.ewi.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.pawc.ewi.entity.*;
 import pl.pawc.ewi.entity.Category;
+import pl.pawc.ewi.entity.Document;
+import pl.pawc.ewi.entity.FuelConsumption;
+import pl.pawc.ewi.entity.FuelConsumptionStandard;
+import pl.pawc.ewi.entity.FuelInitialState;
+import pl.pawc.ewi.entity.Kilometers;
+import pl.pawc.ewi.entity.Machine;
 import pl.pawc.ewi.model.AnnualReport;
 import pl.pawc.ewi.model.Report;
 import pl.pawc.ewi.model.KilometersReport;
@@ -12,7 +17,6 @@ import pl.pawc.ewi.repository.KilometersRepository;
 import pl.pawc.ewi.repository.FuelConsumptionStandardRepository;
 import pl.pawc.ewi.repository.FuelInitialStateRepository;
 import pl.pawc.ewi.repository.FuelConsumptionRepository;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -21,7 +25,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import static java.util.stream.Collectors.groupingBy;
 
 @Component
@@ -58,7 +61,7 @@ public class ReportService {
 
     public List<AnnualReport> getReportAnnual(int year){
         List<AnnualReport> result = getMachineFuelConsumptionStandardUngrouped(year);
-        Map<String, List<AnnualReport>> collect = result.stream().collect(groupingBy(AnnualReport::getCategory_unit));
+        Map<String, List<AnnualReport>> collect = result.stream().collect(groupingBy(AnnualReport::getCategoryUnit));
         List<AnnualReport> groupBy = new ArrayList<>();
 
         collect.forEach((s, lista) -> {
@@ -66,7 +69,7 @@ public class ReportService {
             if(BigDecimal.ZERO.equals(sum)) return;
 
             AnnualReport annualReport = new AnnualReport();
-            annualReport.setCategory_unit(s);
+            annualReport.setCategoryUnit(s);
             annualReport.setCategory(lista.get(0).getCategory());
             annualReport.setUnit(lista.get(0).getUnit());
             BigDecimal waga = lista.get(0).getWeight();
@@ -97,14 +100,14 @@ public class ReportService {
         AnnualReport annualReport = new AnnualReport();
 
         String unit = n.getUnitObj() == null ? n.getUnit() : n.getUnitObj().getName();
-        BigDecimal waga = n.getUnitObj() == null ? BigDecimal.ONE : n.getUnitObj().getWeightRatio();
+        BigDecimal weight = n.getUnitObj() == null ? BigDecimal.ONE : n.getUnitObj().getWeightRatio();
 
         String categoryUnit = new StringBuilder(k.getName()).append("-").append(unit).toString();
-        annualReport.setCategory_unit(categoryUnit.toUpperCase());
+        annualReport.setCategoryUnit(categoryUnit.toUpperCase());
 
         annualReport.setCategory(k.getName());
         annualReport.setUnit(unit);
-        annualReport.setWeight(waga);
+        annualReport.setWeight(weight);
 
         BigDecimal sumaYear = fuelConsumptionService.getSumYear(n.getId(), year);
         annualReport.setSum(sumaYear);
@@ -160,35 +163,46 @@ public class ReportService {
 
             FuelInitialState fuelInitialState = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(fuelConsumptionStandard, year, month);
             BigDecimal fuelInitialStateVal = fuelInitialState == null ? BigDecimal.ZERO : fuelInitialState.getValue();
-
             BigDecimal endState = fuelInitialStateVal.subtract(sumValue).subtract(sumHeating).add(sumRefueling).setScale(scale, RoundingMode.HALF_UP);
-
             Kilometers kilometers = kilometersRepository.findOneByMachineAndYearAndMonth(fuelConsumptionStandard.getMachine(), year, month);
             BigDecimal kilometersInitialState = kilometers != null ? kilometers.getValue() : BigDecimal.ZERO;
             BigDecimal kilometersEndState = kilometersInitialState.add(sumKilometers);
 
-            Report report = new Report();
-            report.setMachineIdFuelConsumptionStandardId(fuelConsumptionStandard.getMachine().getId()+"-"+ fuelConsumptionStandard.getId());
-            report.setMachine(fuelConsumptionStandard.getMachine().getName() + "(" + fuelConsumptionStandard.getMachine().getId() + ")");
-            report.setMachineId(fuelConsumptionStandard.getMachine().getId());
-            report.setKilometersInitialState(kilometersInitialState);
-            report.setKilometers(sumKilometers);
-            report.setEndStateKilometers(kilometersEndState);
-            report.setKilometersTrailer(sumKilometersTrailer);
-            report.setUnit(fuelConsumptionStandard.getUnitObj() == null ? fuelConsumptionStandard.getUnit() : fuelConsumptionStandard.getUnitObj().getName());
-            report.setSum(sumValue);
-            report.setSumHours(sumHours);
-            report.setRefueled(sumRefueling);
-            report.setHeating(sumHeating);
-            report.setFuelConsumptionStandardId(fuelConsumptionStandard.getId());
-            report.setInitialState(fuelInitialStateVal);
-            report.setEndState(endState);
-            results.add(report);
+            Report reportItem = createReportItem(fuelConsumptionStandard, kilometersInitialState, sumKilometers, kilometersEndState,
+                    sumKilometersTrailer, sumValue, sumHours, sumRefueling, sumHeating, fuelInitialStateVal, endState);
+            results.add(reportItem);
 
         }
 
         return results;
 
+    }
+
+    private Report createReportItem(FuelConsumptionStandard fuelConsumptionStandard, BigDecimal kilometersInitialState,
+                        BigDecimal sumKilometers, BigDecimal kilometersEndState, BigDecimal sumKilometersTrailer,
+                        BigDecimal sumValue, BigDecimal sumHours, BigDecimal sumRefueling, BigDecimal sumHeating,
+                        BigDecimal fuelInitialStateVal, BigDecimal endState) {
+        Report report = new Report();
+        setFuelConsumptionStandardDetails(report, fuelConsumptionStandard);
+        report.setKilometersInitialState(kilometersInitialState);
+        report.setKilometers(sumKilometers);
+        report.setEndStateKilometers(kilometersEndState);
+        report.setKilometersTrailer(sumKilometersTrailer);
+        report.setSum(sumValue);
+        report.setSumHours(sumHours);
+        report.setRefueled(sumRefueling);
+        report.setHeating(sumHeating);
+        report.setInitialState(fuelInitialStateVal);
+        report.setEndState(endState);
+        return report;
+    }
+
+    private void setFuelConsumptionStandardDetails(Report report, FuelConsumptionStandard fuelConsumptionStandard){
+        report.setMachineIdFuelConsumptionStandardId(fuelConsumptionStandard.getMachine().getId()+"-"+ fuelConsumptionStandard.getId());
+        report.setMachine(fuelConsumptionStandard.getMachine().getName() + "(" + fuelConsumptionStandard.getMachine().getId() + ")");
+        report.setMachineId(fuelConsumptionStandard.getMachine().getId());
+        report.setUnit(fuelConsumptionStandard.getUnitObj() == null ? fuelConsumptionStandard.getUnit() : fuelConsumptionStandard.getUnitObj().getName());
+        report.setFuelConsumptionStandardId(fuelConsumptionStandard.getId());
     }
 
     private int getFirstMonthOfQuarter(int quarter){

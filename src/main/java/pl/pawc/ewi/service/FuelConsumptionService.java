@@ -12,7 +12,6 @@ import pl.pawc.ewi.repository.DocumentRepository;
 import pl.pawc.ewi.repository.FuelConsumptionStandardRepository;
 import pl.pawc.ewi.repository.FuelInitialStateRepository;
 import pl.pawc.ewi.repository.FuelConsumptionRepository;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Calendar;
@@ -68,10 +67,12 @@ public class FuelConsumptionService {
         BigDecimal heating = collect.stream().map(FuelConsumption::getHeating).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal sum = collect.stream()
-                .map(z -> (z.getValue().multiply(z.getFuelConsumptionStandard().getValue())).setScale(fuelConsumptionStandard.isRounded() ? 2 : 1, RoundingMode.HALF_UP))
+                .map(z -> (z.getValue().multiply(z.getFuelConsumptionStandard().getValue()))
+                    .setScale(fuelConsumptionStandard.isRounded() ? 2 : 1, RoundingMode.HALF_UP))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return (fuelInitialState.getValue().add(refueled).subtract(heating).subtract(sum)).setScale(fuelConsumptionStandard.isRounded() ? 2 : 1, RoundingMode.HALF_UP);
+        return (fuelInitialState.getValue().add(refueled).subtract(heating).subtract(sum))
+                .setScale(fuelConsumptionStandard.isRounded() ? 2 : 1, RoundingMode.HALF_UP);
 
     }
 

@@ -3,7 +3,6 @@ package pl.pawc.ewi.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 import java.math.BigDecimal;
 
 @Getter
@@ -11,7 +10,7 @@ import java.math.BigDecimal;
 @ToString
 public class AnnualReport {
 
-    private String category_unit;
+    private String categoryUnit;
     private String category;
     private String unit;
     private BigDecimal weight;
