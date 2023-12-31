@@ -25,7 +25,7 @@ public class Unit {
     @Column
     private String name;
 
-    @Column
+    @Column(precision = 8, scale = 3)
     private BigDecimal weightRatio;
 
     public Unit(){
