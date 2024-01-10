@@ -208,8 +208,8 @@ public class ReportService {
     private int getFirstMonthOfQuarter(int quarter){
         if(quarter == 1) return 1;
         if(quarter == 2) return 4;
-        if(quarter == 3) return 6;
-        else return 9;
+        if(quarter == 3) return 7;
+        else return 10;
     }
 
 }
