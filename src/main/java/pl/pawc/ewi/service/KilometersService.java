@@ -5,11 +5,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 import pl.pawc.ewi.entity.Kilometers;
-import pl.pawc.ewi.entity.Machine;
 import pl.pawc.ewi.repository.KilometersRepository;
-
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -24,30 +21,20 @@ public class KilometersService {
 
         if(kilometersDB == null){
             kilometersRepository.save(kilometers);
+            logger.info("/kilometers POST added {}", kilometers);
             return true;
         }
         else{
             kilometersDB.setValue(kilometers.getValue());
             kilometersRepository.save(kilometersDB);
+            logger.info("/kilometers POST updated {}", kilometers);
             return false;
         }
     }
 
     public void post(List<Kilometers> kilometers){
         for(Kilometers km : kilometers){
-            Optional<Machine> byId = machineService.findById(km.getMachine().getId());
-            if(byId.isPresent() && !byId.get().isCarriedOver()) continue;
-
-            Kilometers kilometersDB = kilometersRepository.findOneByMachineAndYearAndMonth(km.getMachine(), km.getYear(), km.getMonth());
-            if(kilometersDB == null){
-                logger.info("/kilometersList POST added {}", km);
-                kilometersRepository.save(km);
-            }
-            else{
-                logger.info("/kilometersList POST updated {}", km);
-                kilometersDB.setValue(km.getValue());
-                kilometersRepository.save(kilometersDB);
-            }
+            if(machineService.isCarriedOver(km.getMachine().getId())) post(km);
         }
     }
 

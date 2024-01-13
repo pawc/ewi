@@ -49,6 +49,12 @@ public class MachineService {
         return byId;
     }
 
+    public boolean isCarriedOver(String id){
+        return machineRepository.findById(id)
+                .map(Machine::isCarriedOver)
+                .orElse(false);
+    }
+
     @SneakyThrows
     public Machine get(String id, String miesiac){
         Optional<Machine> result = machineRepository.findById(id);
