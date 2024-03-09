@@ -29,15 +29,6 @@ public class ViewController {
     private final CategoryService categoryService;
     private final UnitService unitService;
 
-    @RequestMapping("/")
-    public String index(
-            Model model){
-
-        logger.debug("/");
-        return "index";
-
-    }
-
     @RequestMapping("/quarterlyReport")
     public String quarterlyReport(
             Model model){
@@ -142,14 +133,6 @@ public class ViewController {
         model.addAttribute(CATEGORIES, categories);
 
         return CATEGORIES;
-
-    }
-
-    @RequestMapping("/login")
-    public String login() {
-
-        logger.debug("/login");
-        return "login";
 
     }
 

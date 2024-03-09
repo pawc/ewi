@@ -42,11 +42,8 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="javascript: document.logoutForm.submit()"><i class="fas fa-sign-out-alt"></i> Wyloguj się</a></li>
+                <li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Wyloguj się</a></li>
             </ul>
-            <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
-                <input hidden type="submit"/>
-            </form>
         </div>
     </div>
 </nav>
