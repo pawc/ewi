@@ -26,6 +26,11 @@ $(document).ready(function(){
         offSetManager();
     }
 
+    $('#logout-link').click(function(e) {
+        e.preventDefault();
+        $('#logout-form').submit();
+    });
+
     offSetManager();
 
 });

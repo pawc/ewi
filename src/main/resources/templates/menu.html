@@ -42,7 +42,10 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt"></i> Wyloguj się</a></li>
+                <li>
+                    <a th:href="@{/logout}" id="logout-link"><i class="fas fa-sign-out-alt"></i> Wyloguj się</a>
+                    <form id="logout-form" th:action="@{/logout}" method="post" style="display: none;"/>
+                </li>
             </ul>
         </div>
     </div>

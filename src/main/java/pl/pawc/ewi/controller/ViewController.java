@@ -29,6 +29,12 @@ public class ViewController {
     private final CategoryService categoryService;
     private final UnitService unitService;
 
+    @RequestMapping("/home")
+    public String home(Model model){
+        logger.debug("/home");
+        return "home";
+    }
+
     @RequestMapping("/quarterlyReport")
     public String quarterlyReport(
             Model model){
