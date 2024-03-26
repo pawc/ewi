@@ -4,11 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.pawc.ewi.model.AnnualReport;
-import pl.pawc.ewi.model.Report;
 import pl.pawc.ewi.model.KilometersReport;
-
+import pl.pawc.ewi.model.Report;
 import jakarta.transaction.Transactional;
-
 import java.math.BigDecimal;
 import java.util.List;
 

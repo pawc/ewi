@@ -3,10 +3,9 @@ package pl.pawc.ewi.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import pl.pawc.ewi.entity.FuelInitialState;
 import pl.pawc.ewi.entity.FuelConsumptionStandard;
+import pl.pawc.ewi.entity.FuelInitialState;
 import pl.pawc.ewi.model.FuelInitialStateReport;
-
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;

@@ -10,13 +10,13 @@ import pl.pawc.ewi.entity.FuelInitialState;
 import pl.pawc.ewi.entity.Kilometers;
 import pl.pawc.ewi.entity.Machine;
 import pl.pawc.ewi.model.AnnualReport;
-import pl.pawc.ewi.model.Report;
 import pl.pawc.ewi.model.KilometersReport;
+import pl.pawc.ewi.model.Report;
 import pl.pawc.ewi.repository.DocumentRepository;
-import pl.pawc.ewi.repository.KilometersRepository;
+import pl.pawc.ewi.repository.FuelConsumptionRepository;
 import pl.pawc.ewi.repository.FuelConsumptionStandardRepository;
 import pl.pawc.ewi.repository.FuelInitialStateRepository;
-import pl.pawc.ewi.repository.FuelConsumptionRepository;
+import pl.pawc.ewi.repository.KilometersRepository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import static java.util.stream.Collectors.groupingBy;
 
 @Component

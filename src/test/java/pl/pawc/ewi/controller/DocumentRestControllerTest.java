@@ -15,11 +15,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import pl.pawc.ewi.entity.Document;
 import pl.pawc.ewi.entity.FuelConsumption;
-import pl.pawc.ewi.entity.Machine;
 import pl.pawc.ewi.entity.FuelConsumptionStandard;
-
+import pl.pawc.ewi.entity.Machine;
 import jakarta.servlet.ServletContext;
-
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.Collections;

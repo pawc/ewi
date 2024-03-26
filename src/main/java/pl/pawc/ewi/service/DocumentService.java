@@ -11,9 +11,9 @@ import pl.pawc.ewi.entity.Machine;
 import pl.pawc.ewi.model.DocumentNotFoundException;
 import pl.pawc.ewi.model.FuelConsumptionStandardNotFoundException;
 import pl.pawc.ewi.repository.DocumentRepository;
-import pl.pawc.ewi.repository.KilometersRepository;
-import pl.pawc.ewi.repository.FuelInitialStateRepository;
 import pl.pawc.ewi.repository.FuelConsumptionRepository;
+import pl.pawc.ewi.repository.FuelInitialStateRepository;
+import pl.pawc.ewi.repository.KilometersRepository;
 
 import java.math.BigDecimal;
 import java.util.Calendar;

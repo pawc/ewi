@@ -10,13 +10,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import pl.pawc.ewi.entity.FuelInitialState;
 import pl.pawc.ewi.entity.FuelConsumptionStandard;
+import pl.pawc.ewi.entity.FuelInitialState;
 import pl.pawc.ewi.model.FuelInitialStateReport;
-
 import jakarta.servlet.ServletContext;
 import jakarta.transaction.Transactional;
-
 import java.math.BigDecimal;
 import java.util.List;
 

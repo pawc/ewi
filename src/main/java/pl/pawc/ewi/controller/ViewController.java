@@ -10,9 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.pawc.ewi.entity.Category;
 import pl.pawc.ewi.entity.Machine;
-import pl.pawc.ewi.service.UnitService;
 import pl.pawc.ewi.service.CategoryService;
 import pl.pawc.ewi.service.MachineService;
+import pl.pawc.ewi.service.UnitService;
 import java.util.List;
 import java.util.Set;
 

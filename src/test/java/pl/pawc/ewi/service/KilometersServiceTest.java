@@ -1,13 +1,14 @@
 package pl.pawc.ewi.service;
 
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.pawc.ewi.entity.Kilometers;
 import pl.pawc.ewi.entity.Machine;
+import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest

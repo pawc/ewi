@@ -6,10 +6,10 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pl.pawc.ewi.model.AnnualReport;
 import pl.pawc.ewi.model.BadRequestException;
 import pl.pawc.ewi.model.Report;
 import pl.pawc.ewi.model.ReportMachineKilometers;
-import pl.pawc.ewi.model.AnnualReport;
 import pl.pawc.ewi.service.ReportMachineKilometersService;
 import pl.pawc.ewi.service.ReportService;
 

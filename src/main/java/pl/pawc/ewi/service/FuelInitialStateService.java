@@ -4,12 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
-import pl.pawc.ewi.entity.FuelInitialState;
 import pl.pawc.ewi.entity.FuelConsumptionStandard;
+import pl.pawc.ewi.entity.FuelInitialState;
 import pl.pawc.ewi.model.FuelInitialStateReport;
 import pl.pawc.ewi.repository.FuelConsumptionStandardRepository;
 import pl.pawc.ewi.repository.FuelInitialStateRepository;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
