@@ -14,10 +14,10 @@ import pl.pawc.ewi.repository.DocumentRepository;
 import pl.pawc.ewi.repository.FuelConsumptionRepository;
 import pl.pawc.ewi.repository.FuelInitialStateRepository;
 import pl.pawc.ewi.repository.KilometersRepository;
-
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,11 +34,20 @@ public class DocumentService {
 
     public List<Document> getDocuments(int year, int month){
         List<Document> documents = documentRepository.getDocuments(year, month);
-        Set<Machine> collect = documents.stream().map(Document::getMachine).collect(Collectors.toSet());
-        for(Machine m : collect){
-            if(m.getCategories() != null) m.getCategories().forEach(c -> c.setMachines(null));
-        }
+        Set<Machine> machines = documents.stream().map(Document::getMachine).collect(Collectors.toSet());
+        setNullMachinesInCategories(machines);
         return documents;
+    }
+
+    private void setNullMachinesInCategories(Set<Machine> machines) {
+        machines.stream()
+                .map(Machine::getCategories)
+                .filter(Objects::nonNull)
+                .forEach(this::setNullMachines);
+    }
+
+    private void setNullMachines(Set<Category> categories) {
+        categories.forEach(category -> category.setMachines(null));
     }
 
     public Optional<Document> findById(String numer){
@@ -46,142 +55,163 @@ public class DocumentService {
     }
 
     public BigDecimal getSumKilometers(String machineId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException {
-
-        final Document document;
-        Calendar calD = Calendar.getInstance();
-        if(excludedDocNumber != null){
-            document = documentRepository.findById(excludedDocNumber).orElseThrow(() -> new DocumentNotFoundException((excludedDocNumber)));
-            calD.setTime(document.getDate());
-        }
-        else{
-            document = null;
-        }
-
-        Machine machine = new Machine();
-        machine.setId(machineId);
-
-        Calendar cal = Calendar.getInstance();
-
-        Kilometers kilometers = kilometersRepository.findOneByMachineAndYearAndMonth(machine, year, month);
-        BigDecimal stan = kilometers != null ? kilometers.getValue() : BigDecimal.ZERO;
-
-        BigDecimal reduce = documentRepository.findByMachine(machine).stream().filter(d -> {
-            cal.setTime(d.getDate());
-            return (cal.get(Calendar.MONTH) + 1) == month
-                    && cal.get(Calendar.YEAR) == year
-                    && !d.getNumber().equals(excludedDocNumber)
-                    && (document == null || calD.get(Calendar.DAY_OF_MONTH) >= cal.get(Calendar.DAY_OF_MONTH));
-        }).map(Document::getKilometers).reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        return stan.add(reduce);
-
+        Machine machine = createMachine(machineId);
+        BigDecimal initialKilometers = getInitialKilometers(machine, year, month);
+        BigDecimal additionalKilometers = getAdditionalKilometers(machine, year, month, excludedDocNumber);
+        return initialKilometers.add(additionalKilometers);
     }
 
-    public Document get(String numer) {
+    private Machine createMachine(String machineId) {
+        Machine machine = new Machine();
+        machine.setId(machineId);
+        return machine;
+    }
 
-        Optional<Document> result = documentRepository.findById(numer);
-        Document document = null;
+    private BigDecimal getInitialKilometers(Machine machine, int year, int month) {
+        Kilometers kilometers = kilometersRepository.findOneByMachineAndYearAndMonth(machine, year, month);
+        return kilometers != null ? kilometers.getValue() : BigDecimal.ZERO;
+    }
 
-        if(result.isPresent()){
-            document = result.get();
+    private BigDecimal getAdditionalKilometers(Machine machine, int year, int month, String excludedDocNumber) {
+        List<Document> documents = documentRepository.findByMachine(machine);
+        return documents.stream()
+                .filter(d -> shouldIncludeDocument(d, year, month, excludedDocNumber))
+                .map(Document::getKilometers)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(document.getDate());
+    private boolean shouldIncludeDocument(Document document, int year, int month, String excludedDocNumber) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(document.getDate());
+        boolean isSameMonthAndYear = (cal.get(Calendar.MONTH) + 1) == month && cal.get(Calendar.YEAR) == year;
+        boolean isNotExcludedDocument = !document.getNumber().equals(excludedDocNumber);
+        boolean isBeforeExcludedDocument = isBeforeExcludedDocument(document, excludedDocNumber);
+        return isSameMonthAndYear && isNotExcludedDocument && isBeforeExcludedDocument;
+    }
 
-            int year = cal.get(Calendar.YEAR);
-            int month = cal.get(Calendar.MONTH) + 1;
+    private boolean isBeforeExcludedDocument(Document document, String excludedDocNumber) {
+        if (excludedDocNumber == null) {
+            return false;
+        }
+        Optional<Document> documentById = documentRepository.findById(excludedDocNumber);
+        if (documentById.isEmpty()) {
+            return false;
+        }
+        Document excludedDocument = documentById.orElse(null);
+        Calendar calD = Calendar.getInstance();
+        calD.setTime(excludedDocument.getDate());
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(document.getDate());
+        return calD.get(Calendar.DAY_OF_MONTH) >= cal.get(Calendar.DAY_OF_MONTH);
+    }
 
-            List<FuelConsumption> fuelConsumptions = fuelConsumptionRepository.findByDocument(document);
-            document.setFuelConsumption(fuelConsumptions);
+    public Document get(String number) throws FuelConsumptionStandardNotFoundException, DocumentNotFoundException {
+        Optional<Document> byId = documentRepository.findById(number);
+        if (byId.isPresent()) {
+            return processDocument(byId.get());
+        }
+        else {
+            throw new DocumentNotFoundException(number);
+        }
+    }
 
-            for(FuelConsumption fuelConsumption : fuelConsumptions){
+    private Document processDocument(Document document) throws FuelConsumptionStandardNotFoundException, DocumentNotFoundException {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(document.getDate());
 
-                BigDecimal suma = null;
-                BigDecimal sumaBefore = null;
-                fuelConsumption.setDocument(document);
-                try {
-                    suma = fuelConsumptionService.getSum(fuelConsumption.getFuelConsumptionStandard().getId(), year, month, null);
-                    sumaBefore = fuelConsumptionService.getSum(fuelConsumption.getFuelConsumptionStandard().getId(), year, month, document.getNumber());
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
 
-                } catch (DocumentNotFoundException | FuelConsumptionStandardNotFoundException e) {
-                    e.printStackTrace();
-                }
+        List<FuelConsumption> fuelConsumptions = fuelConsumptionRepository.findByDocument(document);
+        document.setFuelConsumption(fuelConsumptions);
 
-                FuelInitialState fuelInitialState = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(fuelConsumption.getFuelConsumptionStandard(), year, month);
-                BigDecimal stanD = fuelInitialState == null ? BigDecimal.ZERO : fuelInitialState.getValue();
-
-                fuelConsumption.getFuelConsumptionStandard().setSum(suma);
-                fuelConsumption.getFuelConsumptionStandard().setSumBefore(sumaBefore);
-                fuelConsumption.getFuelConsumptionStandard().setInitialState(stanD);
-
-                fuelConsumption.setDocument(null);
-                fuelConsumption.getFuelConsumptionStandard().setMachine(null);
-
-            }
-
-            BigDecimal kilometersBefore = null;
-            try {
-                kilometersBefore = getSumKilometers(document.getMachine().getId(), year, month, document.getNumber());
-            } catch (DocumentNotFoundException e) {
-                e.printStackTrace();
-            }
-            document.setKilometersBefore(kilometersBefore);
-            Set<Category> categories = document.getMachine().getCategories();
-            if(categories != null) categories.forEach(c -> c.setMachines(null));
+        for (FuelConsumption fuelConsumption : fuelConsumptions) {
+            setDefaultValuesForFuelConsumption(fuelConsumption);
+            fuelConsumption.setDocument(document);
+            setFuelConsumptionStandardValues(fuelConsumption, year, month, document.getNumber());
         }
 
-        return document;
+        BigDecimal kilometersBefore = getSumKilometers(document.getMachine().getId(), year, month, document.getNumber());
+        document.setKilometersBefore(kilometersBefore);
+        setNullMachinesInCategories(Set.of(document.getMachine()));
 
+        return document;
+    }
+
+    private void setFuelConsumptionStandardValues(FuelConsumption fuelConsumption, int year, int month, String documentNumber) throws FuelConsumptionStandardNotFoundException, DocumentNotFoundException {
+        BigDecimal sum = fuelConsumptionService.getSum(fuelConsumption.getFuelConsumptionStandard().getId(), year, month, null);
+        BigDecimal sumBefore = fuelConsumptionService.getSum(fuelConsumption.getFuelConsumptionStandard().getId(), year, month, documentNumber);
+        FuelInitialState fuelInitialState = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(fuelConsumption.getFuelConsumptionStandard(), year, month);
+        BigDecimal initialState = fuelInitialState == null ? BigDecimal.ZERO : fuelInitialState.getValue();
+
+        fuelConsumption.getFuelConsumptionStandard().setSum(sum);
+        fuelConsumption.getFuelConsumptionStandard().setSumBefore(sumBefore);
+        fuelConsumption.getFuelConsumptionStandard().setInitialState(initialState);
+
+        fuelConsumption.setDocument(null);
+        fuelConsumption.getFuelConsumptionStandard().setMachine(null);
     }
 
     public void post(Document document){
+        setDefaultValuesForDocument(document);
+        saveFuelConsumption(document);
+    }
+
+    private void setDefaultValuesForDocument(Document document) {
         if(document.getKilometers() == null) document.setKilometers(BigDecimal.ZERO);
         if(document.getKilometersTrailer() == null) document.setKilometersTrailer(BigDecimal.ZERO);
+    }
+
+    private void saveFuelConsumption(Document document) {
         for(FuelConsumption fuelConsumption : document.getFuelConsumption()){
-            if(fuelConsumption.getValue() == null) fuelConsumption.setValue(BigDecimal.ZERO);
-            if(fuelConsumption.getRefueled() == null) fuelConsumption.setRefueled(BigDecimal.ZERO);
-            if(fuelConsumption.getHeating() == null) fuelConsumption.setHeating(BigDecimal.ZERO);
+            setDefaultValuesForFuelConsumption(fuelConsumption);
             fuelConsumption.setDocument(document);
             fuelConsumptionRepository.save(fuelConsumption);
         }
     }
 
+    private void setDefaultValuesForFuelConsumption(FuelConsumption fuelConsumption) {
+        if(fuelConsumption.getValue() == null) fuelConsumption.setValue(BigDecimal.ZERO);
+        if(fuelConsumption.getRefueled() == null) fuelConsumption.setRefueled(BigDecimal.ZERO);
+        if(fuelConsumption.getHeating() == null) fuelConsumption.setHeating(BigDecimal.ZERO);
+    }
+
     public void put(Document document) throws DocumentNotFoundException {
-        Optional<Document> byId = findById(document.getNumber());
-        if(byId.isEmpty()) throw new DocumentNotFoundException(document.getNumber());
+        Document documentDB = findDocumentById(document.getNumber());
+        setDefaultValuesForDocument(document);
+        updateDocument(document, documentDB);
+        document.getFuelConsumption().forEach(this::updateFuelConsumption);
+    }
 
-        if(document.getKilometers() == null) document.setKilometers(BigDecimal.ZERO);
-        if(document.getKilometersTrailer() == null) document.setKilometersTrailer(BigDecimal.ZERO);
+    private Document findDocumentById(String documentNumber) throws DocumentNotFoundException {
+        Optional<Document> byId = findById(documentNumber);
+        if(byId.isEmpty()) throw new DocumentNotFoundException(documentNumber);
+        return byId.get();
+    }
 
-        Document documentDB = byId.get();
-
+    private void updateDocument(Document document, Document documentDB) {
         documentDB.setDate(document.getDate());
         documentDB.setKilometers(document.getKilometers());
         documentDB.setKilometersTrailer(document.getKilometersTrailer());
         documentRepository.save(documentDB);
+    }
 
-        for(FuelConsumption fuelConsumption : document.getFuelConsumption()) {
-            Optional<FuelConsumption> fuelConsumptionOptional = fuelConsumptionRepository.findById(fuelConsumption.getId());
-            if(fuelConsumptionOptional.isEmpty()) continue;
-            FuelConsumption fuelConsumptionDB = fuelConsumptionOptional.get();
-            if(fuelConsumption.getValue() == null) fuelConsumption.setValue(BigDecimal.ZERO);
-            if(fuelConsumption.getRefueled() == null) fuelConsumption.setRefueled(BigDecimal.ZERO);
-            if(fuelConsumption.getHeating() == null) fuelConsumption.setHeating(BigDecimal.ZERO);
-            fuelConsumptionDB.setValue(fuelConsumption.getValue());
-            fuelConsumptionDB.setRefueled(fuelConsumption.getRefueled());
-            fuelConsumptionDB.setHeating(fuelConsumption.getHeating());
-
-            fuelConsumptionRepository.save(fuelConsumptionDB);
-        }
+    private void updateFuelConsumption(FuelConsumption fuelConsumption) {
+        Optional<FuelConsumption> fuelConsumptionOptional = fuelConsumptionRepository.findById(fuelConsumption.getId());
+        if(fuelConsumptionOptional.isEmpty()) return;
+        FuelConsumption fuelConsumptionDB = fuelConsumptionOptional.get();
+        setDefaultValuesForFuelConsumption(fuelConsumption);
+        fuelConsumptionDB.setValue(fuelConsumption.getValue());
+        fuelConsumptionDB.setRefueled(fuelConsumption.getRefueled());
+        fuelConsumptionDB.setHeating(fuelConsumption.getHeating());
+        fuelConsumptionRepository.save(fuelConsumptionDB);
     }
 
     public void delete(String numer) {
-
         documentRepository.findById(numer).ifPresent(dok -> {
             fuelConsumptionRepository.findByDocument(dok).forEach(fuelConsumptionRepository::delete);
             documentRepository.delete(dok);
         });
-
     }
 
 }

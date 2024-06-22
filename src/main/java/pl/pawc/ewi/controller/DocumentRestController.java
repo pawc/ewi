@@ -14,8 +14,8 @@ import org.thymeleaf.util.StringUtils;
 import pl.pawc.ewi.entity.Document;
 import pl.pawc.ewi.model.BadRequestException;
 import pl.pawc.ewi.model.DocumentNotFoundException;
+import pl.pawc.ewi.model.FuelConsumptionStandardNotFoundException;
 import pl.pawc.ewi.service.DocumentService;
-
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -29,10 +29,13 @@ public class DocumentRestController {
     public Document document(
             @RequestParam("number") String number) {
 
-        logger.debug("/document GET number={} ", number);
-        Document document = documentService.get(number);
-        return document == null ? new Document() : document;
-
+        try {
+            logger.debug("/document GET number={} ", number);
+            return documentService.get(number);
+        } catch (FuelConsumptionStandardNotFoundException | DocumentNotFoundException e) {
+            logger.warn("/document GET number={} not found. Returning empty Document object.", number);
+            return new Document();
+        }
     }
 
     @RequestMapping("/documents")
