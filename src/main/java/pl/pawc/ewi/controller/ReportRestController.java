@@ -12,7 +12,6 @@ import pl.pawc.ewi.model.Report;
 import pl.pawc.ewi.model.ReportMachineKilometers;
 import pl.pawc.ewi.service.ReportMachineKilometersService;
 import pl.pawc.ewi.service.ReportService;
-
 import java.text.ParseException;
 import java.util.List;
 
@@ -66,6 +65,7 @@ public class ReportRestController {
             return reportMachineKilometersService.getReportKilometers(machineId, dateStart, dateEnd);
         } catch (ParseException e) {
             logger.debug("/getReportMachineKilometers GET machineId: {} {}-{}", machineId, dateStart, dateEnd);
+            logger.error(e.getMessage(), e);
             throw new BadRequestException();
         }
 

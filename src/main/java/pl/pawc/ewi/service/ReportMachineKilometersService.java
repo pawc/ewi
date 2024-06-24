@@ -6,7 +6,6 @@ import pl.pawc.ewi.entity.Document;
 import pl.pawc.ewi.entity.Machine;
 import pl.pawc.ewi.model.ReportMachineKilometers;
 import pl.pawc.ewi.repository.DocumentRepository;
-
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,18 +23,40 @@ public class ReportMachineKilometersService {
     public ReportMachineKilometers getReportKilometers(String machineId, String dateStartS, String dateEndS) throws ParseException {
 
         Optional<Machine> machineById = machineService.findById(machineId);
-        if(machineById.isEmpty()) return null;
+        if (machineById.isEmpty()) return null;
+
         Machine machine = machineById.get();
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date dateStart = formatter.parse(dateStartS);
-        Date dateEnd = formatter.parse(dateEndS);
+        Date dateStart = parseDate(dateStartS);
+        Date dateEnd = parseDate(dateEndS);
 
         List<Document> documentsByDataBetween = documentRepository.findByMachineAndDateBetween(machine, dateStart, dateEnd);
 
-        BigDecimal sumKilometers = documentsByDataBetween.stream().map(Document::getKilometers).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal sumKilometersTrailer = documentsByDataBetween.stream().map(Document::getKilometersTrailer).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal sumKilometers = getSumKilometers(documentsByDataBetween);
+        BigDecimal sumKilometersTrailer = getSumKilometersTrailer(documentsByDataBetween);
 
+        return getReportMachineKilometers(machine, dateStart, dateEnd, documentsByDataBetween, sumKilometers, sumKilometersTrailer);
+    }
+
+    private Date parseDate(String date) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.parse(date);
+    }
+
+    private static BigDecimal getSumKilometersTrailer(List<Document> documentsByDataBetween) {
+        return documentsByDataBetween.stream()
+                .map(Document::getKilometersTrailer)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private static BigDecimal getSumKilometers(List<Document> documentsByDataBetween) {
+        return documentsByDataBetween.stream()
+                .map(Document::getKilometers)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private static ReportMachineKilometers getReportMachineKilometers(Machine machine, Date dateStart, Date dateEnd,
+                      List<Document> documentsByDataBetween, BigDecimal sumKilometers, BigDecimal sumKilometersTrailer) {
         ReportMachineKilometers reportMachineKilometers = new ReportMachineKilometers();
         reportMachineKilometers.setMachine(machine);
         reportMachineKilometers.setDataStart(dateStart);
@@ -43,9 +64,7 @@ public class ReportMachineKilometersService {
         reportMachineKilometers.setDocuments(documentsByDataBetween);
         reportMachineKilometers.setSumKilometers(sumKilometers);
         reportMachineKilometers.setSumKilometersTrailer(sumKilometersTrailer);
-
         return reportMachineKilometers;
-
     }
 
 }

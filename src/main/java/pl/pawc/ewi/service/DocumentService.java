@@ -68,8 +68,9 @@ public class DocumentService {
     }
 
     private BigDecimal getInitialKilometers(Machine machine, int year, int month) {
-        Kilometers kilometers = kilometersRepository.findOneByMachineAndYearAndMonth(machine, year, month);
-        return kilometers != null ? kilometers.getValue() : BigDecimal.ZERO;
+        return kilometersRepository.findOneByMachineAndYearAndMonth(machine, year, month)
+                .map(Kilometers::getValue)
+                .orElse(BigDecimal.ZERO);
     }
 
     private BigDecimal getAdditionalKilometers(Machine machine, int year, int month, String excludedDocNumber) {

@@ -38,8 +38,8 @@ public class MachineService {
     }
 
     public List<Machine> findAllUncategorized(){
-        return machineRepository.findAll().stream().
-                filter(m -> m.getCategories().isEmpty())
+        return machineRepository.findAll().stream()
+                .filter(m -> m.getCategories().isEmpty())
                 .toList();
     }
 

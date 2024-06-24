@@ -28,13 +28,12 @@ public class CategoryService {
 
     public boolean toggleCarriedOver(Category category){
         Optional<Category> byId = categoryRepository.findById(category.getName());
-        boolean exists = byId.isPresent();
-        if(exists){
+        if(byId.isPresent()){
             Category kat = byId.get();
             kat.setCarriedOver(!kat.isCarriedOver());
             categoryRepository.save(kat);
         }
-        return exists;
+        return byId.isPresent();
     }
 
     public List<Category> findAll(){
