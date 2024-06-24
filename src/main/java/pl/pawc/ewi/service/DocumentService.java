@@ -142,8 +142,8 @@ public class DocumentService {
     private void setFuelConsumptionStandardValues(FuelConsumption fuelConsumption, int year, int month, String documentNumber) throws FuelConsumptionStandardNotFoundException, DocumentNotFoundException {
         BigDecimal sum = fuelConsumptionService.getSum(fuelConsumption.getFuelConsumptionStandard().getId(), year, month, null);
         BigDecimal sumBefore = fuelConsumptionService.getSum(fuelConsumption.getFuelConsumptionStandard().getId(), year, month, documentNumber);
-        FuelInitialState fuelInitialState = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(fuelConsumption.getFuelConsumptionStandard(), year, month);
-        BigDecimal initialState = fuelInitialState == null ? BigDecimal.ZERO : fuelInitialState.getValue();
+        Optional<FuelInitialState> fuelInitialStateOptional = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(fuelConsumption.getFuelConsumptionStandard(), year, month);
+        BigDecimal initialState = fuelInitialStateOptional.map(FuelInitialState::getValue).orElse(BigDecimal.ZERO);
 
         fuelConsumption.getFuelConsumptionStandard().setSum(sum);
         fuelConsumption.getFuelConsumptionStandard().setSumBefore(sumBefore);

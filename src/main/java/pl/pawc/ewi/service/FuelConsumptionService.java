@@ -56,11 +56,14 @@ public class FuelConsumptionService {
                     }
                 ).toList();
 
-        FuelInitialState fuelInitialState = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(fuelConsumptionStandard, year, month);
-
-        if (fuelInitialState == null) {
+        Optional<FuelInitialState> fuelInitialStateOptional = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(fuelConsumptionStandard, year, month);
+        FuelInitialState fuelInitialState;
+        if (fuelInitialStateOptional.isEmpty()){
             fuelInitialState = new FuelInitialState();
             fuelInitialState.setValue(BigDecimal.ZERO);
+        }
+        else {
+            fuelInitialState = fuelInitialStateOptional.get();
         }
 
         BigDecimal refueled = collect.stream().map(FuelConsumption::getRefueled).reduce(BigDecimal.ZERO, BigDecimal::add);

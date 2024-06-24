@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.pawc.ewi.entity.Category;
 import pl.pawc.ewi.repository.CategoryRepository;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +39,7 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
-    public Category findOneByName(String name){
+    public Optional<Category> findOneByName(String name){
         return categoryRepository.findOneByName(name);
     }
 

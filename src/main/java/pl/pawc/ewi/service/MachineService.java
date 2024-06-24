@@ -9,8 +9,10 @@ import pl.pawc.ewi.entity.Machine;
 import pl.pawc.ewi.repository.FuelConsumptionStandardRepository;
 import pl.pawc.ewi.repository.MachineRepository;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -56,7 +58,7 @@ public class MachineService {
     }
 
     @SneakyThrows
-    public Machine get(String id, String miesiac){
+    public Machine get(String id, String monthParam){
         Optional<Machine> result = machineRepository.findById(id);
         Machine machine = new Machine();
         if(result.isPresent()){
@@ -66,10 +68,10 @@ public class MachineService {
             machine.setFuelConsumptionStandards(fuelConsumptionStandardsByMachine);
             machine.getCategories().forEach(c -> c.setMachines(null));
 
-            if(miesiac != null){
+            if(monthParam != null){
                 try{
-                    int year = Integer.parseInt(miesiac.split("-")[0]);
-                    int month = Integer.parseInt(miesiac.split("-")[1]);
+                    int year = Integer.parseInt(monthParam.split("-")[0]);
+                    int month = Integer.parseInt(monthParam.split("-")[1]);
 
                     BigDecimal sumKilometers = documentService.getSumKilometers(machine.getId(), year, month, null);
                     machine.setSumOfKilometers(sumKilometers);
@@ -93,15 +95,17 @@ public class MachineService {
 
         Set<Category> categories = new HashSet<>();
 
-        // new categories can't be added with a new machine anyway
-        if (machine.getCategories() != null) {
-            machine.getCategories().forEach(c -> {
-                    Category oneByName = categoryService.findOneByName(c.getName());
-                    oneByName.getMachines().add(machine);
-                    categories.add(oneByName);
-                }
-            );
-        }
+        Optional.ofNullable(machine.getCategories())
+            .orElse(Collections.emptySet())
+            .stream()
+            .filter(Objects::nonNull)
+            .map(c -> categoryService.findOneByName(c.getName()))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .forEach(c -> {
+                c.addMachine(machine);
+                categories.add(c);
+            });
 
         machine.setCategories(categories);
 
@@ -124,13 +128,17 @@ public class MachineService {
 
             Set<Category> categories = new HashSet<>();
 
-            if(machine.getCategories() != null){
-                machine.getCategories().forEach(c -> {
-                    Category oneByName = categoryService.findOneByName(c.getName());
-                    oneByName.addMachine(machineDB);
-                    categories.add(oneByName);
-                });
-            }
+            Optional.ofNullable(machine.getCategories())
+                    .orElse(Collections.emptySet())
+                    .stream()
+                    .filter(Objects::nonNull)
+                    .map(c -> categoryService.findOneByName(c.getName()))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .forEach(c -> {
+                        c.addMachine(machineDB);
+                        categories.add(c);
+                    });
             machineDB.setCategories(categories);
 
             List<FuelConsumptionStandard> fuelConsumptionStandardsDB = fuelConsumptionStandardRepository.findByMachine(machineDB);
@@ -138,16 +146,11 @@ public class MachineService {
             machine.getFuelConsumptionStandards().forEach(nNew -> {
 
                 fuelConsumptionStandardsDB.stream()
-                        .filter(nNew::equals).findFirst()
-                        .ifPresent(nOld -> {
-                            nOld.setValue(nNew.getValue());
-                            nOld.setUnit(nNew.getUnit());
-                            nOld.setUsedForHeating(nNew.isUsedForHeating());
-                            nOld.setRounded(nNew.isRounded());
-                            fuelConsumptionStandardRepository.save(nOld);
-                        });
+                        .filter(nNew::equals)
+                        .findFirst()
+                        .ifPresent(nOld -> updateFuelConsumptionStandard(nNew, nOld));
 
-                if(!fuelConsumptionStandardsDB.contains(nNew)){
+                if (!fuelConsumptionStandardsDB.contains(nNew)) {
                     nNew.setMachine(machineDB);
                     fuelConsumptionStandardRepository.save(nNew);
                 }
@@ -157,5 +160,13 @@ public class MachineService {
         }
 
     }
-    
+
+    private void updateFuelConsumptionStandard(FuelConsumptionStandard nNew, FuelConsumptionStandard nOld) {
+        nOld.setValue(nNew.getValue());
+        nOld.setUnit(nNew.getUnit());
+        nOld.setUsedForHeating(nNew.isUsedForHeating());
+        nOld.setRounded(nNew.isRounded());
+        fuelConsumptionStandardRepository.save(nOld);
+    }
+
 }
