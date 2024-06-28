@@ -31,7 +31,7 @@ public class FuelConsumptionService {
 
         Document excludedDocument;
 
-        if(excludedDocNumber != null){
+        if (excludedDocNumber != null) {
             excludedDocument = documentRepository.findById(excludedDocNumber).orElseThrow(() -> new DocumentNotFoundException(excludedDocNumber));
             Calendar calD = Calendar.getInstance();
             calD.setTime(excludedDocument.getDate());

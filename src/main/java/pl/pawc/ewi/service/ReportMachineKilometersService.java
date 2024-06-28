@@ -43,19 +43,19 @@ public class ReportMachineKilometersService {
         return formatter.parse(date);
     }
 
-    private static BigDecimal getSumKilometersTrailer(List<Document> documentsByDataBetween) {
+    private BigDecimal getSumKilometersTrailer(List<Document> documentsByDataBetween) {
         return documentsByDataBetween.stream()
                 .map(Document::getKilometersTrailer)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private static BigDecimal getSumKilometers(List<Document> documentsByDataBetween) {
+    private BigDecimal getSumKilometers(List<Document> documentsByDataBetween) {
         return documentsByDataBetween.stream()
                 .map(Document::getKilometers)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private static ReportMachineKilometers getReportMachineKilometers(Machine machine, Date dateStart, Date dateEnd,
+    private ReportMachineKilometers getReportMachineKilometers(Machine machine, Date dateStart, Date dateEnd,
                       List<Document> documentsByDataBetween, BigDecimal sumKilometers, BigDecimal sumKilometersTrailer) {
         ReportMachineKilometers reportMachineKilometers = new ReportMachineKilometers();
         reportMachineKilometers.setMachine(machine);
