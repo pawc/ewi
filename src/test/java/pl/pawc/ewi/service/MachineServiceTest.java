@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.pawc.ewi.entity.Machine;
-
 import jakarta.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,31 +16,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class MachineServiceTest {
 
 	@Autowired
-	MachineService machineService;
+	private MachineService machineService;
 
 	@Autowired
-	CategoryService categoryService;
+	private CategoryService categoryService;
 
 	@Test
 	@Transactional
 	void testFindAllActive() {
-
 		assertEquals(2, machineService.findAllActive().size());
-
 	}
 
 	@Test
 	@Transactional
 	void testFindAllUncategorized() {
-
 		assertEquals(1, machineService.findAllUncategorized().size());
-
 	}
 
 	@Test
 	@Transactional
 	void testPost() throws JsonProcessingException {
-
 		ObjectMapper objectMapper = new ObjectMapper();
 		String input = "{\"id\":\"ABC123\",\"name\":\"Machine 1\",\"description\":\"test machine\",\"fuelConsumptionStandards\":[{\"value\":\"1.2\",\"unit\":\"L/H\",\"usedForHeating\":false},{\"value\":\"3.27\",\"unit\":\"ON/H\",\"usedForHeating\":true}],\"categories\":[{\"name\": \"Ciągniki\"}],\"active\":true}";
 		Machine machine = objectMapper.readValue(input, Machine.class);
@@ -52,14 +46,13 @@ class MachineServiceTest {
 		assertTrue(m.isActive());
 		m.getFuelConsumptionStandards().forEach(n -> assertEquals("ABC123", n.getMachine().getId()));
 
-		assertEquals(2, categoryService.findOneByName("Ciągniki").getMachines().size());
+		assertEquals(2, categoryService.findOneByName("Ciągniki").get().getMachines().size());
 
 	}
 
 	@Test
 	@Transactional
 	void testGetPut() {
-
 		Machine c1 = machineService.get("C1", "2022-05");
 		assertNotNull(c1);
 		assertNotNull(c1.getSumOfKilometers());
@@ -70,7 +63,6 @@ class MachineServiceTest {
 		c1 = machineService.get("C1", "2022-05");
 		assertNotNull(c1);
 		assertEquals("Ciągnik Test", c1.getName());
-
 	}
 
 }

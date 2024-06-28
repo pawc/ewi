@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import pl.pawc.ewi.entity.Document;
 import pl.pawc.ewi.model.DocumentNotFoundException;
 import jakarta.transaction.Transactional;
+import pl.pawc.ewi.model.FuelConsumptionStandardNotFoundException;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
@@ -29,6 +30,13 @@ class DocumentServiceTest {
 
 	@Test
 	@Transactional
+	void testGetDocument() {
+		assertThrows(DocumentNotFoundException.class,
+				() -> documentService.get("non existing document"));
+	}
+
+	@Test
+	@Transactional
 	void testGetSumKilometersBeforeDate() {
 
 		try {
@@ -46,14 +54,11 @@ class DocumentServiceTest {
 			fail();
 		}
 
-		assertThrows(DocumentNotFoundException.class,
-				() -> documentService.getSumKilometers("C1", 2022, 4,"11/04/2022/C1"));
-
 	}
 
 	@Test
 	@Transactional
-	void testPostGetPutDeleteDocument() throws JsonProcessingException {
+	void testPostGetPutDeleteDocument() throws JsonProcessingException, FuelConsumptionStandardNotFoundException, DocumentNotFoundException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String input = "{\"number\":\"15/04/2022/C1\",\"date\":\"2022-04-17\",\"kilometers\":\"25\",\"kilometersTrailer\":\"25\",\"machine\":{\"id\":\"C1\"},\"fuelConsumption\":[{\"value\":\"2.5\",\"fuelConsumptionStandard\":{\"id\":\"1\",\"value\":\"1\"},\"refueled\":\"2.5\",\"heating\":\"2.5\"},{\"value\":\"3.5\",\"fuelConsumptionStandard\":{\"id\":\"2\",\"value\":\"2\"},\"refueled\":\"3.5\",\"heating\":\"3.5\"}]}";
 		Document document = objectMapper.readValue(input, Document.class);

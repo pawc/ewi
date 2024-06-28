@@ -33,11 +33,15 @@ public class FuelInitialStateService {
             String unit = n.getUnitObj() == null ? n.getUnit() : n.getUnitObj().getName();
             fuelInitialStateReport.setUnit(unit);
             fuelInitialStateReport.setFuelConsumptionStandardId(n.getId());
-            FuelInitialState fuelInitialState = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(n, year, month);
-            if(fuelInitialState == null) {
+            Optional<FuelInitialState> fuelInitialStateOptional = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(n, year, month);
+            FuelInitialState fuelInitialState;
+            if (fuelInitialStateOptional.isEmpty()) {
                 fuelInitialState = new FuelInitialState();
                 fuelInitialState.setId(-1);
                 fuelInitialState.setValue(BigDecimal.ZERO);
+            }
+            else{
+                fuelInitialState = fuelInitialStateOptional.get();
             }
             fuelInitialStateReport.setFuelInitialStateId(fuelInitialState.getId());
             fuelInitialStateReport.setFuelInitialState(fuelInitialState.getValue());
@@ -49,13 +53,14 @@ public class FuelInitialStateService {
     }
 
     public boolean post(FuelInitialState fuelInitialState){
-        FuelInitialState fuelInitialStateDB = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(fuelInitialState.getFuelConsumptionStandard(), fuelInitialState.getYear(), fuelInitialState.getMonth());
-        if(fuelInitialState.getValue() == null) fuelInitialState.setValue(BigDecimal.ZERO);
-        if(fuelInitialStateDB == null){
+        Optional<FuelInitialState> fuelInitialStateDBOptional = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(fuelInitialState.getFuelConsumptionStandard(), fuelInitialState.getYear(), fuelInitialState.getMonth());
+        if (fuelInitialState.getValue() == null) fuelInitialState.setValue(BigDecimal.ZERO);
+        if (fuelInitialStateDBOptional.isEmpty()) {
             fuelInitialStateRepository.save(fuelInitialState);
             return true;
         }
-        else{
+        else {
+            FuelInitialState fuelInitialStateDB = fuelInitialStateDBOptional.get();
             fuelInitialStateDB.setValue(fuelInitialState.getValue());
             fuelInitialStateRepository.save(fuelInitialStateDB);
             return false;
@@ -69,12 +74,13 @@ public class FuelInitialStateService {
             Optional<FuelConsumptionStandard> byId = fuelConsumptionStandardRepository.findById(fuelInitialState.getFuelConsumptionStandard().getId());
             if(byId.isPresent() && !byId.get().getMachine().isCarriedOver()) continue;
 
-            fuelInitialStateDB = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(fuelInitialState.getFuelConsumptionStandard(), fuelInitialState.getYear(), fuelInitialState.getMonth());
-            if(fuelInitialState.getValue() == null) fuelInitialState.setValue(BigDecimal.ZERO);
-            if(fuelInitialStateDB == null){
+            Optional<FuelInitialState> fuelInitialStateDBOptional = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(fuelInitialState.getFuelConsumptionStandard(), fuelInitialState.getYear(), fuelInitialState.getMonth());
+            if (fuelInitialState.getValue() == null) fuelInitialState.setValue(BigDecimal.ZERO);
+            if (fuelInitialStateDBOptional.isEmpty()) {
                 fuelInitialStateRepository.save(fuelInitialState);
             }
             else{
+                fuelInitialStateDB = fuelInitialStateDBOptional.get();
                 fuelInitialStateDB.setValue(fuelInitialState.getValue());
                 fuelInitialStateRepository.save(fuelInitialStateDB);
             }

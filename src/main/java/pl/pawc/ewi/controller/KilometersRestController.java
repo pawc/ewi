@@ -28,8 +28,12 @@ public class KilometersRestController {
     public void kilometersPost(
             @RequestBody Kilometers kilometers) {
 
-        if(kilometersService.post(kilometers)) logger.info("/kilometers POST added {}", kilometers);
-        else logger.info("/kilometers POST updated {}", kilometers);
+        if (kilometersService.post(kilometers)) {
+            logger.info("/kilometers POST added {}", kilometers);
+        }
+        else {
+            logger.info("/kilometers POST updated {}", kilometers);
+        }
 
     }
 

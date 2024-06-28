@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.pawc.ewi.entity.Unit;
 import pl.pawc.ewi.repository.UnitRepository;
-
 import java.util.List;
 
 @Component

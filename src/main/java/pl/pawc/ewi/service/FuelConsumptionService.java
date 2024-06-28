@@ -29,15 +29,15 @@ public class FuelConsumptionService {
 
     public BigDecimal getSum(long fuelConsumptionStandardId, int year, int month, String excludedDocNumber) throws DocumentNotFoundException, FuelConsumptionStandardNotFoundException {
 
-        Document document;
+        Document excludedDocument;
 
-        if(excludedDocNumber != null){
-            document = documentRepository.findById(excludedDocNumber).orElseThrow(() -> new DocumentNotFoundException(excludedDocNumber));
+        if (excludedDocNumber != null) {
+            excludedDocument = documentRepository.findById(excludedDocNumber).orElseThrow(() -> new DocumentNotFoundException(excludedDocNumber));
             Calendar calD = Calendar.getInstance();
-            calD.setTime(document.getDate());
+            calD.setTime(excludedDocument.getDate());
         }
         else {
-            document = null;
+            excludedDocument = null;
         }
 
         Optional<FuelConsumptionStandard> fuelConsumptionStandardById = fuelConsumptionStandardRepository.findById(fuelConsumptionStandardId);
@@ -51,16 +51,19 @@ public class FuelConsumptionService {
                         cal.setTime(z.getDocument().getDate());
                         return cal.get(Calendar.MONTH) + 1 == month
                             && cal.get(Calendar.YEAR) == year
-                            && (document == null || !z.getDocument().getNumber().equals(excludedDocNumber))
-                            && (document == null || document.getDate().compareTo(z.getDocument().getDate()) > 0);
+                            && (excludedDocument == null || !z.getDocument().getNumber().equals(excludedDocNumber))
+                            && (excludedDocument == null || excludedDocument.getDate().compareTo(z.getDocument().getDate()) > 0);
                     }
                 ).toList();
 
-        FuelInitialState fuelInitialState = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(fuelConsumptionStandard, year, month);
-
-        if(fuelInitialState == null){
+        Optional<FuelInitialState> fuelInitialStateOptional = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(fuelConsumptionStandard, year, month);
+        FuelInitialState fuelInitialState;
+        if (fuelInitialStateOptional.isEmpty()){
             fuelInitialState = new FuelInitialState();
             fuelInitialState.setValue(BigDecimal.ZERO);
+        }
+        else {
+            fuelInitialState = fuelInitialStateOptional.get();
         }
 
         BigDecimal refueled = collect.stream().map(FuelConsumption::getRefueled).reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -82,7 +85,8 @@ public class FuelConsumptionService {
         fuelConsumptionStandard.setId(fuelConsumptionStandardId);
         Calendar cal = Calendar.getInstance();
 
-        List<FuelConsumption> collect = fuelConsumptionRepository.findByFuelConsumptionStandard(fuelConsumptionStandard).stream()
+        List<FuelConsumption> collect = fuelConsumptionRepository.findByFuelConsumptionStandard(fuelConsumptionStandard)
+                .stream()
                 .filter(z -> {
                             cal.setTime(z.getDocument().getDate());
                             return cal.get(Calendar.YEAR) == year;

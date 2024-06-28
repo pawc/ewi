@@ -41,7 +41,7 @@ public class ReportService {
     private final FuelConsumptionStandardRepository fuelConsumptionStandardRepository;
     private final FuelConsumptionRepository fuelConsumptionRepository;
 
-    public List<KilometersReport> getKilometersReport(int rok, int miesiac){
+    public List<KilometersReport> getKilometersReport(int year, int month){
 
         List<Machine> allActive = machineService.findAllActive();
         List<KilometersReport> result = new ArrayList<>();
@@ -50,9 +50,11 @@ public class ReportService {
             KilometersReport kilometersReport = new KilometersReport();
             kilometersReport.setMachineId(m.getId());
             kilometersReport.setMachineName(m.getName());
-            Kilometers oneByMachineAndYearAndMonth = kilometersRepository.findOneByMachineAndYearAndMonth(m, rok, miesiac);
-            if (oneByMachineAndYearAndMonth == null) kilometersReport.setInitialState(BigDecimal.ZERO);
-            else kilometersReport.setInitialState(oneByMachineAndYearAndMonth.getValue());
+
+            Optional<Kilometers> oneByMachineAndYearAndMonth = kilometersRepository.findOneByMachineAndYearAndMonth(m, year, month);
+            BigDecimal initialState = oneByMachineAndYearAndMonth.map(Kilometers::getValue).orElse(BigDecimal.ZERO);
+            kilometersReport.setInitialState(initialState);
+
             result.add(kilometersReport);
         });
 
@@ -162,11 +164,11 @@ public class ReportService {
                 sumHours = sumHours.add(fuelConsumption.getValue()).setScale(scale, RoundingMode.HALF_UP);
             }
 
-            FuelInitialState fuelInitialState = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(fuelConsumptionStandard, year, month);
-            BigDecimal fuelInitialStateVal = fuelInitialState == null ? BigDecimal.ZERO : fuelInitialState.getValue();
+            Optional<FuelInitialState> fuelInitialStateOptional = fuelInitialStateRepository.findOneByFuelConsumptionStandardAndYearAndMonth(fuelConsumptionStandard, year, month);
+            BigDecimal fuelInitialStateVal = fuelInitialStateOptional.map(FuelInitialState::getValue).orElse(BigDecimal.ZERO);
             BigDecimal endState = fuelInitialStateVal.subtract(sumValue).subtract(sumHeating).add(sumRefueling).setScale(scale, RoundingMode.HALF_UP);
-            Kilometers kilometers = kilometersRepository.findOneByMachineAndYearAndMonth(fuelConsumptionStandard.getMachine(), year, month);
-            BigDecimal kilometersInitialState = kilometers != null ? kilometers.getValue() : BigDecimal.ZERO;
+            Optional<Kilometers> oneByMachineAndYearAndMonth = kilometersRepository.findOneByMachineAndYearAndMonth(fuelConsumptionStandard.getMachine(), year, month);
+            BigDecimal kilometersInitialState = oneByMachineAndYearAndMonth.map(Kilometers::getValue).orElse(BigDecimal.ZERO);
             BigDecimal kilometersEndState = kilometersInitialState.add(sumKilometers);
 
             Report reportItem = createReportItem(fuelConsumptionStandard, kilometersInitialState, sumKilometers, kilometersEndState,

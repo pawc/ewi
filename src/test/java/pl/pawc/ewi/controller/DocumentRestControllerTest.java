@@ -94,7 +94,7 @@ class DocumentRestControllerTest {
 
     @Test
     @Order(2)
-    void documentyGetTest() throws Exception {
+    void documentsGetTest() throws Exception {
 
         mockMvc.perform(get("/documents")
                         .param("year", "2022")
@@ -182,10 +182,6 @@ class DocumentRestControllerTest {
     @Test
     @Order(5)
     void documentDeleteTest() throws Exception {
-
-/*        mockMvc.perform(delete("/document")
-                        .param("number", "80/04/2022/C1"))
-                .andExpect(status().isBadRequest());*/
 
         mockMvc.perform(delete("/document")
                         .param("number", "80/09/2022/C1"))

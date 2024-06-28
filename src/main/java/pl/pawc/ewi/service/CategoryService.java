@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.pawc.ewi.entity.Category;
 import pl.pawc.ewi.repository.CategoryRepository;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -28,20 +27,19 @@ public class CategoryService {
 
     public boolean toggleCarriedOver(Category category){
         Optional<Category> byId = categoryRepository.findById(category.getName());
-        boolean exists = byId.isPresent();
-        if(exists){
+        if(byId.isPresent()){
             Category kat = byId.get();
             kat.setCarriedOver(!kat.isCarriedOver());
             categoryRepository.save(kat);
         }
-        return exists;
+        return byId.isPresent();
     }
 
     public List<Category> findAll(){
         return categoryRepository.findAll();
     }
 
-    public Category findOneByName(String name){
+    public Optional<Category> findOneByName(String name){
         return categoryRepository.findOneByName(name);
     }
 
