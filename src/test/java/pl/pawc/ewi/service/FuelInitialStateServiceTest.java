@@ -23,8 +23,7 @@ class FuelInitialStateServiceTest {
 
 	@Test
 	@Transactional
-	void test() {
-
+	void postFuelInitialStateTest() {
 		List<FuelInitialStateReport> initialStatesReport = fuelInitialStateService.findBy(2022, 4);
 		assertEquals(4, initialStatesReport.size());
 		initialStatesReport.forEach(s -> {
@@ -59,6 +58,52 @@ class FuelInitialStateServiceTest {
 		assertEquals("C1", rs.getMachineId());
 		assertEquals("ON/H", rs.getUnit());
 
+	}
+
+	@Test
+	@Transactional
+	void postFuelInitialStatesTest(){
+		FuelConsumptionStandard standard1 = new FuelConsumptionStandard();
+		standard1.setId(1);
+
+		FuelConsumptionStandard standard2 = new FuelConsumptionStandard();
+		standard2.setId(2);
+
+		FuelInitialState initialState1 = new FuelInitialState();
+		initialState1.setFuelConsumptionStandard(standard1);
+		initialState1.setYear(2024);
+		initialState1.setMonth(6);
+		initialState1.setValue(BigDecimal.valueOf(3.45));
+
+		FuelInitialState initialState2 = new FuelInitialState();
+		initialState2.setFuelConsumptionStandard(standard2);
+		initialState2.setYear(2024);
+		initialState2.setMonth(6);
+		initialState2.setValue(BigDecimal.valueOf(3.46));
+
+		List<FuelInitialState> initialStates = List.of(initialState1, initialState2);
+
+		List<FuelInitialStateReport> initialStatesBefore = fuelInitialStateService.findBy(2024, 6);
+		initialStatesBefore.forEach(state -> {
+			if(state.getFuelConsumptionStandardId() == 1){
+				assertEquals(BigDecimal.ZERO, state.getFuelInitialState());
+			}
+			if(state.getFuelConsumptionStandardId() == 2){
+				assertEquals(BigDecimal.ZERO, state.getFuelInitialState());
+			}
+		});
+
+		fuelInitialStateService.postFuelInitialStates(initialStates);
+
+		List<FuelInitialStateReport> initialStatesAfter = fuelInitialStateService.findBy(2024, 6);
+		initialStatesAfter.forEach(state -> {
+			if(state.getFuelConsumptionStandardId() == 1){
+				assertEquals(new BigDecimal("3.45"), state.getFuelInitialState());
+			}
+			if(state.getFuelConsumptionStandardId() == 2){
+				assertEquals(new BigDecimal("3.46"), state.getFuelInitialState());
+			}
+		});
 	}
 
 }
