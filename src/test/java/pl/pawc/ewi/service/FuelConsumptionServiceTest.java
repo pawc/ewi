@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
@@ -35,6 +36,14 @@ class FuelConsumptionServiceTest {
 			fail();
 		}
 
+	}
+
+	@Test
+	@Transactional
+	void testFuelConsumptionNotFoundException() {
+		assertThrows(FuelConsumptionStandardNotFoundException.class,
+				() -> fuelConsumptionService.getSum(99, 2022, 4, null)
+		);
 	}
 
 	@Test
