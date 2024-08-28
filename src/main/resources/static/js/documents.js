@@ -100,6 +100,7 @@ $(document).ready(() => {
             }
 
             $('#kmBefore').html(machine.sumOfKilometers)
+            $('#kmAfter').html("")
 
             $.each(machine.fuelConsumptionStandards, (i, fuelConsumptionStandard) => {
                 var fuelConsumptionStandardSum = (fuelConsumptionStandard.sum == null) ? 0 : fuelConsumptionStandard.sum
@@ -413,6 +414,7 @@ function addBtn(){
     $("#consumptionTable > tbody > tr").remove();
     $('#machine').val(-1);
     $('#kilometersTrailer').val(0);
+    $('#number').val('')
     type = 'POST';
     dialog.dialog("open");
 }

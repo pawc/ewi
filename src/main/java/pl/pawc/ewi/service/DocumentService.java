@@ -92,11 +92,11 @@ public class DocumentService {
 
     private boolean isBeforeExcludedDocument(Document document, String excludedDocNumber) {
         if (excludedDocNumber == null) {
-            return false;
+            return true;
         }
         Optional<Document> documentById = documentRepository.findById(excludedDocNumber);
         if (documentById.isEmpty()) {
-            return false;
+            return true;
         }
         Document excludedDocument = documentById.orElse(null);
         Calendar calD = Calendar.getInstance();
