@@ -33,7 +33,7 @@ public class DocumentRestController {
             logger.debug("/document GET number={} ", number);
             return documentService.get(number);
         } catch (FuelConsumptionStandardNotFoundException | DocumentNotFoundException e) {
-            logger.warn("/document GET number={} not found. Returning empty Document object.", number);
+            logger.debug("/document GET number={} not found. Returning empty Document object.", number);
             return new Document();
         }
     }
