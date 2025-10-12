@@ -60,7 +60,6 @@ class FuelInitialStateRestControllerTest {
         assertNotNull(fuelConsumptionStandard.hashCode());
 
         FuelInitialState fuelInitialState = new FuelInitialState();
-        fuelInitialState.setId(102);
         fuelInitialState.setFuelConsumptionStandard(fuelConsumptionStandard);
         fuelInitialState.setValue(BigDecimal.valueOf(0));
         fuelInitialState.setYear(2023);
