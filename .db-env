@@ -1,0 +1,5 @@
+MYSQL_DATABASE=ewidb
+MYSQL_USER=ewiuser
+MYSQL_PASSWORD=ewiuser_password
+MYSQL_ROOT_PASSWORD=root_password
+MYSQL_ROOT_HOST=ewi
