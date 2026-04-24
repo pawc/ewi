@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class EwiApplication {
 
 	public static void main(String[] args) {
-		System.setProperty("server.servlet.context-path", "/paliwo");
 		SpringApplication.run(EwiApplication.class, args);
 	}
 
